@@ -2,7 +2,10 @@
 
 > Дубль [`README.md`](../README.md) · канонічна версія в корені репозиторію
 
-<img src="assets/readme-banner.svg" alt="Invoice Maker 2026 — Agentic Engineering Greenfield" width="100%" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/readme-banner.png">
+  <img src="assets/readme-banner.png" alt="Invoice Maker 2026 — Agentic Engineering Greenfield" width="100%" />
+</picture>
 
 <br />
 
@@ -10,10 +13,10 @@
 
 <br />
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![OpenSpec](https://img.shields.io/badge/OpenSpec-SDD-22d3ee?style=for-the-badge)](../openspec/config.yaml)
+[![OpenSpec](https://img.shields.io/badge/OpenSpec-SDD-22d3ee?style=for-the-badge&logo=openapi-initiative&logoColor=black)](../openspec/config.yaml)
 [![WEG3D Fin](https://img.shields.io/badge/Design-WEG3D_Fin-ef4136?style=for-the-badge)](../Design.md)
 
 <br />
@@ -31,6 +34,34 @@
 </div>
 
 <br />
+
+### `// SLICE · G4` · Один слайс: від спеки до зеленого
+
+<table>
+<tr>
+<td><img src="https://img.shields.io/badge/7-нарізка-1d4ed8?style=flat-square" alt="7" /></td>
+<td>Розбий MVP на <strong>capabilities</strong>, познач залежності, один власник на вимогу.</td>
+</tr>
+<tr>
+<td><img src="https://img.shields.io/badge/8-спека_+_код-1d4ed8?style=flat-square" alt="8" /></td>
+<td>Візьми <strong>одну</strong> здатність (<code>nace-catalog</code> + <code>invoice-calc</code> + <code>template-render</code>): спека → <code>src/lib/</code>.</td>
+</tr>
+<tr>
+<td><img src="https://img.shields.io/badge/9-тести_+_verify-1d4ed8?style=flat-square" alt="9" /></td>
+<td>Падаючий тест → зелений, потім повний прогін перевірки.</td>
+</tr>
+</table>
+
+```bash
+# change: invoice-slice-1
+# proposal · spec (FR-NACE, FR-CALC, FR-TPL) · tasks
+
+> write failing test -> implement -> green
+> npm run lint && npm run typecheck && npm run build
+> openspec validate --strict
+
+✓ slice ready · maker ≠ checker
+```
 
 > **Generation is solved.** Verification, judgment, and direction are the engineering craft.  
 > У цьому репозиторії код — наслідок **специфікацій**, **тестів** і **детермінованих гейтів**, а не навпаки.
@@ -154,7 +185,7 @@ flowchart LR
 | **NACE каталог** | 📋 Заплановано | Slice 1 — `nace-catalog` + `invoice-calc` + `template-render` |
 | **Генерація інвойсу** | 📋 Заплановано | Перший вертикальний слайс (G4) |
 | **Chat / LLM ввід** | ⏳ Post-MVP | `FR-CHAT-*` перенесено в Future |
-| **Supabase / Auth** | ⏳ Post-MVP | Enterprise-архітектура в `docs/ARCHITECTURE.md` — фаза 2+ |
+| **Supabase / Auth** | ⏳ Post-MVP | Enterprise-архітектура в [`ARCHITECTURE.md`](ARCHITECTURE.md) — фаза 2+ |
 
 ---
 
@@ -346,7 +377,7 @@ flowchart TB
 
 <br />
 
-Повна архітектура з multi-tenancy, Supabase, Server Actions — задокументована в [`ARCHITECTURE.md`](ARCHITECTURE.md).
+Повна архітектура з multi-tenancy, Supabase, Server Actions — задокументована в [[`ARCHITECTURE.md`](ARCHITECTURE.md)](ARCHITECTURE.md).
 
 ```mermaid
 flowchart TB
@@ -566,16 +597,16 @@ sequenceDiagram
 
 | Документ | Призначення |
 | --- | --- |
-| [`requirements.md`](requirements.md) | **Єдине джерело правди** — FR/NFR/TC/BC з ID |
+| [[`requirements.md`](requirements.md)](requirements.md) | **Єдине джерело правди** — FR/NFR/TC/BC з ID |
 | [`product-brief.md`](product-brief.md) | Бізнес-контекст, MVP vs Future |
-| [`ARCHITECTURE.md`](ARCHITECTURE.md) | Шарова архітектура, фази імплементації |
+| [[`ARCHITECTURE.md`](ARCHITECTURE.md)](ARCHITECTURE.md) | Шарова архітектура, фази імплементації |
 | [`research.md`](research.md) | User research, формати вводу, тригери |
-| [`invoice-template.html`](invoice-template.html) | Контракт верстки інвойсу |
+| [[`invoice-template.html`](invoice-template.html)](docs/invoice-template.html) | Контракт верстки інвойсу |
 | [`191_2025.pdf`](191_2025.pdf) | NACE 2.1-UA (наказ Держстату № 191) |
-| [`../Design.md`](../Design.md) | WEG3D Fin — токени, типографіка, компоненти |
+| [[`../Design.md`](../Design.md)](../Design.md) | WEG3D Fin — токени, типографіка, компоненти |
 | [`../CONTEXT.md`](../CONTEXT.md) | Глосарій домену |
-| [`../openspec/config.yaml`](../openspec/config.yaml) | Контекст для OpenSpec-агентів |
-| [`README-uk.md`](README-uk.md) | Цей документ (дубль кореневого README) |
+| [[`../openspec/config.yaml`](../openspec/config.yaml)](../openspec/config.yaml) | Контекст для OpenSpec-агентів |
+| [`docs/README-uk.md`](README-uk.md) | Повна українська документація (дубль README) |
 
 ---
 

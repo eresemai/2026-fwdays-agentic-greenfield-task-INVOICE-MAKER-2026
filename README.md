@@ -1,6 +1,9 @@
 <div align="center">
 
-<img src="docs/assets/readme-banner.svg" alt="Invoice Maker 2026 — Agentic Engineering Greenfield" width="100%" />
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme-banner.png">
+  <img src="docs/assets/readme-banner.png" alt="Invoice Maker 2026 — Agentic Engineering Greenfield" width="100%" />
+</picture>
 
 <br />
 
@@ -8,10 +11,10 @@
 
 <br />
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![OpenSpec](https://img.shields.io/badge/OpenSpec-SDD-22d3ee?style=for-the-badge)](openspec/config.yaml)
+[![OpenSpec](https://img.shields.io/badge/OpenSpec-SDD-22d3ee?style=for-the-badge&logo=openapi-initiative&logoColor=black)](openspec/config.yaml)
 [![WEG3D Fin](https://img.shields.io/badge/Design-WEG3D_Fin-ef4136?style=for-the-badge)](Design.md)
 
 <br />
@@ -29,6 +32,34 @@
 </div>
 
 <br />
+
+### `// SLICE · G4` · Один слайс: від спеки до зеленого
+
+<table>
+<tr>
+<td><img src="https://img.shields.io/badge/7-нарізка-1d4ed8?style=flat-square" alt="7" /></td>
+<td>Розбий MVP на <strong>capabilities</strong>, познач залежності, один власник на вимогу.</td>
+</tr>
+<tr>
+<td><img src="https://img.shields.io/badge/8-спека_+_код-1d4ed8?style=flat-square" alt="8" /></td>
+<td>Візьми <strong>одну</strong> здатність (<code>nace-catalog</code> + <code>invoice-calc</code> + <code>template-render</code>): спека → <code>src/lib/</code>.</td>
+</tr>
+<tr>
+<td><img src="https://img.shields.io/badge/9-тести_+_verify-1d4ed8?style=flat-square" alt="9" /></td>
+<td>Падаючий тест → зелений, потім повний прогін перевірки.</td>
+</tr>
+</table>
+
+```bash
+# change: invoice-slice-1
+# proposal · spec (FR-NACE, FR-CALC, FR-TPL) · tasks
+
+> write failing test -> implement -> green
+> npm run lint && npm run typecheck && npm run build
+> openspec validate --strict
+
+✓ slice ready · maker ≠ checker
+```
 
 > **Generation is solved.** Verification, judgment, and direction are the engineering craft.  
 > У цьому репозиторії код — наслідок **специфікацій**, **тестів** і **детермінованих гейтів**, а не навпаки.
