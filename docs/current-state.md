@@ -28,7 +28,7 @@ _None._
 
 ## Next up
 
-1. Read `docs/requirements.md` and `openspec/capability-map.yaml` for current slice.
+1. Read `docs/capability.md` (order + deps), then `docs/capabilities/<id>.md` for scope.
 2. Run `npm run capability:check -- --capability <id>` before starting implementation.
 3. Record outcomes here when the session ends.
 

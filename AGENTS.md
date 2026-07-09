@@ -51,7 +51,9 @@ file for agent rules and UI conventions.
 | --- | --- |
 | **Session handoff (read first)** | `docs/current-state.md` |
 | **Authoritative specs (read first)** | `openspec/specs/<capability>/spec.md` |
-| **Capability order + gates** | `openspec/capability-map.yaml` (`npm run capability:check`) |
+| **Capability map (order + deps)** | `docs/capability.md` |
+| **Capability detail (expanded)** | `docs/capabilities/<id>.md` |
+| **Capability gates (machine)** | `openspec/capability-map.yaml` (`npm run capability:check`) |
 | OpenSpec config + injected context | `openspec/config.yaml` |
 | In-flight changes | `openspec/changes/<change-name>/` |
 | Numbered FR traceability | `docs/requirements.md` |

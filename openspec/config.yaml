@@ -7,7 +7,8 @@ context: |
 
   Authoritative spec: openspec/specs/<capability>/spec.md (validate with
   `openspec validate --strict`). Decisions tracker: .scratch/mvp-spec-coherence/map.md.
-  Capability order and gates: openspec/capability-map.yaml (check with
+  Capability order and gates: docs/capability.md (human) and
+  openspec/capability-map.yaml (check with
   `npm run capability:check -- --capability <id>` before starting work).
   Session handoff: docs/current-state.md — read at session start; update when
   pausing or ending work (active capability, blockers, next up).
@@ -36,6 +37,8 @@ context: |
   - src/types/ — domain types
   - src/components/ui/ — shadcn; src/components/invoices/ — domain UI
   - docs/invoice-template.html — document layout source of truth
+  - docs/capability.md — implementation order and dependencies (read first)
+  - docs/capabilities/ — expanded scope per capability
   - docs/requirements.md — numbered FR traceability (IDs preserved in specs)
   - CONTEXT.md — domain glossary
   - Design.md — WEG3D Fin UI rules
