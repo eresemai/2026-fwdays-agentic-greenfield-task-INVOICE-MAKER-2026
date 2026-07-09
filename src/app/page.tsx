@@ -12,12 +12,16 @@ export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
       <header className="border-b border-border">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
+        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
           <span className="text-lg font-semibold tracking-tight">
             Invoice Maker
           </span>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" render={<Link href="/dashboard" />}>
+            <Button
+              className="hidden sm:inline-flex"
+              variant="ghost"
+              render={<Link href="/dashboard" />}
+            >
               Open app
             </Button>
             <Button render={<Link href="/invoices/new" />}>Create invoice</Button>
