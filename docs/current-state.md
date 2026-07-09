@@ -11,7 +11,7 @@ Last updated: 2026-07-10 (UTC)
 | --- | --- |
 | **Branch** | `main` @ `a0759b3` |
 | **Active capability** | — (planning complete; implementation not started) |
-| **Active OpenSpec change** | — |
+| **Active OpenSpec change** | `add-invoice-calc` (artifacts 4/4, ready for `/opsx:apply`) |
 | **Slice / gate** | S0 — `shell` in_progress |
 | **Gate check** | Unblocked: `shell`, `nace-catalog`, `invoice-calc` |
 
@@ -61,7 +61,7 @@ Wayfinder tickets still open (see `.scratch/mvp-spec-coherence/`):
 | --- | --- | --- |
 | ~~06~~ | **resolved**: unit×qty, integer cents, `1,234.56` everywhere | invoice-calc unblocked |
 | ~~07~~ | **resolved**: sequential `YYYY-NNN` on issue, per supplier; `DDMM/0YY` retired | invoice-calc unblocked |
-| 15 | Audit migrated specs (6 vanished reqs) — **in progress (background agent)** | all specs trust |
+| ~~15~~ | **resolved**: all 6 vanished FRs were accidents; no tool checks FR-id coverage in specs | repairs → 08, 09, 10, 16 |
 | 05 | PDF output fidelity | export-share pdf |
 | 16 | Edit after send (immutability) | invoice-edit |
 | 11 | Design system reconciliation | shell, form-input |
@@ -74,12 +74,10 @@ Specs pass `openspec validate --strict` but may still be wrong per map.md.
 2. **Wayfinder 15 (AFK)** — audit the `8d45456` migration: six FR ids vanished
    (incl. `FR-NACE-04` video and `FR-CALC-05` deadlines); `invoice-calc/spec.md`
    and `src/types/invoice.ts` compute money in opposite directions.
-3. **Wayfinder 06 + 07 (grilling, needs the human)** — money model and invoice
-   numbering. Evidence is already gathered in ticket 02's answer: authority is
-   unit × qty → total (integer cents), number is a sequential counter assigned
-   on issue. These two **gate `invoice-calc`** — do not `/opsx:propose
-   add-invoice-calc` before they close, or the spec freezes the inverted
-   FR-CALC-03 again.
+3. ~~**Wayfinder 06 + 07 (grilling)**~~ **done** — money: unit×qty, integer cents;
+   numbering: sequential `YYYY-NNN` on issue. **Next:** sync `invoice-calc.md`
+   + OpenSpec delta before `/opsx:propose add-invoice-calc` (ticket 15 audit
+   still tracks spec content).
 4. **Ship S0** `shell` — finish FR-SHELL-02, mark `shipped` in
    capability-map.yaml. Safe to do in parallel; no open ticket gates it.
 5. **S1 `nace-catalog`** may start after 15 confirms the seed entries
@@ -115,3 +113,6 @@ Append-only (newest last).
 | 2026-07-10 | Agent | Deleted `wayfinder/resolve-01-04` | Branch merged; local + remote removed |
 | 2026-07-10 | Wayfinder | Grilled 06+07 with the human | Money: unit×qty, integer cents; numbering: sequential YYYY-NNN on issue (DDMM/0YY retired). invoice-calc ungated; ticket 15 audit running in background |
 | 2026-07-10 | Wayfinder | Session close: factual fixes | product-brief NACE date corrected (in force 2027-01-01, not 2025); config.yaml scenario format fixed (WHEN/THEN, not Given/When/Then); layout.tsx `subsets: ["cyrillic","latin"]` (ticket 01 evidence); Next-up reordered — 06/07 gate invoice-calc |
+| 2026-07-10 | Checker | Maker≠checker review fork PR #2 | Separate chat; Bugbot + synthesis; logged in `.github/HOMEWORK_SUBMISSION.md` Review log; verdict approve-with-follow-ups (yaml dep, invoice-calc.md drift, current-state Next up) |
+| 2026-07-10 | Wayfinder | Ticket 15 resolved (audit) | 6 vanished FRs = accidents; FR-NACE-06 still SHALL despite ticket 03 (→09); no FR-id coverage tool exists |
+| 2026-07-10 | OpenSpec | `add-invoice-calc` change created | proposal + delta specs (FR-CALC-01/03/04/06 MODIFIED, 05 ADDED) + design + tasks; validate --strict green; next: /opsx:apply |

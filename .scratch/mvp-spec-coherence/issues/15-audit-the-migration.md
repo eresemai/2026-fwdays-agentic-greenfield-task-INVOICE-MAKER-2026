@@ -1,7 +1,7 @@
 # 15 — Six requirements vanished in the migration. Was each a decision?
 
 Type: research
-Status: claimed
+Status: resolved
 Blocked by: —
 
 ## Why this ticket exists
@@ -76,3 +76,81 @@ before it is trusted again.
 A markdown summary at `.scratch/mvp-spec-coherence/assets/15-migration-audit.md`:
 a per-ID verdict table (decision / accident / open), and a short statement of
 what `openspec validate --strict` does and does not prove.
+
+---
+
+## Answer
+
+Full evidence trail (file:line per claim) in
+[`assets/15-migration-audit.md`](../assets/15-migration-audit.md). Audited at
+`54b0715`; `openspec/specs/` is unchanged since `8d45456`, so all findings are
+current.
+
+**(a) All six omissions are accidents — zero decisions, zero scope changes.**
+The docs restructure (`37640ae`, `c78f3c0`) did not remove the IDs; it moved
+them. All six survive as `proposed` in the restructured `docs/requirements.md`,
+in `docs/capabilities/{nace-catalog,invoice-calc,document-render}.md`, and in
+`openspec/capability-map.yaml` — they are missing **only** from
+`openspec/specs/`. The clincher: the migration commit itself kept them
+`proposed` in `docs/requirements.md` while using the `dropped` status, in the
+same file, for `FR-CHAT-*` — a deliberate drop had an obvious way to say so and
+didn't. No commit message, ADR, or capability doc records a reason.
+Specifically: **video invoices (`FR-NACE-04`) were never removed from the
+product** — the `FR-NACE-04`/`FR-TPL-02` disappearance is not a resolution of
+ticket 09's conflict, just the migration agent skipping what it couldn't
+reconcile. `FR-TPL-02`'s TERMS half did land as `BC-LEGAL-01`; its frozen
+"Graphic Design Service" subtitle half is nowhere. `FR-CALC-05` is the most
+load-bearing loss: `invoice-registry`'s overdue derivation depends on a payment
+deadline that no spec defines how to compute.
+
+**FR-NACE-06:** ticket 03 dropped it, but the drop propagated nowhere — it is
+still a `SHALL` in `nace-catalog/spec.md:25-26` and still `proposed` in
+`docs/requirements.md:73`, `docs/capabilities/nace-catalog.md:28`, and
+`capability-map.yaml:66,229`.
+
+**(b) All three undecided assertions confirmed, verbatim, at:**
+`invoice-calc/spec.md:22` (unit price = total ÷ quantity — inverted vs ticket
+02's authority *and* vs `docs/capabilities/invoice-calc.md:46`, which already
+verifies the opposite direction); `invoice-registry/spec.md:29` ("localStorage
+or IndexedDB"); `nace-catalog/spec.md:26` ("when ticket 09 resolves
+placement").
+
+**(c) Confirmed — `src/types/invoice.ts` still contradicts settled decision 7**
+and is unchanged since the migration: `clientId` reference at line 17 (no
+client snapshot), no supplier/banking fields at all (while `banking` and
+`invoice-registry` specs promise data "from the snapshot"), no NACE field,
+float `unitPrice` instead of integer cents. Spec and type were committed
+together and cannot both be true.
+
+**(d) `openspec validate --strict` is a per-file format linter, nothing more.**
+Verified against CLI v1.5.0 source and observed output (11 valid, exit 0). It
+checks: headers `## Purpose`/`## Requirements`, ≥1 requirement, the literal
+token SHALL/MUST in each requirement, `#### Scenario:` formatting, and (strict
+only, via warnings) Purpose ≥ 50 chars and ≥1 scenario per requirement. It has
+no concept of requirement IDs, never reads `docs/`, `src/`, or a second spec
+file. Coverage gaps, "or"s, ticket deferrals, inverted formulas, and
+spec-vs-code contradictions — i.e. **every defect in this audit** — are
+structurally outside its reach. Note also: `npm run capability:check` reads
+only `capability-map.yaml`, so **no tool in the repo verifies that an owned ID
+appears in its owning spec**.
+
+**Repairs needed** (routed; not performed here):
+
+- **→ 06:** rewrite `FR-CALC-03` in `invoice-calc/spec.md:22` to unit × qty →
+  total, integer cents, explicit rounding; restore `FR-CALC-05` (deadline /
+  execution term) into `invoice-calc/spec.md` — `invoice-registry`'s overdue
+  rule is undefined without it.
+- **→ 08:** rework `src/types/invoice.ts` to snapshot semantics (client +
+  supplier snapshots on issued invoices, NACE on line items); restore
+  `FR-NACE-02/03/04` seed entries into `nace-catalog/spec.md` using 03(d)'s
+  modelling (entries *carry* a class code; the code is not a unique key).
+- **→ 09:** decide the subtitle, then restore `FR-TPL-02` into
+  `document-render/spec.md` with the decided wording (its TERMS half already
+  lives there as `BC-LEGAL-01`); execute ticket 03's drop of `FR-NACE-06` in
+  `nace-catalog/spec.md`, `docs/requirements.md:73`,
+  `docs/capabilities/nace-catalog.md:28`, and `capability-map.yaml`.
+- **→ 10:** replace `invoice-registry/spec.md:29`'s "localStorage or IndexedDB"
+  with one chosen backend.
+- **→ 16:** when specifying edit-after-send, also restore `FR-TPL-04`
+  (`{{PROJECT_BLOCK}}`) into `document-render/spec.md` alongside the
+  immutability rules, or hand it to 09 if template scope lands there first.
