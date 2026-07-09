@@ -1,7 +1,7 @@
 # 15 — Six requirements vanished in the migration. Was each a decision?
 
 Type: research
-Status: open
+Status: claimed
 Blocked by: —
 
 ## Why this ticket exists

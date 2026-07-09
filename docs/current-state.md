@@ -59,9 +59,9 @@ Wayfinder tickets still open (see `.scratch/mvp-spec-coherence/`):
 
 | Ticket | Topic | Blocks capability |
 | --- | --- | --- |
-| 06 | Money model (integer cents, unit×qty) | invoice-calc |
-| 07 | Invoice number format vs sequential counter | invoice-calc |
-| 15 | Audit migrated specs (6 vanished reqs) | all specs trust |
+| ~~06~~ | **resolved**: unit×qty, integer cents, `1,234.56` everywhere | invoice-calc unblocked |
+| ~~07~~ | **resolved**: sequential `YYYY-NNN` on issue, per supplier; `DDMM/0YY` retired | invoice-calc unblocked |
+| 15 | Audit migrated specs (6 vanished reqs) — **in progress (background agent)** | all specs trust |
 | 05 | PDF output fidelity | export-share pdf |
 | 16 | Edit after send (immutability) | invoice-edit |
 | 11 | Design system reconciliation | shell, form-input |
@@ -113,4 +113,5 @@ Append-only (newest last).
 | 2026-07-10 | Agent | Improved tables in capability.md | Per-slice narrow tables |
 | 2026-07-10 | Agent | Merged to `main`, pushed origin | `main` @ `b686caa`; CI syncs `fwdays-submission` |
 | 2026-07-10 | Agent | Deleted `wayfinder/resolve-01-04` | Branch merged; local + remote removed |
+| 2026-07-10 | Wayfinder | Grilled 06+07 with the human | Money: unit×qty, integer cents; numbering: sequential YYYY-NNN on issue (DDMM/0YY retired). invoice-calc ungated; ticket 15 audit running in background |
 | 2026-07-10 | Wayfinder | Session close: factual fixes | product-brief NACE date corrected (in force 2027-01-01, not 2025); config.yaml scenario format fixed (WHEN/THEN, not Given/When/Then); layout.tsx `subsets: ["cyrillic","latin"]` (ticket 01 evidence); Next-up reordered — 06/07 gate invoice-calc |

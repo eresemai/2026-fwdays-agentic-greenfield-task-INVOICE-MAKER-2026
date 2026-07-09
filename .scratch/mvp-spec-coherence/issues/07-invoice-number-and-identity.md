@@ -1,7 +1,7 @@
 # 07 — The invoice number, and what identifies an invoice
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 02
 
 ## Question
@@ -36,3 +36,26 @@ Decide, with the numbering survey from ticket `02` in hand:
 Ticket `08` needs the identity rule before it can describe the record.
 The **Not yet specified** entry on edit and duplicate semantics graduates from
 here.
+
+---
+
+## Answer
+
+Grilled with the human on 2026-07-10. The human chose the **sequential counter**
+over preserving `DDMM/0YY` — an explicit break with the legacy format, accepted
+to eliminate same-day collisions by construction.
+
+- **Scheme: per-year sequential counter**, default rendering `YYYY-NNN`
+  (e.g. `2026-001`). `FR-CALC-01` (`DDMM/0YY`) is **replaced**, not amended.
+- **Assigned on issue** (`draft → sent`). A draft has no number and is
+  addressed by its opaque record id (ticket 08's identity).
+- **Editable** by the user, with a uniqueness check against the register.
+- **Sequence is per supplier profile** — two ФОПs in one browser never share
+  a counter.
+- **A cancelled invoice keeps its number; the number is never reused.**
+- The opaque record id — not the number — identifies an invoice internally;
+  `FR-EDIT-01` "edit by number" needs rewording (ticket 16).
+
+Consumers: ticket `08` (identity + numbering fields), ticket `16` (draft
+addressing), `openspec/specs/invoice-calc/spec.md` delta (FR-CALC-01 replaced),
+`FR-CALC-06` payment purpose now reads `Payment by the invoice №2026-001 from …`.

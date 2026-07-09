@@ -1,7 +1,7 @@
 # 06 — The money model: what the user types, what the system derives
 
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: 02
 
 ## Question
@@ -36,3 +36,26 @@ Decide, with the evidence from ticket `02` in hand:
 
 Ticket `08` cannot describe the stored invoice record until this is settled.
 Ticket `05` should supply a fixture that does not divide evenly.
+
+---
+
+## Answer
+
+Grilled with the human on 2026-07-10, with ticket 02's evidence on the table.
+
+- **The user enters unit price × quantity.** Line amount and invoice total are
+  derived by multiplication and summation. `FR-CALC-03` (`unit = total ÷ qty`)
+  is **inverted and replaced** — division does not occur anywhere in the money
+  model, so no rounding residue exists. `calculateLineTotal` in
+  `src/types/invoice.ts` was already correct.
+- **Representation: integer minor units (cents).** No floating-point money.
+- **Prepayment:** percentage input (0–100, default 50 per research.md);
+  `prepayment = round(total × pct)`, `balance = total − prepayment`, so
+  `prepayment + balance == total` holds exactly for every input.
+- **Display format: `1,234.56` on the entire document**, both EN and UA lines
+  (ticket 02: bilingual invoices do not vary money format per language; only
+  dates differ). Confirmed by the human.
+
+Consumers: ticket `08` (record stores unitPrice + qty per line, amounts in
+cents); `openspec/specs/invoice-calc/spec.md` requires a delta change — its
+current FR-CALC-03 asserts the inverted direction.

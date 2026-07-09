@@ -119,6 +119,17 @@ this map.
   code «не створює прав чи обов'язків». One class code legitimately carries many
   line texts, so `FR-NACE-01`'s "keyed by class code" is wrong.
 
+- [The money model](issues/06-money-model-and-rounding.md) — the user enters
+  **unit price × quantity**; totals are derived, division never occurs, money is
+  integer cents, `prepayment + balance == total` exactly, format `1,234.56` on
+  the whole document. `FR-CALC-03` is inverted and replaced; the code was right.
+
+- [The invoice number](issues/07-invoice-number-and-identity.md) — **per-year
+  sequential counter (`YYYY-NNN`), assigned on issue**, per supplier profile,
+  editable with uniqueness check, never reused after cancel. The human chose to
+  retire `DDMM/0YY` outright (`FR-CALC-01` replaced). Drafts have no number and
+  are addressed by record id.
+
 - [Stop `openspec/config.yaml` from lying](issues/04-wire-openspec-into-claude-code.md)
   — done by a concurrent session (`8d45456`) before it was claimed. Spec format
   confirmed (`### Requirement:` + `#### Scenario:` with `**WHEN**`/`**THEN**`);
