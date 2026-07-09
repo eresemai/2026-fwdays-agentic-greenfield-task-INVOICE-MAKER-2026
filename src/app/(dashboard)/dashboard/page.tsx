@@ -10,8 +10,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
+        <h1 className="wf-display">Dashboard</h1>
+        <p className="mt-1 text-wf-text-2">
           Overview of invoices, revenue, and overdue items.
         </p>
       </div>
@@ -23,7 +23,7 @@ export default function DashboardPage() {
             <CardDescription>This month</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold">—</p>
+            <p className="wf-mono text-3xl font-semibold tracking-tight">—</p>
           </CardContent>
         </Card>
         <Card>
@@ -32,7 +32,7 @@ export default function DashboardPage() {
             <CardDescription>Awaiting payment</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold">—</p>
+            <p className="wf-mono text-3xl font-semibold tracking-tight">—</p>
           </CardContent>
         </Card>
         <Card>
@@ -41,7 +41,7 @@ export default function DashboardPage() {
             <CardDescription>Past due date</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-3xl font-semibold">—</p>
+            <p className="wf-mono text-3xl font-semibold tracking-tight">—</p>
           </CardContent>
         </Card>
       </div>
