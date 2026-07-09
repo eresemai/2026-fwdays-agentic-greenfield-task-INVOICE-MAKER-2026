@@ -13,6 +13,7 @@ Invoice Maker uses the **WEG3D Fin** light theme. Read `Design.md` before changi
 
 | Concern | Location |
 | --- | --- |
+| **Agent skill (UI workflow)** | `.agents/skills/weg3d-fin-design/SKILL.md` |
 | Full design docs | `Design.md` |
 | Runtime CSS tokens | `src/styles/design-tokens.css` |
 | Theme + Tailwind mapping | `src/app/globals.css` |
@@ -30,6 +31,7 @@ Invoice Maker uses the **WEG3D Fin** light theme. Read `Design.md` before changi
 6. **Invoice statuses** — use `<InvoiceStatusBadge status="…" />` from `@/components/invoices/invoice-status-badge`.
 7. **Invoice preview surfaces** — use `wf-doc` or `wf-panel` utility classes.
 8. **Token changes** — edit `src/styles/design-tokens.css` first; mirror to `docs/Design System/design-tokens.css` if the handoff file must stay in sync.
+9. **UI work** — invoke `.agents/skills/weg3d-fin-design`; on activation, post the 🎨 session banner from that skill before other output.
 
 ## Fonts
 

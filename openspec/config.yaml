@@ -39,6 +39,7 @@ context: |
   - docs/requirements.md — numbered FR traceability (IDs preserved in specs)
   - CONTEXT.md — domain glossary
   - Design.md — WEG3D Fin UI rules
+  - .agents/skills/weg3d-fin-design/SKILL.md — WEG3D Fin UI workflow (invoke for UI; 🎨 banner on activation)
   - docs/ARCHITECTURE.md — runtime architecture (browser-first MVP)
   - docs/adr/0002-browser-first-mvp.md — supersedes ADR-0001
 
@@ -52,6 +53,7 @@ rules:
   design:
     - Follow docs/ARCHITECTURE.md (browser storage + stateless PDF render)
     - UI changes MUST comply with Design.md / AGENTS.md design-system rules (no raw hex)
+    - Invoke weg3d-fin-design skill for UI work; show its 🎨 session banner on activation
     - Prefer minimal diffs; no Server Actions or database layers unless spec changes
   tasks:
     - Break work into independently verifiable slices (max ~2 hours each)
