@@ -7,6 +7,8 @@ context: |
 
   Authoritative spec: openspec/specs/<capability>/spec.md (validate with
   `openspec validate --strict`). Decisions tracker: .scratch/mvp-spec-coherence/map.md.
+  Capability order and gates: openspec/capability-map.yaml (check with
+  `npm run capability:check -- --capability <id>` before starting work).
 
   MVP domain (settled):
   - Form input with live HTML preview; chat/LLM input is Future (not MVP).
@@ -52,6 +54,7 @@ rules:
     - Break work into independently verifiable slices (max ~2 hours each)
     - Include verification per task (typecheck, lint, manual check, or test)
     - Prefer minimal diffs; do not refactor unrelated code
+    - Before starting a capability, run `npm run capability:check -- --capability <id>`; if blocked, finish dependencies first and set their status to shipped in capability-map.yaml
   specs:
     - Use domain terms from CONTEXT.md consistently
     - "Requirements use SHALL/MUST; scenarios use Given/When/Then (#### Scenario:)"

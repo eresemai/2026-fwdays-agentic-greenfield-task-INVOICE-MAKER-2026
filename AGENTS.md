@@ -48,6 +48,7 @@ file for agent rules and UI conventions.
 | Concern | Location |
 | --- | --- |
 | **Authoritative specs (read first)** | `openspec/specs/<capability>/spec.md` |
+| **Capability order + gates** | `openspec/capability-map.yaml` (`npm run capability:check`) |
 | OpenSpec config + injected context | `openspec/config.yaml` |
 | In-flight changes | `openspec/changes/<change-name>/` |
 | Numbered FR traceability | `docs/requirements.md` |
@@ -71,8 +72,9 @@ CLI equivalents: `openspec new change <name>`, `openspec status`, `openspec list
 ## Rules for agents
 
 1. **Read specs first** — before changing behavior, check `openspec/specs/` for the relevant capability. If empty (brownfield), infer from code and `docs/requirements.md`, then capture in a change.
-2. **Non-trivial features go through a change** — use `openspec/changes/` for proposal → design → tasks → delta specs before coding.
-3. **Respect existing agent rules** — `AGENTS.md` design-system and Next.js rules still apply during `/opsx:apply`.
-4. **Use domain language** — terms from `CONTEXT.md` (Invoice, Client, LineItem, statuses).
-5. **Archive when done** — after tasks are complete and verified, run `/opsx:sync` then `/opsx:archive`.
+2. **Respect capability gates** — run `npm run capability:check -- --capability <id>` before starting work; if blocked, finish dependencies and mark them `shipped` in `openspec/capability-map.yaml`.
+3. **Non-trivial features go through a change** — use `openspec/changes/` for proposal → design → tasks → delta specs before coding.
+4. **Respect existing agent rules** — `AGENTS.md` design-system and Next.js rules still apply during `/opsx:apply`.
+5. **Use domain language** — terms from `CONTEXT.md` (Invoice, Client, LineItem, statuses).
+6. **Archive when done** — after tasks are complete and verified, run `/opsx:sync` then `/opsx:archive`.
 <!-- END:openspec-rules -->
