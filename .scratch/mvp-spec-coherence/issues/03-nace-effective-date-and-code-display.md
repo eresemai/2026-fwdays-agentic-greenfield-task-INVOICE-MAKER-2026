@@ -1,7 +1,7 @@
 # 03 — When NACE 2.1-UA took effect, and whether an invoice prints the code
 
 Type: research
-Status: open
+Status: resolved
 Blocked by: —
 
 ## Question
@@ -49,3 +49,53 @@ A markdown summary at `.scratch/mvp-spec-coherence/assets/03-nace.md`, giving
 the provenance of every NACE claim currently made in `docs/product-brief.md`
 and `docs/requirements.md`, and marking each as confirmed, corrected, or
 unsourced.
+
+---
+
+## Answer
+
+Full working and the provenance table live in
+[`assets/03-nace.md`](../assets/03-nace.md). Decisions below are self-contained.
+
+**(a) Effective date — 1 January 2027, not 2025.** Order No. 191 of 28 Oct 2025
+only *approved and published* NACE 2.1-UA. Its operative clause (in the order
+body, not in the appendix `docs/191_2025.pdf` — which is why grep found no
+"набирає чинності") reads, verbatim from the Держстат order page: «затвердити
+Класифікацію видів економічної діяльності (NACE 2.1-UA), що додається, та ввести
+її в дію з 01 січня 2027 року.» Держстат's explainer: «Із 1 січня 2027 року
+Україна переходить на нову класифікацію…». So 2025–2026 is a preparation window;
+**ДК 009:2010 (КВЕД) stays the operative classifier until 2027-01-01.** The
+brief's "From 2025, Ukraine uses NACE 2.1-UA" (`product-brief.md:75`) is wrong.
+Transition is governed by a separate Держстат order, No. 244 of 25 Dec 2025.
+
+**(b) The register today holds a legacy КВЕД code, not NACE.** Because NACE
+2.1-UA is not in force until 2027-01-01, a ФОП's ЄДР entry in 2026-07 still
+carries a ДК 009:2010 code. Держстат says conversion will be mostly automatic
+(«Для більшості підприємств зміни відбудуться автоматично…») but that happens at
+the 2027 introduction. **An invoice that prints a NACE 2.1-UA code today would
+not match the entrepreneur's registration** — a real mismatch, not a cosmetic
+one. (That Дія/registrar offer no NACE registration path yet is stated by
+accounting sources; treat the exact citation as UNVERIFIED, the conclusion as
+safe.)
+
+**(c) Printing the code on an invoice is an invention — FR-NACE-06 does not
+survive.** Three grounds: (1) the classification itself disclaims legal effect —
+PDF p.142–150: «код виду економічної діяльності не створює прав чи обов'язків для
+суб'єктів» and, in contracts/acts, «може розглядатися лише як припущення, а не
+доказ»; (2) a рахунок-фактура has no statutory activity-code requisite (art. 9
+Law on Accounting requisites, per Мінфін letters — the code is not among them);
+(3) `docs/invoice-template.html` has **no** NACE/code placeholder and no code
+column in `{{SERVICE_ROWS}}`, and the template is frozen by `TC-STACK-03` /
+`BC-BRAND-01` / `BC-LEGAL-01`. Recommendation: **drop FR-NACE-06** (or demote it
+to an optional, off-by-default UI note). The NACE code stays a catalog-internal
+key that selects the bilingual service text; it does not print on the document.
+This is the input to ticket **`09` (document immutability and NACE display)**.
+
+**(d) One class code can legitimately carry many invoice-line texts.** A NACE
+class is a broad grouping of similar activities (PDF p.111–114), so 74.12
+"Діяльність із графічного та візуального дизайну" spans logos, brand identity,
+brand book, 3D visualization points, etc. The two seed rows keyed on 74.12 are
+correct in intent, but they prove the class code is **not a unique key**.
+`FR-NACE-01` should read "each entry *carries* a class code", not "entries are
+*keyed by* class code": a catalog entry needs its own id, with the NACE class
+code as a non-unique attribute. Modelling guidance for ticket **`08`**.

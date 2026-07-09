@@ -7,6 +7,11 @@ context: |
 
   Authoritative spec: openspec/specs/<capability>/spec.md (validate with
   `openspec validate --strict`). Decisions tracker: .scratch/mvp-spec-coherence/map.md.
+  Capability order and gates: docs/capability.md (human) and
+  openspec/capability-map.yaml (check with
+  `npm run capability:check -- --capability <id>` before starting work).
+  Session handoff: docs/current-state.md — read at session start; update when
+  pausing or ending work (active capability, blockers, next up).
 
   MVP domain (settled):
   - Form input with live HTML preview; chat/LLM input is Future (not MVP).
@@ -27,13 +32,17 @@ context: |
   - Pure domain modules in src/lib/ (framework-free where possible)
 
   Key paths:
+  - docs/current-state.md — agent session handoff (read first; update on pause/end)
   - src/app/(dashboard)/ — app shell (dashboard, invoices, clients, settings)
   - src/types/ — domain types
   - src/components/ui/ — shadcn; src/components/invoices/ — domain UI
   - docs/invoice-template.html — document layout source of truth
+  - docs/capability.md — implementation order and dependencies (read first)
+  - docs/capabilities/ — expanded scope per capability
   - docs/requirements.md — numbered FR traceability (IDs preserved in specs)
   - CONTEXT.md — domain glossary
   - Design.md — WEG3D Fin UI rules
+  - .agents/skills/weg3d-fin-design/SKILL.md — WEG3D Fin UI workflow (invoke for UI; 🎨 banner on activation)
   - docs/ARCHITECTURE.md — runtime architecture (browser-first MVP)
   - docs/adr/0002-browser-first-mvp.md — supersedes ADR-0001
 
@@ -47,11 +56,14 @@ rules:
   design:
     - Follow docs/ARCHITECTURE.md (browser storage + stateless PDF render)
     - UI changes MUST comply with Design.md / AGENTS.md design-system rules (no raw hex)
+    - Invoke weg3d-fin-design skill for UI work; show its 🎨 session banner on activation
     - Prefer minimal diffs; no Server Actions or database layers unless spec changes
   tasks:
     - Break work into independently verifiable slices (max ~2 hours each)
     - Include verification per task (typecheck, lint, manual check, or test)
     - Prefer minimal diffs; do not refactor unrelated code
+    - Before starting a capability, run `npm run capability:check -- --capability <id>`; if blocked, finish dependencies first and set their status to shipped in capability-map.yaml
+    - When pausing or finishing a slice, update docs/current-state.md (completed work, stopped at, blockers, next up)
   specs:
     - Use domain terms from CONTEXT.md consistently
     - "Requirements use SHALL/MUST; scenarios use Given/When/Then (#### Scenario:)"
