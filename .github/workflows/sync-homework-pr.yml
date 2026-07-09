@@ -11,7 +11,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 concurrency:
   group: sync-homework-pr
@@ -39,12 +38,6 @@ jobs:
           git merge origin/main --no-edit -m "chore: sync main into fwdays-submission [auto]"
           git push origin fwdays-submission
 
-      - name: Update mentor draft PR description
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [ -f .github/HOMEWORK_SUBMISSION.md ]; then
-            gh pr edit 50 \
-              --repo koldovsky/2026-fwdays-agentic-greenfield-task \
-              --body-file .github/HOMEWORK_SUBMISSION.md
-          fi
+      # PR body lives in .github/HOMEWORK_SUBMISSION.md (English).
+      # GITHUB_TOKEN cannot edit PRs on the mentor repo; update the draft body
+      # locally when needed: gh pr edit 50 --repo koldovsky/2026-fwdays-agentic-greenfield-task --body-file .github/HOMEWORK_SUBMISSION.md
