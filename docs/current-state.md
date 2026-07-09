@@ -9,7 +9,7 @@ Last updated: 2026-07-10 (UTC)
 
 | Field | Value |
 | --- | --- |
-| **Branch** | `wayfinder/resolve-01-04` (planning/docs; merge to `main` to sync homework) |
+| **Branch** | `main` (synced with `wayfinder/resolve-01-04` at `b686caa`) |
 | **Active capability** | — (planning complete; implementation not started) |
 | **Active OpenSpec change** | — |
 | **Slice / gate** | S0 — `shell` in_progress |
@@ -70,7 +70,7 @@ Specs pass `openspec validate --strict` but may still be wrong per map.md.
 
 ## Next up (priority order)
 
-1. **Merge** `wayfinder/resolve-01-04` → `main` → push (triggers homework sync CI)
+1. ~~**Merge** `wayfinder/resolve-01-04` → `main`~~ done (`b686caa` pushed; homework CI sync pending)
 2. **Ship S0** `shell` — finish FR-SHELL-02, mark `shipped` in capability-map.yaml
 3. **Parallel S1** — `/opsx:propose add-nace-catalog` and/or `add-invoice-calc`
 4. Close wayfinder **06** and **07** before implementing invoice-calc
@@ -97,4 +97,4 @@ Append-only (newest last).
 | 2026-07-10 | Agent | Split requirements by capability | `docs/requirements.md` restructured |
 | 2026-07-10 | Agent | `docs/capability.md` + `docs/capabilities/` | Order/deps vs expanded scope |
 | 2026-07-10 | Agent | Improved tables in capability.md | Per-slice narrow tables |
-| 2026-07-10 | Agent | Enriched current-state + repo sync | This update; merge to main pending |
+| 2026-07-10 | Agent | Merged to `main`, pushed origin | `main` @ `b686caa`; CI syncs `fwdays-submission` |
