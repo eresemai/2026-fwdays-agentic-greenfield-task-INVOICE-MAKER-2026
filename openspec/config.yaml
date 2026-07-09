@@ -9,6 +9,8 @@ context: |
   `openspec validate --strict`). Decisions tracker: .scratch/mvp-spec-coherence/map.md.
   Capability order and gates: openspec/capability-map.yaml (check with
   `npm run capability:check -- --capability <id>` before starting work).
+  Session handoff: docs/current-state.md — read at session start; update when
+  pausing or ending work (active capability, blockers, next up).
 
   MVP domain (settled):
   - Form input with live HTML preview; chat/LLM input is Future (not MVP).
@@ -29,6 +31,7 @@ context: |
   - Pure domain modules in src/lib/ (framework-free where possible)
 
   Key paths:
+  - docs/current-state.md — agent session handoff (read first; update on pause/end)
   - src/app/(dashboard)/ — app shell (dashboard, invoices, clients, settings)
   - src/types/ — domain types
   - src/components/ui/ — shadcn; src/components/invoices/ — domain UI
@@ -55,6 +58,7 @@ rules:
     - Include verification per task (typecheck, lint, manual check, or test)
     - Prefer minimal diffs; do not refactor unrelated code
     - Before starting a capability, run `npm run capability:check -- --capability <id>`; if blocked, finish dependencies first and set their status to shipped in capability-map.yaml
+    - When pausing or finishing a slice, update docs/current-state.md (completed work, stopped at, blockers, next up)
   specs:
     - Use domain terms from CONTEXT.md consistently
     - "Requirements use SHALL/MUST; scenarios use Given/When/Then (#### Scenario:)"

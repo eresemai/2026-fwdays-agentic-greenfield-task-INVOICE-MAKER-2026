@@ -12,6 +12,7 @@ requirement has a stable ID and **exactly one owning capability**.
 (`npm run capability:check`).
 
 Refer to [docs/product-brief.md](product-brief.md) for narrative context.
+Refer to [docs/current-state.md](current-state.md) for agent session handoff (last work, blockers, next up).
 Refer to [docs/research.md](research.md) for original discovery notes (Ukrainian, not translated).
 Refer to [docs/ARCHITECTURE.md](ARCHITECTURE.md) and [ADR-0002](adr/0002-browser-first-mvp.md) for MVP architecture.
 NACE codes per [docs/191_2025.pdf](191_2025.pdf) (NACE 2.1-UA, State Statistics Service order No. 191).
