@@ -4,9 +4,7 @@
 
 **Invoice Maker 2026** — це веб-додаток для швидкого створення **двомовних (українська + англійська) інвойсів** для українських ФОПів і фрілансерів, які виставляють рахунки іноземним клієнтам у **USD** або **EUR**.
 
-Проєкт розробляється в рамках інтенсиву [**Agentic Engineering — Greenfield**](https://fwdays.com/en/event/agentic-engineering-greenfield-course) (ментор — [Вʼячеслав Колдовський](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/)). Ми **крок за кроком** повторюємо інженерний підхід з презентації курсу — від ідеї та специфікацій до вертикального слайсу з детермінованою верифікацією.
-
-Ключовий слайд нашого поточного етапу: **[Слайд 47 — «Один слайс: від спеки до зеленого»](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/47)**.
+Розробка ведеться за підходом **Agentic Engineering** і **Spec-Driven Development**: спочатку — перевірювані вимоги та специфікації, потім — вертикальні зрізи з детермінованими гейтами якості. Поточний фокус — перший vertical slice: від структурованого вводу до HTML-превʼю інвойсу.
 
 ---
 
@@ -115,24 +113,21 @@ flowchart LR
 
 ## Процес розробки (Agentic Engineering)
 
-Ми слідуємо методології курсу [**Agentic Engineering — Greenfield**](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/). Це не «vibe coding», а **оркестрація агентів** навколо перевірюваних специфікацій.
+Проєкт використовує **Agentic Engineering** — оркестрацію AI-агентів навколо перевірюваних специфікацій замість нетвореної генерації коду. Методологічні орієнтири: [Agentic Engineering — Greenfield](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/) (Вʼячеслав Колдовський).
 
-### Наш шлях по слайдах курсу
+### Етапи інженерного процесу
 
-| Слайд | Тема | Що зроблено в проєкті |
+| Етап | Зміст | Статус у проєкті |
 | --- | --- | --- |
-| [43](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/43) | Інженерний підхід крок за кроком | Обрано greenfield, без legacy-боргу |
-| [44](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/44) | Середовище: репо + Next.js + skill | `create-next-app`, `AGENTS.md`, Vercel React best practices |
-| [45](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/45) | Контекст: вимоги, дизайн, специфікації | `docs/`, `Design.md`, `openspec/` |
-| [46](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/46) | Готові requirements.md та product-brief.md | ✅ `docs/requirements.md`, `docs/product-brief.md` |
-| **[47](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/47)** | **Один слайс: від спеки до зеленого** | **🎯 Поточний фокус — перший vertical slice** |
-| [48](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/48) | Вручну → автоматично | Спочатку ручний цикл, потім автоматизація гейтів |
-| [52](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/52) | Гейти G0–G8 | Детерміновані команди з кодом виходу |
-| [54](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/54) | OpenSpec | Намір як перевірюваний контракт |
+| **Foundation** | Greenfield-репозиторій, Next.js, agent rules | ✅ |
+| **Контекст** | Вимоги, дизайн-система, OpenSpec | ✅ |
+| **Vertical slice** | spec → test → impl → gates → review | 🎯 поточний |
+| **Автоматизація** | Hooks, CI, traceability matrix | заплановано |
+| **QA & release** | E2E, UAT, демо-сценарії | заплановано |
 
-### Слайд 47 — ядро нашого підходу
+### Vertical slice (G4)
 
-На [слайді 47](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/47) описано **Slice Cycle (G4)** — перехід від специфікації до «зеленого» стану:
+Центральний елемент процесу — **Slice Cycle (G4)**: перехід від специфікації до верифікованого «зеленого» стану.
 
 ```mermaid
 flowchart TD
@@ -150,7 +145,7 @@ flowchart TD
 
 **Правило maker ≠ checker:** той, хто імплементує слайс, **не ревʼюить** власну роботу. Тести пишуться **до** коду, зі специфікації.
 
-### Три вкладені цикли (курс, слайд 49)
+### Три вкладені цикли
 
 ```mermaid
 flowchart TB
@@ -187,9 +182,9 @@ flowchart TB
 | **G3** | План зміни + людський чекпойнт | `openspec/changes/<name>/` |
 | **G4** | **Slice cycle: spec → red → green → gates** | **Перший слайс: nace + calc + template** |
 | **G5** | Traceability: FR → spec → test → proof | Матриця в `docs/requirements.md` |
-| **G6** | QA verify (Playwright, візуальні перевірки) | Планується для demo |
+| **G6** | QA verify (Playwright, візуальні перевірки) | Планується для release |
 | **G7** | Adversarial review | Окремий checker-агент |
-| **G8** | UAT triage + регресійні тести | Курсова демо-перевірка |
+| **G8** | UAT triage + регресійні тести | Приймальне тестування |
 
 ### Ланцюг трасування (FR → коміт)
 
@@ -332,7 +327,7 @@ stateDiagram-v2
 
 ## MVP: перший вертикальний слайс
 
-Рекомендований **перший vertical slice** (курс, слайд 46; `docs/requirements.md`):
+Рекомендований **перший vertical slice** (`docs/requirements.md`):
 
 > `nace-catalog` + `invoice-calc` + `template-render` → один зелений шлях від структурованого вводу до HTML-превʼю **без чату**.
 
@@ -392,7 +387,7 @@ sequenceDiagram
 | --- | --- | --- |
 | **Валідація** | [Zod](https://zod.dev) | MVP — спільні схеми форма + lib |
 | **Тести** | [Vitest](https://vitest.dev) | MVP — `lib/` (calc, NACE, template) |
-| **E2E / QA** | Playwright | G6 — курсова демо-перевірка |
+| **E2E / QA** | Playwright | G6 — smoke та візуальні перевірки |
 | **ORM** | [Drizzle](https://orm.drizzle.team) | Post-MVP |
 | **Backend** | [Supabase](https://supabase.com) (Postgres + Auth) | Post-MVP |
 | **PDF** | Browser print / `@react-pdf/renderer` | MVP: browser; post-MVP: server |
@@ -411,7 +406,7 @@ sequenceDiagram
 | **Agent Skills** | `openspec-*`, `vercel-react-best-practices` |
 | **OpenSpec CLI** | `@fission-ai/openspec` — spec-driven workflow |
 
-### Процеси якості (курс + проєкт)
+### Процеси якості
 
 | Процес | Опис |
 | --- | --- |
@@ -483,8 +478,6 @@ sequenceDiagram
 | [`Design.md`](Design.md) | WEG3D Fin — токени, типографіка, компоненти |
 | [`CONTEXT.md`](CONTEXT.md) | Глосарій домену |
 | [`openspec/config.yaml`](openspec/config.yaml) | Контекст для OpenSpec-агентів |
-| [Курс: Agentic Engineering](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/) | Методологія ментора |
-| [Слайд 47: один слайс](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/47) | Slice cycle — наш поточний етап |
 | [`docs/README-uk.md`](docs/README-uk.md) | Повна українська документація (дубль README) |
 
 ---
@@ -563,8 +556,8 @@ gantt
   section Slice 2
     export PDF/HTML                   :s4, 2026-08-01, 2026-08-10
     browser storage + directories     :s5, 2026-08-05, 2026-08-15
-  section Course demo
-    Demo video 1-2 min (BC-DEMO-01)   :demo, 2026-08-15, 2026-08-25
+  section Release
+    Demo scenario (BC-DEMO-01)          :demo, 2026-08-15, 2026-08-25
 
   section Post-MVP
     Supabase + Auth + RLS             :p1, 2026-09-01, 2026-10-01
@@ -583,18 +576,6 @@ gantt
 
 ---
 
-## Курс і менторство
-
-| | |
-| --- | --- |
-| **Курс** | [Agentic Engineering — Greenfield](https://fwdays.com/en/event/agentic-engineering-greenfield-course) |
-| **Академія** | [Fwdays Academy](https://fwdays.com) |
-| **Ментор** | Вʼячеслав Колдовський — Competence Manager, SoftServe |
-| **Презентація** | [Slidev deck](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/) |
-| **Наш етап** | [Слайд 47 — від спеки до зеленого](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/#/47) |
-
----
-
 ## Ліцензія
 
-Приватний навчальний проєкт. All rights reserved.
+All rights reserved.
