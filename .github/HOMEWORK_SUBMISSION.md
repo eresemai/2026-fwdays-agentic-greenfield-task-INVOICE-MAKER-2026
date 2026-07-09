@@ -1,5 +1,6 @@
 <!-- Draft body for fwdays homework PR #50 (mentor repo). -->
-<!-- Update "Video demo" before marking the PR ready for review. -->
+<!-- Source of truth: edit this file, then run: -->
+<!-- gh pr edit 50 --repo koldovsky/2026-fwdays-agentic-greenfield-task --body-file .github/HOMEWORK_SUBMISSION.md -->
 
 ## Author
 
@@ -9,15 +10,34 @@
 
 **Invoice Maker 2026** — a web service for quickly creating **bilingual (Ukrainian + English) invoices** for Ukrainian sole entrepreneurs (FOP) who bill foreign clients in **USD** or **EUR**.
 
-The user fills a form → the system picks a service description by **NACE 2.1-UA** code → calculates amounts and dates → generates HTML/PDF from `docs/invoice-template.html`. MVP data is stored in the browser (browser-first architecture).
+**Flow (target MVP):** form input → NACE 2.1-UA service description → invoice calculations → bilingual HTML/PDF from `docs/invoice-template.html` → user shares the file manually. Data lives in the browser (browser-first); PDF rendering via a stateless Route Handler (ADR-0002).
 
 **Stack:** Next.js 16, React 19, TypeScript (strict), Tailwind v4, shadcn/ui, OpenSpec (SDD).
 
 **Repository:** https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026
 
+**Draft PR branch:** `fwdays-submission` (auto-synced from `main` on every push via GitHub Actions).
+
 ## Video demo (1–2 min)
 
 Video: _to be added after recording_
+
+## Current progress (2026-07-10)
+
+| Area | Status |
+| --- | --- |
+| **App scaffold** | ✅ Next.js shell, dashboard routes, WEG3D Fin design system |
+| **Health API** | ✅ `GET /api/health` (`FR-SHELL-03`) |
+| **OpenSpec specs** | ✅ 11 capabilities in `openspec/specs/` |
+| **Capability roadmap** | ✅ `openspec/capability-map.yaml`, `docs/capability.md`, `docs/capabilities/` |
+| **Gate tooling** | ✅ `npm run capability:check` / `capability:list` |
+| **Agent handoff** | ✅ `docs/current-state.md` (session resume between agents) |
+| **Wayfinder planning** | ✅ Tickets 01–04 resolved; migration audit (ticket 15 open) |
+| **Active slice** | 🔄 **S0 `shell`** — in_progress |
+| **Domain implementation** | ⏳ S1 (`nace-catalog`, `invoice-calc`) not started |
+| **End-to-end invoice flow** | ⏳ Demo milestone M4 (S4: form → live HTML preview) |
+
+**Recent commits (high level):** capability map + ordered requirements split, per-capability docs, WEG3D Fin agent skill, wayfinder spec-coherence resolution, CI auto-sync to this PR.
 
 ## Agentic Engineering practices applied
 
@@ -27,98 +47,99 @@ Honest status for each course practice. Open **TODO** items will be completed be
 
 ### 1. Context engineering — ✅ applied
 
-**Static context** (always in the repo; the agent reads before work):
+**Static context:**
 
 | Artifact | Purpose |
 | --- | --- |
-| `AGENTS.md` | Agent constitution: Next.js 16 rules, WEG3D Fin design system, OpenSpec workflow |
+| `AGENTS.md` | Agent constitution: Next.js 16, WEG3D Fin, OpenSpec, session handoff rules |
 | `CONTEXT.md` | Domain glossary (Invoice, Client, Snapshot, NACE, statuses) |
-| `docs/requirements.md` | 40+ numbered FR/NFR with traceability |
-| `Design.md` | WEG3D Fin UI rules |
+| `docs/requirements.md` | FR/NFR traceability index (split by capability) |
+| `docs/capability.md` + `docs/capabilities/` | Slice order, dependencies, expanded scope per capability |
+| `docs/current-state.md` | **Agent handoff** — backlog, blockers, next steps (updated each session) |
+| `Design.md` + `.agents/skills/weg3d-fin-design/` | Design system rules + dedicated agent skill |
 | `docs/ARCHITECTURE.md`, `docs/adr/0002-browser-first-mvp.md` | Architecture and decisions |
-| `openspec/specs/<capability>/spec.md` | 11 capability specs (authoritative behavior) |
+| `openspec/specs/<capability>/spec.md` | 11 authoritative capability specs |
+| `.scratch/mvp-spec-coherence/map.md` | Cross-session decisions and wayfinder tickets |
 
-**Dynamic context** (injected per task):
+**Dynamic context:**
 
 | Artifact | Purpose |
 | --- | --- |
-| `openspec/config.yaml` | Project context for OpenSpec CLI (domain, stack, paths, verification gates) |
-| `/opsx:*` slash commands | Cursor / Claude / Windsurf — propose → apply → sync → archive |
-| `.scratch/mvp-spec-coherence/map.md` | Cross-session decisions tracker |
+| `openspec/config.yaml` | Injected project context for OpenSpec CLI |
+| `/opsx:*` slash commands | Cursor, Claude Code, Codex, Copilot, Pi, Windsurf |
+| `openspec/capability-map.yaml` | Gate status (`not_started` / `in_progress` / `shipped`) |
 
-**Human:** product vision, domain decisions (NACE 2.1-UA, browser-first, snapshot model).  
-**Agent:** spec authoring, UI scaffold, refactors per `AGENTS.md`.
+**Human:** product vision, domain decisions (NACE 2.1-UA, browser-first, snapshot model), slice prioritization.  
+**Agent:** spec authoring, capability docs, scaffold UI, refactors per `AGENTS.md`.
 
 ---
 
-### 2. Specs first (SDD) — ✅ applied
+### 2. Specs first (SDD) — ✅ applied (planning phase)
 
-- **OpenSpec** living specs in `openspec/specs/` (shell, invoice-calc, nace-catalog, document-render, export-share, …).
+- **OpenSpec** living specs for all 11 MVP capabilities.
+- **Capability map** with slice order S0→S6 and dependency gates (`npm run capability:check`).
 - Workflow: `/opsx:propose` → design + tasks + delta specs → `/opsx:apply` → `/opsx:sync` → `/opsx:archive`.
-- Traceability chain: `FR-*` (requirements) → OpenSpec scenario → code in `src/lib/`.
-- `openspec validate --strict` as part of verification gates.
+- Traceability: `FR-*` → OpenSpec scenario → `src/lib/` (implementation starting at S1).
+- `openspec validate --strict` passes structurally; wayfinder ticket **15** tracks content audit of migrated specs.
 
 **TODO before final submission:**
 
-- [ ] Complete the first vertical slice (G4) through a full OpenSpec change (`openspec/changes/` → apply → sync → archive).
-- [ ] Ensure every shipped feature has a matching scenario in spec, not only in README.
+- [ ] Ship **S0 `shell`**, then **S1** domain core through full OpenSpec changes.
+- [ ] Reach demo milestone **M4** (form → live HTML preview).
+- [ ] Close wayfinder tickets **06** (money model) and **07** (invoice number) before `invoice-calc`.
 
 ---
 
-### 3. Verification — 🔄 partial (needs strengthening)
+### 3. Verification — 🔄 partial
 
 **Done:**
 
-- Deterministic gates in `package.json`: `npm run typecheck`, `npm run lint`, `npm run build`.
+- Gates: `npm run typecheck`, `npm run lint`, `npm run build`.
+- **Capability gates:** `npm run capability:check -- --capability <id>`.
 - `GET /api/health` contract in `openspec/specs/shell/spec.md`.
-- **CodeRabbit** enabled on the fork; reviews the homework PR (verified).
-- ADRs and `.scratch/` issues document acceptance criteria.
-
-**Not done yet (important for the course):**
-
-- [ ] **Vitest** — referenced in `docs/requirements.md` (`TC-STACK-06`) and README, but **not installed** yet (`package.json` has no `vitest`).
-- [ ] **Test-first for `src/lib/`** — red test from spec → green implementation (calc, NACE matcher, template vars).
-- [ ] **`openspec validate --strict`** — add to CI or a pre-push hook.
-- [ ] **Evals / smoke** — minimal flow: fill form → preview → PDF (manual checklist or Playwright).
-
----
-
-### 4. Maker ≠ checker — 🔄 partial (needs formalization)
-
-**Done:**
-
-- Rule documented in README and engineering pipeline (G7 adversarial review).
-- Cursor subagents: `code-reviewer`, `bugbot`, `ultracite-reviewer`.
-- CodeRabbit as external checker on the PR.
+- **CodeRabbit** enabled on the fork; reviews this PR (verified).
+- Wayfinder tickets document acceptance criteria and spec conflicts.
+- **CI:** `.github/workflows/sync-homework-pr.yml` keeps this draft PR in sync with `main`.
 
 **Not done yet:**
 
-- [ ] **Systematic checker pass** after each slice: maker (Composer) implements → separate agent reviews the diff (different chat).
-- [ ] **PR / change log note** — short entry: “reviewed by checker agent, findings: …”.
-- [ ] Before final submission: address CodeRabbit feedback and iterate.
+- [ ] **Vitest** + test-first for `src/lib/` (`TC-STACK-06`).
+- [ ] `openspec validate --strict` in CI or pre-push hook.
+- [ ] Smoke / eval: form → preview → PDF.
+
+---
+
+### 4. Maker ≠ checker — 🔄 partial
+
+**Done:**
+
+- Rule in README and engineering pipeline (G7).
+- Cursor subagents: `code-reviewer`, `bugbot`, `ultracite-reviewer`.
+- **CodeRabbit** as external checker on this PR.
+- Wayfinder sessions used separate planning agents (Claude Opus) vs implementation agents (Cursor).
+
+**TODO:**
+
+- [ ] Systematic checker pass after each shipped slice (separate agent / chat).
+- [ ] Document checker findings in PR or change log.
+- [ ] Address CodeRabbit feedback before **Ready for review**.
 
 ---
 
 ### 5. Loop engineering — ❌ not applied yet
 
-Work is mostly **manual sessions** and `/opsx:*` slash commands, not an autonomous loop until tasks are green.
+Work is still **session-based** with `/opsx:*` and handoff via `docs/current-state.md`, not a fully autonomous loop.
 
-**TODO before final submission:**
+**TODO:**
 
-- [ ] Run **Cursor loop** (`/loop` or loop skill) for one vertical slice: OpenSpec tasks → implement → verify → repeat.
-- [ ] Or **CI-watcher / babysit** — agent waits on `npm run build` / lint and fixes errors in a loop.
-- [ ] Document one concrete example in the PR: “slice X completed in N loop iterations without micromanagement”.
+- [ ] Run Cursor **loop** for one vertical slice (S1 or S0 completion).
+- [ ] Document: “slice X completed in N loop iterations”.
 
 ---
 
 ### 6. Project Factory — ⏭️ intentionally skipped (optional)
 
-Full factory (`/project-factory:init`) was **not** run — MVP uses a lighter stack: OpenSpec + `AGENTS.md` + slash commands.
-
-**TODO (optional):**
-
-- [ ] Evaluate whether Project Factory adds value on top of the current OpenSpec workflow.
-- [ ] If yes — run `/project-factory:init` and compare artifacts with the current structure.
+Not run. Lighter stack: OpenSpec + `AGENTS.md` + capability gates + slash commands.
 
 ---
 
@@ -126,11 +147,13 @@ Full factory (`/project-factory:init`) was **not** run — MVP uses a lighter st
 
 | Tool | Usage |
 | --- | --- |
-| **Cursor** | Primary Agentic IDE, Composer, `/opsx:*` slash commands |
-| **OpenSpec CLI** | `@fission-ai/openspec` — propose, validate, sync |
-| **CodeRabbit** | Automated homework PR review |
-| **MCP Context7** | Up-to-date Next.js / React docs during implementation |
-| **MCP Vercel** | Deploy and runtime logs (planned for PDF route) |
+| **Cursor** | Primary Agentic IDE, Composer, `/opsx:*`, subagents |
+| **Claude Code** | Wayfinder planning, `.claude/commands` OpenSpec integration |
+| **OpenSpec CLI** | Propose, validate, sync |
+| **CodeRabbit** | Automated PR review on this draft |
+| **GitHub Actions** | Auto-sync `main` → `fwdays-submission` → updates PR diff |
+| **MCP Context7** | Library docs during implementation |
+| **MCP Vercel** | Deploy / logs (planned for PDF route) |
 
 ---
 
@@ -138,9 +161,9 @@ Full factory (`/project-factory:init`) was **not** run — MVP uses a lighter st
 
 | Serhii Rozum (human) | AI agent |
 | --- | --- |
-| Product, MVP priorities, domain (NACE, FOP, bilingual docs) | Code generation from specs |
-| Architecture (browser-first, ADR-0002) | UI components, boilerplate, refactors |
-| Final acceptance, video recording | Best-practice research, docs/spec fill-in |
+| Product, MVP priorities, domain (NACE, FOP, bilingual docs) | Code and docs generation from specs |
+| Architecture (browser-first, ADR-0002), slice order | UI scaffold, capability docs, refactors |
+| Final acceptance, video recording | Wayfinder analysis, spec migration, handoff updates |
 | Direction and judgment | Iteration within given context |
 
 ## (Optional) Code link
@@ -154,7 +177,7 @@ https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-20
 - [x] Real name provided (Serhii Rozum)
 - [ ] Video demo link added (1–2 min)
 - [x] Agentic Engineering practices described (with honest TODOs)
-- [ ] Working end-to-end result
+- [ ] Working end-to-end result (target: M4 demo milestone)
 - [ ] Loop engineering — at least one slice through an autonomous loop
 - [ ] Vitest + test-first for `src/lib/`
-- [ ] Maker ≠ checker — documented separate review pass
+- [ ] Maker ≠ checker — documented separate review pass per shipped slice
