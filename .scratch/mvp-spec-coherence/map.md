@@ -25,6 +25,14 @@ and forwards it themselves.
 **Skills every session must consult.** `/grilling` and `/domain-modeling` for
 decisions; `/prototype` for fidelity questions; `/research` for facts.
 
+**The repo moves under you.** Concurrent sessions and the human commit while a
+ticket is being worked. Commit `8d45456` executed most of this map — eleven
+capability specs, `CONTEXT.md`, both ADRs, `src/` — before its decisions existed.
+Re-read a file before asserting anything about it, and treat
+`openspec/specs/` as a **draft under audit** until
+[Six requirements vanished in the migration](issues/15-audit-the-migration.md)
+closes. `openspec validate --strict` will not tell you it is wrong.
+
 **Standing preferences.**
 
 - Plan, don't do. Tickets produce decisions, not features.
@@ -92,6 +100,32 @@ this map.
   a stateless server render is the only option that gives all three, and the repo
   already has a server.
 
+- [What serious invoice makers actually do](issues/02-invoice-maker-best-practices.md)
+  — the number is a unique **sequential counter assigned on issue**, separate
+  from the date, so `FR-CALC-01`'s `DDMM/0YY` collides same-day (→ `07`);
+  authority runs **unit × qty → total**, never `total ÷ qty`, so `FR-CALC-03` is
+  inverted and can print a unit price that does not reconcile with the printed
+  total — and the template shows both columns (→ `06`); money is integer cents,
+  formatted **once for the whole document**, not per language column; sent
+  invoices are immutable, corrected by cancel-and-reissue (→ `16`); and bilingual
+  EN+UA is a **Ukrainian-language legal requirement**, not styling — a paid
+  invoice can stand as the primary document under Law 996-XIV Art. 9.
+
+- [When NACE 2.1-UA took effect](issues/03-nace-effective-date-and-code-display.md)
+  — order No. 191 only **approved** the classifier; its body reads «ввести її в
+  дію з **01 січня 2027 року**». So NACE 2.1-UA is **not yet in force**, today's
+  ФОП register still carries legacy КВЕД codes, and a printed NACE code would not
+  match the registration. `FR-NACE-06` is dropped — the classifier itself says a
+  code «не створює прав чи обов'язків». One class code legitimately carries many
+  line texts, so `FR-NACE-01`'s "keyed by class code" is wrong.
+
+- [Stop `openspec/config.yaml` from lying](issues/04-wire-openspec-into-claude-code.md)
+  — done by a concurrent session (`8d45456`) before it was claimed. Spec format
+  confirmed (`### Requirement:` + `#### Scenario:` with `**WHEN**`/`**THEN**`);
+  stable `FR-*` ids survive in headings; greenfield may seed `specs/` directly,
+  leaving no proposal behind. **`openspec validate --strict` checks structure
+  only** — it passed a `SHALL` that defers to an open ticket, and an "or".
+
 ## Not yet specified
 
 In scope, but not yet sharp enough to state as a question. Graduates into
@@ -112,8 +146,6 @@ tickets as the frontier advances.
   mobile, and what the user actually sees.
 - **Timezone and locale for "today".** The invoice number and both date formats
   depend on which day it is: `Europe/Kyiv`, UTC, or the device's clock.
-- **Edit and duplicate semantics.** `FR-EDIT-01` / `FR-EDIT-02` — what may
-  still be changed once an invoice is `sent`. Sharpens after `07` and `08`.
 - **Test strategy.** `TC-STACK-06` names Vitest, which is not installed. Whether
   the rendered document needs a golden-file snapshot test. Sharpens after `05`.
 - **Zod.** `TC-STACK-05` names it; nothing uses it. Whether form types and
