@@ -19,7 +19,7 @@ in scope, but run through the full engineering loop (specs → slice → verific
 
 ## Who it is for
 
-The primary actor is a **sole proprietor (FOP) / freelancer** who provides
+The primary actor is a **sole entrepreneur (FOP) / freelancer** who provides
 creative services (graphic design, 3D visualization, video editing) to foreign
 clients and invoices in **USD or EUR**. In MVP there is a single supplier
 profile (FOP details and bank accounts); multi-tenancy and payment tracking are
