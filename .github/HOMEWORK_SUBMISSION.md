@@ -1,160 +1,160 @@
-<!-- Draft body for fwdays homework PR. Use: gh pr create --draft --body-file .github/HOMEWORK_SUBMISSION.md -->
-<!-- Update "Відео-демо" before marking PR ready for review. -->
+<!-- Draft body for fwdays homework PR #50 (mentor repo). -->
+<!-- Update "Video demo" before marking the PR ready for review. -->
 
-## Автор
+## Author
 
 **Serhii Rozum**
 
-## Проєкт
+## Project
 
-**Invoice Maker 2026** — веб-сервіс для швидкого створення **двомовних (українська + англійська) інвойсів** для українських ФОПів і фрілансерів, які виставляють рахунки іноземним клієнтам у **USD** або **EUR**.
+**Invoice Maker 2026** — a web service for quickly creating **bilingual (Ukrainian + English) invoices** for Ukrainian sole entrepreneurs (FOP) who bill foreign clients in **USD** or **EUR**.
 
-Користувач заповнює форму → система підбирає опис послуги за **NACE 2.1-UA** → розраховує суми та дати → генерує HTML/PDF з шаблону `docs/invoice-template.html`. Дані MVP зберігаються в браузері (browser-first).
+The user fills a form → the system picks a service description by **NACE 2.1-UA** code → calculates amounts and dates → generates HTML/PDF from `docs/invoice-template.html`. MVP data is stored in the browser (browser-first architecture).
 
-**Стек:** Next.js 16, React 19, TypeScript (strict), Tailwind v4, shadcn/ui, OpenSpec (SDD).
+**Stack:** Next.js 16, React 19, TypeScript (strict), Tailwind v4, shadcn/ui, OpenSpec (SDD).
 
-**Репозиторій:** https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026
+**Repository:** https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026
 
-## Відео-демо (1–2 хв)
+## Video demo (1–2 min)
 
-Video: _буде додано після запису_
+Video: _to be added after recording_
 
-## Які практики Agentic Engineering застосовано
+## Agentic Engineering practices applied
 
-Нижче — чесний статус по кожній практиці з курсу. Де практика ще не доведена до кінця, є **TODO** для завершення до фінальної здачі.
-
----
-
-### 1. Контекст-інженерія — ✅ застосовано
-
-**Статичний контекст** (завжди в репозиторії, агент читає перед роботою):
-
-| Артефакт | Призначення |
-| --- | --- |
-| `AGENTS.md` | Конституція агента: Next.js 16 rules, WEG3D Fin design system, OpenSpec workflow |
-| `CONTEXT.md` | Доменний глосарій (Invoice, Client, Snapshot, NACE, статуси) |
-| `docs/requirements.md` | 40+ нумерованих FR/NFR з трасуванням |
-| `Design.md` | UI-правила WEG3D Fin |
-| `docs/ARCHITECTURE.md`, `docs/adr/0002-browser-first-mvp.md` | Архітектура та рішення |
-| `openspec/specs/<capability>/spec.md` | 11 capability-спек (авторитетна поведінка) |
-
-**Динамічний контекст** (інжектується під задачу):
-
-| Артефакт | Призначення |
-| --- | --- |
-| `openspec/config.yaml` | Project context для OpenSpec CLI (домен, стек, шляхи, verification gates) |
-| Slash-команди `/opsx:*` | Cursor / Claude / Windsurf — propose → apply → sync → archive |
-| `.scratch/mvp-spec-coherence/map.md` | Трекер узгоджених рішень між сесіями |
-
-**Що робив я:** продуктове бачення, доменні рішення (NACE 2.1-UA, browser-first, snapshot-модель).  
-**Що робив агент:** наповнення спек, scaffold UI, рефакторинг за правилами з `AGENTS.md`.
+Honest status for each course practice. Open **TODO** items will be completed before final submission.
 
 ---
 
-### 2. Специфікації наперед (SDD) — ✅ застосовано
+### 1. Context engineering — ✅ applied
 
-- **OpenSpec** з living specs у `openspec/specs/` (shell, invoice-calc, nace-catalog, document-render, export-share, …).
+**Static context** (always in the repo; the agent reads before work):
+
+| Artifact | Purpose |
+| --- | --- |
+| `AGENTS.md` | Agent constitution: Next.js 16 rules, WEG3D Fin design system, OpenSpec workflow |
+| `CONTEXT.md` | Domain glossary (Invoice, Client, Snapshot, NACE, statuses) |
+| `docs/requirements.md` | 40+ numbered FR/NFR with traceability |
+| `Design.md` | WEG3D Fin UI rules |
+| `docs/ARCHITECTURE.md`, `docs/adr/0002-browser-first-mvp.md` | Architecture and decisions |
+| `openspec/specs/<capability>/spec.md` | 11 capability specs (authoritative behavior) |
+
+**Dynamic context** (injected per task):
+
+| Artifact | Purpose |
+| --- | --- |
+| `openspec/config.yaml` | Project context for OpenSpec CLI (domain, stack, paths, verification gates) |
+| `/opsx:*` slash commands | Cursor / Claude / Windsurf — propose → apply → sync → archive |
+| `.scratch/mvp-spec-coherence/map.md` | Cross-session decisions tracker |
+
+**Human:** product vision, domain decisions (NACE 2.1-UA, browser-first, snapshot model).  
+**Agent:** spec authoring, UI scaffold, refactors per `AGENTS.md`.
+
+---
+
+### 2. Specs first (SDD) — ✅ applied
+
+- **OpenSpec** living specs in `openspec/specs/` (shell, invoice-calc, nace-catalog, document-render, export-share, …).
 - Workflow: `/opsx:propose` → design + tasks + delta specs → `/opsx:apply` → `/opsx:sync` → `/opsx:archive`.
-- Ланцюг трасування: `FR-*` (requirements) → OpenSpec scenario → код у `src/lib/`.
-- `openspec validate --strict` — частина verification gates.
+- Traceability chain: `FR-*` (requirements) → OpenSpec scenario → code in `src/lib/`.
+- `openspec validate --strict` as part of verification gates.
 
-**TODO до здачі:**
+**TODO before final submission:**
 
-- [ ] Завершити перший vertical slice (G4) через повний OpenSpec change (`openspec/changes/` → apply → sync → archive).
-- [ ] Переконатися, що кожна імплементована фіча має відповідний scenario в spec, а не лише в README.
-
----
-
-### 3. Верифікація — 🔄 частково (потрібно посилити)
-
-**Що вже є:**
-
-- Детерміновані гейти в `package.json`: `npm run typecheck`, `npm run lint`, `npm run build`.
-- `GET /api/health` з контрактом у `openspec/specs/shell/spec.md`.
-- **CodeRabbit** — увімкнено на форку, ревʼює PR українською (перевірено).
-- ADR та `.scratch/` issues — документовані критерії прийняття.
-
-**Що ще не зроблено (критично для курсу):**
-
-- [ ] **Vitest** — згаданий у `docs/requirements.md` (`TC-STACK-06`) і README, але **ще не встановлений** (`package.json` без `vitest`).
-- [ ] **Test-first для `src/lib/`** — червоний тест зі спеки → зелена імплементація (calc, NACE matcher, template vars).
-- [ ] **`openspec validate --strict`** — додати в CI або pre-push hook.
-- [ ] **Evals / smoke** — мінімальний сценарій «заповнити форму → превʼю → PDF» (ручний чекліст або Playwright).
+- [ ] Complete the first vertical slice (G4) through a full OpenSpec change (`openspec/changes/` → apply → sync → archive).
+- [ ] Ensure every shipped feature has a matching scenario in spec, not only in README.
 
 ---
 
-### 4. Maker ≠ checker — 🔄 частково (потрібно формалізувати)
+### 3. Verification — 🔄 partial (needs strengthening)
 
-**Що вже є:**
+**Done:**
 
-- Правило зафіксовано в README та engineering pipeline (G7 adversarial review).
-- Cursor subagents: `code-reviewer`, `bugbot`, `ultracite-reviewer` — доступні для окремого проходу.
-- CodeRabbit як зовнішній checker на PR.
+- Deterministic gates in `package.json`: `npm run typecheck`, `npm run lint`, `npm run build`.
+- `GET /api/health` contract in `openspec/specs/shell/spec.md`.
+- **CodeRabbit** enabled on the fork; reviews the homework PR (verified).
+- ADRs and `.scratch/` issues document acceptance criteria.
 
-**Що ще не зроблено:**
+**Not done yet (important for the course):**
 
-- [ ] **Систематичний checker-прохід** після кожного slice: maker (Composer) імплементує → окремий агент ревʼюить diff (не той самий чат).
-- [ ] **Запис у PR / change log** — коротка нотатка «reviewed by checker agent, findings: …».
-- [ ] Для фінального PR: пройти CodeRabbit feedback і поітерувати.
-
----
-
-### 5. Цикли (loop engineering) — ❌ ще не застосовано
-
-Зараз робота йде переважно через **ручні сесії** та slash-команди `/opsx:*`, а не через автономний loop «поки tasks не зелені».
-
-**TODO до здачі:**
-
-- [ ] Підключити **Cursor loop** (`/loop` або skill `loop`) для одного vertical slice: tasks з OpenSpec change → implement → verify → repeat until done.
-- [ ] Або **CI-watcher / babysit** — агент чекає на `npm run build` / lint і сам виправляє помилки в циклі.
-- [ ] Зафіксувати в PR один конкретний приклад: «slice X пройшов через N ітерацій loop без ручного мікроменеджменту».
+- [ ] **Vitest** — referenced in `docs/requirements.md` (`TC-STACK-06`) and README, but **not installed** yet (`package.json` has no `vitest`).
+- [ ] **Test-first for `src/lib/`** — red test from spec → green implementation (calc, NACE matcher, template vars).
+- [ ] **`openspec validate --strict`** — add to CI or a pre-push hook.
+- [ ] **Evals / smoke** — minimal flow: fill form → preview → PDF (manual checklist or Playwright).
 
 ---
 
-### 6. Project Factory — ⏭️ свідомо не застосовано (опційно)
+### 4. Maker ≠ checker — 🔄 partial (needs formalization)
 
-Повна фабрика (`/project-factory:init`) **не запускалась** — для MVP обрано легший стек: OpenSpec + `AGENTS.md` + slash-команди.
+**Done:**
 
-**TODO (опційно, якщо встигнемо):**
+- Rule documented in README and engineering pipeline (G7 adversarial review).
+- Cursor subagents: `code-reviewer`, `bugbot`, `ultracite-reviewer`.
+- CodeRabbit as external checker on the PR.
 
-- [ ] Оцінити, чи дає Project Factory додаткову цінність поверх наявного OpenSpec workflow.
-- [ ] Якщо так — `/project-factory:init` і порівняти артефакти з поточною структурою.
+**Not done yet:**
+
+- [ ] **Systematic checker pass** after each slice: maker (Composer) implements → separate agent reviews the diff (different chat).
+- [ ] **PR / change log note** — short entry: “reviewed by checker agent, findings: …”.
+- [ ] Before final submission: address CodeRabbit feedback and iterate.
 
 ---
 
-### Інструменти та MCP
+### 5. Loop engineering — ❌ not applied yet
 
-| Інструмент | Використання |
+Work is mostly **manual sessions** and `/opsx:*` slash commands, not an autonomous loop until tasks are green.
+
+**TODO before final submission:**
+
+- [ ] Run **Cursor loop** (`/loop` or loop skill) for one vertical slice: OpenSpec tasks → implement → verify → repeat.
+- [ ] Or **CI-watcher / babysit** — agent waits on `npm run build` / lint and fixes errors in a loop.
+- [ ] Document one concrete example in the PR: “slice X completed in N loop iterations without micromanagement”.
+
+---
+
+### 6. Project Factory — ⏭️ intentionally skipped (optional)
+
+Full factory (`/project-factory:init`) was **not** run — MVP uses a lighter stack: OpenSpec + `AGENTS.md` + slash commands.
+
+**TODO (optional):**
+
+- [ ] Evaluate whether Project Factory adds value on top of the current OpenSpec workflow.
+- [ ] If yes — run `/project-factory:init` and compare artifacts with the current structure.
+
+---
+
+### Tools and MCP
+
+| Tool | Usage |
 | --- | --- |
-| **Cursor** | Основний Agentic IDE, Composer, slash-команди `/opsx:*` |
+| **Cursor** | Primary Agentic IDE, Composer, `/opsx:*` slash commands |
 | **OpenSpec CLI** | `@fission-ai/openspec` — propose, validate, sync |
-| **CodeRabbit** | Авто-ревʼю homework PR |
-| **MCP Context7** | Актуальна документація Next.js / React під час імплементації |
-| **MCP Vercel** | Деплой та runtime logs (планується для PDF route) |
+| **CodeRabbit** | Automated homework PR review |
+| **MCP Context7** | Up-to-date Next.js / React docs during implementation |
+| **MCP Vercel** | Deploy and runtime logs (planned for PDF route) |
 
 ---
 
-### Розподіл ролей: я vs агент
+### Roles: human vs agent
 
-| Serhii Rozum (людина) | AI-агент |
+| Serhii Rozum (human) | AI agent |
 | --- | --- |
-| Продукт, пріоритети MVP, домен (NACE, ФОП, двомовність) | Генерація коду за спеками |
-| Архітектурні рішення (browser-first, ADR-0002) | UI-компоненти, boilerplate, рефакторинг |
-| Фінальне прийняття змін, запис відео | Дослідження best practices, наповнення docs/specs |
-| Напрямок і judgment | Ітерації в межах заданого контексту |
+| Product, MVP priorities, domain (NACE, FOP, bilingual docs) | Code generation from specs |
+| Architecture (browser-first, ADR-0002) | UI components, boilerplate, refactors |
+| Final acceptance, video recording | Best-practice research, docs/spec fill-in |
+| Direction and judgment | Iteration within given context |
 
-## (Опційно) Посилання на код
+## (Optional) Code link
 
 https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026
 
 ---
 
-### Чекліст
+### Checklist
 
-- [x] Вказано справжнє імʼя (Serhii Rozum)
-- [ ] Додано посилання на відео-демо (1–2 хв)
-- [x] Описано застосовані практики Agentic Engineering (з чесними TODO)
-- [ ] Результат робочий і доведений до кінця
-- [ ] Loop engineering — хоча б один slice через автономний цикл
-- [ ] Vitest + test-first для `src/lib/`
-- [ ] Maker ≠ checker — задокументований окремий review-прохід
+- [x] Real name provided (Serhii Rozum)
+- [ ] Video demo link added (1–2 min)
+- [x] Agentic Engineering practices described (with honest TODOs)
+- [ ] Working end-to-end result
+- [ ] Loop engineering — at least one slice through an autonomous loop
+- [ ] Vitest + test-first for `src/lib/`
+- [ ] Maker ≠ checker — documented separate review pass
