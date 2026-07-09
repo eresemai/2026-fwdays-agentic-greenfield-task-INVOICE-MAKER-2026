@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-label="Invoice Maker 2026">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070b14"/>
+      <stop offset="55%" stop-color="#0d1528"/>
+      <stop offset="100%" stop-color="#101c33"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="50%" stop-color="#67e8f9"/>
+      <stop offset="100%" stop-color="#ef4136"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ef4136" stop-opacity="0.10"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="320" fill="url(#bg)"/>
+  <circle cx="980" cy="60" r="120" fill="url(#glow)" filter="url(#soft)"/>
+  <circle cx="180" cy="260" r="90" fill="url(#glow)" filter="url(#soft)"/>
+
+  <rect x="48" y="48" width="1104" height="224" rx="18" fill="#0f1729" stroke="#1f2b45" stroke-width="1"/>
+  <rect x="48" y="48" width="1104" height="4" rx="2" fill="url(#accent)"/>
+
+  <text x="88" y="98" fill="#7dd3fc" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" letter-spacing="3">AGENTIC ENGINEERING · GREENFIELD</text>
+
+  <text x="88" y="156" fill="#f8fafc" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="52" font-weight="700" letter-spacing="-1.5">Invoice Maker 2026</text>
+
+  <text x="88" y="196" fill="#94a3b8" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" font-size="20" font-weight="500">INVOICE /  %# · bilingual UA/EN · NACE 2.1-UA · USD/EUR</text>
+
+  <g transform="translate(88, 220)">
+    <rect width="168" height="34" rx="8" fill="#111b37" stroke="#24324f"/>
+    <text x="16" y="22" fill="#e2e8f0" font-family="ui-monospace, monospace" font-size="12">spec ’ test ’ ship</text>
+
+    <rect x="184" width="148" height="34" rx="8" fill="#111b37" stroke="#24324f"/>
+    <text x="200" y="22" fill="#e2e8f0" font-family="ui-monospace, monospace" font-size="12">maker ` checker</text>
+
+    <rect x="348" width="132" height="34" rx="8" fill="#172554" stroke="#22d3ee" stroke-opacity="0.45"/>
+    <text x="364" y="22" fill="#67e8f9" font-family="ui-monospace, monospace" font-size="12">G4 · slice cycle</text>
+  </g>
+
+  <g transform="translate(900, 118)">
+    <rect width="220" height="118" rx="14" fill="#0b1220" stroke="#24324f"/>
+    <text x="20" y="34" fill="#64748b" font-family="ui-monospace, monospace" font-size="11" letter-spacing="2">PIPELINE</text>
+    <text x="20" y="62" fill="#f8fafc" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600">Form ’ NACE ’ HTML</text>
+    <text x="20" y="88" fill="#94a3b8" font-family="ui-sans-serif, system-ui, sans-serif" font-size="14">deterministic · traceable · bilingual</text>
+    <circle cx="190" cy="88" r="18" fill="#ef4136" fill-opacity="0.18" stroke="#ef4136" stroke-opacity="0.55"/>
+    <text x="183" y="93" fill="#ef4136" font-family="ui-sans-serif, sans-serif" font-size="14" font-weight="700">I</text>
+  </g>
+</svg>

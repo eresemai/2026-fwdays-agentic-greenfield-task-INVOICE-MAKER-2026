@@ -1,8 +1,39 @@
-# Invoice Maker 2026
+<div align="center">
 
-> Повна українська документація також у [`docs/README-uk.md`](docs/README-uk.md).
+<img src="docs/assets/readme-banner.svg" alt="Invoice Maker 2026 — Agentic Engineering Greenfield" width="100%" />
 
-**Invoice Maker 2026** — це веб-додаток для швидкого створення **двомовних (українська + англійська) інвойсів** для українських ФОПів і фрілансерів, які виставляють рахунки іноземним клієнтам у **USD** або **EUR**.
+<br />
+
+**Двомовні інвойси для міжнародних розрахунків · NACE 2.1-UA · USD/EUR**
+
+<br />
+
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![OpenSpec](https://img.shields.io/badge/OpenSpec-SDD-22d3ee?style=for-the-badge)](openspec/config.yaml)
+[![WEG3D Fin](https://img.shields.io/badge/Design-WEG3D_Fin-ef4136?style=for-the-badge)](Design.md)
+
+<br />
+
+| | | |
+| :---: | :---: | :---: |
+| **40+** | **6** | **G4** |
+| нумерованих вимог | capabilities | активний gate |
+| `FR` · `NFR` · `TC` · `BC` | vertical slices | slice cycle |
+
+<br />
+
+[Документація UA](docs/README-uk.md) · [Вимоги](docs/requirements.md) · [Архітектура](docs/ARCHITECTURE.md) · [Методологія](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/)
+
+</div>
+
+<br />
+
+> **Generation is solved.** Verification, judgment, and direction are the engineering craft.  
+> У цьому репозиторії код — наслідок **специфікацій**, **тестів** і **детермінованих гейтів**, а не навпаки.
+
+**Invoice Maker 2026** — веб-додаток для швидкого створення **двомовних (українська + англійська) інвойсів** для українських ФОПів і фрілансерів, які виставляють рахунки іноземним клієнтам у **USD** або **EUR**.
 
 Розробка ведеться за підходом **Agentic Engineering** і **Spec-Driven Development**: спочатку — перевірювані вимоги та специфікації, потім — вертикальні зрізи з детермінованими гейтами якості. Поточний фокус — перший vertical slice: від структурованого вводу до HTML-превʼю інвойсу.
 
@@ -10,20 +41,34 @@
 
 ## Зміст
 
+**Огляд**
+
 - [Що це за продукт](#що-це-за-продукт)
 - [Для кого](#для-кого)
 - [Поточний стан](#поточний-стан)
-- [Процес розробки (Agentic Engineering)](#процес-розробки-agentic-engineering)
+
+**Інженерія**
+
+- [Процес розробки](#процес-розробки-agentic-engineering)
 - [Архітектура](#архітектура)
+- [MVP: перший vertical slice](#mvp-перший-вертикальний-слайс)
+
+**Довідник**
+
 - [Доменна модель](#доменна-модель)
-- [MVP: перший вертикальний слайс](#mvp-перший-вертикальний-слайс)
 - [Технологічний стек](#технологічний-стек)
 - [Інструменти та процеси](#інструменти-та-процеси)
-- [Структура репозиторію](#структура-репозиторію)
-- [Документація](#документація)
 - [Швидкий старт](#швидкий-старт)
 - [Верифікація](#верифікація)
+
+<details>
+<summary><strong>Розгорнути повний зміст (структура репо, документація, roadmap)</strong></summary>
+
+- [Структура репозиторію](#структура-репозиторію)
+- [Документація](#документація)
 - [Дорожня карта](#дорожня-карта)
+
+</details>
 
 ---
 
@@ -115,6 +160,34 @@ flowchart LR
 
 Проєкт використовує **Agentic Engineering** — оркестрацію AI-агентів навколо перевірюваних специфікацій замість нетвореної генерації коду. Методологічні орієнтири: [Agentic Engineering — Greenfield](https://koldovsky.github.io/2026-fwdays-agentic-greenfield-slidev/) (Вʼячеслав Колдовський).
 
+### Product pipeline
+
+<table>
+<tr>
+<td align="center" width="30%"><sub>01 · INPUT</sub><br /><strong>Форма + довідники</strong><br /><sub>клієнт · послуга · валюта</sub></td>
+<td align="center" width="5%">→</td>
+<td align="center" width="30%"><sub>02 · ENGINE</sub><br /><strong>NACE + calc + template</strong><br /><sub>детермінований lib/</sub></td>
+<td align="center" width="5%">→</td>
+<td align="center" width="30%"><sub>03 · OUTPUT</sub><br /><strong>HTML / PDF</strong><br /><sub>bilingual · A4 · share</sub></td>
+</tr>
+</table>
+
+### Engineering pipeline
+
+<table>
+<tr>
+<td align="center" width="18%"><sub>SPEC</sub><br /><strong>requirements.md</strong><br /><sub>+ OpenSpec</sub></td>
+<td align="center" width="4%">→</td>
+<td align="center" width="18%"><sub>RED</sub><br /><strong>test-first</strong><br /><sub>Vitest</sub></td>
+<td align="center" width="4%">→</td>
+<td align="center" width="18%"><sub>GREEN</sub><br /><strong>lib/ impl</strong><br /><sub>minimal diff</sub></td>
+<td align="center" width="4%">→</td>
+<td align="center" width="18%"><sub>GATES</sub><br /><strong>typecheck · lint</strong><br /><sub>build</sub></td>
+<td align="center" width="4%">→</td>
+<td align="center" width="18%"><sub>REVIEW</sub><br /><strong>maker ≠ checker</strong><br /><sub>archive</sub></td>
+</tr>
+</table>
+
 ### Етапи інженерного процесу
 
 | Етап | Зміст | Статус у проєкті |
@@ -130,6 +203,7 @@ flowchart LR
 Центральний елемент процесу — **Slice Cycle (G4)**: перехід від специфікації до верифікованого «зеленого» стану.
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#0d1528', 'primaryTextColor': '#e2e8f0', 'primaryBorderColor': '#22d3ee', 'lineColor': '#64748b', 'secondaryColor': '#111b37', 'tertiaryColor': '#172554'}}}%%
 flowchart TD
   SPEC[OpenSpec: capability spec] --> RED[Test-first: червоний тест зі спеки]
   RED --> IMPL[Імплементація lib/ модуля]
@@ -138,9 +212,10 @@ flowchart TD
   GATES --> REVIEW[Review-gate: maker ≠ checker]
   REVIEW --> ARCHIVE[/opsx:sync + /opsx:archive/]
 
-  style SPEC fill:#f1f1f3
-  style GREEN fill:#d4edda
-  style RED fill:#fdecea
+  style SPEC fill:#111b37,stroke:#22d3ee,color:#e2e8f0
+  style GREEN fill:#052e16,stroke:#22c55e,color:#dcfce7
+  style RED fill:#450a0a,stroke:#ef4136,color:#fee2e2
+  style GATES fill:#172554,stroke:#38bdf8,color:#e0f2fe
 ```
 
 **Правило maker ≠ checker:** той, хто імплементує слайс, **не ревʼюить** власну роботу. Тести пишуться **до** коду, зі специфікації.
@@ -170,9 +245,10 @@ flowchart TB
   slice --> edit
 ```
 
-### Гейти G0–G8
+<details>
+<summary><strong>Гейти G0–G8 (детерміновані команди з кодом виходу)</strong></summary>
 
-Детерміновані команди з кодом виходу. «Done» — це не відчуття, а **зелена команда**.
+<br />
 
 | Гейт | Призначення | Наш проєкт |
 | --- | --- | --- |
@@ -185,6 +261,13 @@ flowchart TB
 | **G6** | QA verify (Playwright, візуальні перевірки) | Планується для release |
 | **G7** | Adversarial review | Окремий checker-агент |
 | **G8** | UAT triage + регресійні тести | Приймальне тестування |
+
+</details>
+
+<details>
+<summary><strong>Ланцюг трасування та OpenSpec workflow</strong></summary>
+
+<br />
 
 ### Ланцюг трасування (FR → коміт)
 
@@ -227,6 +310,8 @@ flowchart LR
 | `/opsx:sync` | Злити delta specs у `openspec/specs/` |
 | `/opsx:archive` | Архівувати завершений change |
 
+</details>
+
 ---
 
 ## Архітектура
@@ -254,9 +339,12 @@ flowchart TB
   LIB --> NACE_PDF
 ```
 
-### Enterprise (post-MVP, `docs/ARCHITECTURE.md`)
+<details>
+<summary><strong>Enterprise-архітектура (post-MVP)</strong></summary>
 
-Повна архітектура з multi-tenancy, Supabase, Server Actions — задокументована для фази 2+.
+<br />
+
+Повна архітектура з multi-tenancy, Supabase, Server Actions — задокументована в [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ```mermaid
 flowchart TB
@@ -290,6 +378,8 @@ flowchart TB
   domain --> PDF
   domain --> MAIL
 ```
+
+</details>
 
 ---
 
@@ -429,7 +519,10 @@ sequenceDiagram
 
 ---
 
-## Структура репозиторію
+<details>
+<summary><strong>Структура репозиторію</strong></summary>
+
+<br />
 
 ```
 .
@@ -447,7 +540,8 @@ sequenceDiagram
 │   ├── types/                  # Invoice, Client, LineItem
 │   └── styles/design-tokens.css
 ├── docs/
-│   ├── requirements.md         # 📌 Source of truth — нумеровані вимоги
+│   ├── assets/                 # README banner, handoff assets
+│   ├── requirements.md         # Source of truth — нумеровані вимоги
 │   ├── product-brief.md        # Бізнес-наратив
 │   ├── ARCHITECTURE.md         # Enterprise-архітектура (фаза 2+)
 │   ├── research.md             # Оригінальні нотатки (UA)
@@ -459,9 +553,10 @@ sequenceDiagram
 │   └── changes/                # In-flight changes
 ├── Design.md                   # WEG3D Fin design system
 ├── CONTEXT.md                  # Domain glossary
-├── AGENTS.md                   # Agent rules (Cursor / Claude Code)
-└── .scratch/mvp-spec-coherence/  # Coherence map + decision tickets
+└── AGENTS.md                   # Agent rules (Cursor / Claude Code)
 ```
+
+</details>
 
 ---
 
@@ -537,6 +632,11 @@ npm run build       # typecheck + next build
 
 ## Дорожня карта
 
+<details>
+<summary><strong>Розгорнути Gantt roadmap та out-of-scope</strong></summary>
+
+<br />
+
 ```mermaid
 gantt
   title Invoice Maker 2026 — Roadmap
@@ -573,6 +673,8 @@ gantt
 - Payment tracking, автоматичний lifecycle
 - Повний каталог NACE (651 клас) — лише креативні послуги
 - E-invoicing / інтеграція з податковою
+
+</details>
 
 ---
 
