@@ -9,7 +9,7 @@ Last updated: 2026-07-10 (UTC)
 
 | Field | Value |
 | --- | --- |
-| **Branch** | `main` (synced with `wayfinder/resolve-01-04` at `b686caa`) |
+| **Branch** | `main` @ `a0759b3` |
 | **Active capability** | — (planning complete; implementation not started) |
 | **Active OpenSpec change** | — |
 | **Slice / gate** | S0 — `shell` in_progress |
@@ -81,7 +81,6 @@ Specs pass `openspec validate --strict` but may still be wrong per map.md.
 | --- | --- | --- |
 | `origin` | `main` | Primary; pushes trigger homework sync |
 | `origin` | `fwdays-submission` | Mentor PR #50 (auto-synced from main) |
-| `origin` | `wayfinder/resolve-01-04` | Active planning branch |
 | `upstream` | `main` | Course template (read-only reference) |
 
 After merge to `main`: GitHub Action `sync-homework-pr.yml` merges `main` into `fwdays-submission`.
@@ -98,3 +97,4 @@ Append-only (newest last).
 | 2026-07-10 | Agent | `docs/capability.md` + `docs/capabilities/` | Order/deps vs expanded scope |
 | 2026-07-10 | Agent | Improved tables in capability.md | Per-slice narrow tables |
 | 2026-07-10 | Agent | Merged to `main`, pushed origin | `main` @ `b686caa`; CI syncs `fwdays-submission` |
+| 2026-07-10 | Agent | Deleted `wayfinder/resolve-01-04` | Branch merged; local + remote removed |
