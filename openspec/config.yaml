@@ -2,38 +2,40 @@ schema: spec-driven
 
 # Injected into OpenSpec artifact instructions (propose, design, tasks, delta specs).
 context: |
-  Project: Invoice Maker 2026 — web app for fast bilingual (Ukrainian–English) invoices
-  for freelancers/FOPs billing international clients in USD/EUR.
+  Project: Invoice Maker 2026 — browser-first bilingual (EN + UA) invoice generator
+  for a Ukrainian sole entrepreneur (ФОП) billing foreign clients in USD or EUR.
 
-  Product goals (see docs/product-brief.md, docs/requirements.md):
-  - Chat-like or structured invoice creation from a standardized HTML template
-  - NACE 2.1-UA service descriptions (not legacy KVED)
-  - PDF export, email delivery, payment tracking (planned; not all implemented yet)
+  Authoritative spec: openspec/specs/<capability>/spec.md (validate with
+  `openspec validate --strict`). Decisions tracker: .scratch/mvp-spec-coherence/map.md.
+
+  MVP domain (settled):
+  - Form input with live HTML preview; chat/LLM input is Future (not MVP).
+  - Invoice register, supplier profiles, and client directory live in browser storage only.
+  - No accounts, multi-tenancy, payment recording, email delivery, or hosted invoice URLs.
+  - User receives a PDF file and shares it themselves (Telegram, WhatsApp, email client).
+  - PDF via stateless Route Handler: POST invoice payload → headless Chromium renders
+    docs/invoice-template.html → application/pdf; server retains no data (see ADR-0002).
+  - Stored statuses: draft, sent, paid, cancelled (user-set). overdue is derived at display
+    time (sent + payment deadline passed); never persisted.
+  - Issued invoices store a snapshot of everything printed; directories only prefill forms.
+  - App UI strings: Ukrainian. Project docs: English. Invoice document: bilingual EN + UA.
 
   Tech stack:
   - Next.js 16 App Router, React 19, TypeScript (strict)
   - shadcn/ui + Tailwind CSS v4, WEG3D Fin design system (light theme)
-  - Server Actions for mutations; Route Handlers for webhooks/health
-  - Planned: Supabase (Postgres + Auth), Drizzle ORM, Zod validation
+  - Client-side mutations (localStorage / IndexedDB); GET /api/health; POST /api/pdf (planned)
+  - Pure domain modules in src/lib/ (framework-free where possible)
 
-  Architecture (docs/ARCHITECTURE.md):
-  - src/app/(dashboard)/ — protected shell: dashboard, invoices, clients, settings
-  - src/actions/ — Server Actions (must authenticate inside each action)
-  - src/lib/db/ — database client (scaffolded)
-  - src/types/ — domain types (Invoice, Client, InvoiceStatus, LineItem)
-  - src/components/ui/ — shadcn primitives; src/components/invoices/ — domain UI
-
-  Domain glossary (CONTEXT.md): Organization, Client, Invoice, LineItem, Payment;
-  invoice statuses: draft, sent, paid, overdue, void.
-
-  UI conventions (Design.md, AGENTS.md design-system-rules):
-  - Light theme only unless explicitly requested
-  - No raw hex in components — use semantic tokens or wf-* Tailwind classes
-  - Controls: h-9 (36px), 8px radius; amounts use wf-mono
-  - Invoice statuses: <InvoiceStatusBadge status="…" />
-
-  Agent context files: AGENTS.md (rules), CONTEXT.md (terms), Design.md (UI),
-  docs/ARCHITECTURE.md (structure), docs/requirements.md (numbered FRs).
+  Key paths:
+  - src/app/(dashboard)/ — app shell (dashboard, invoices, clients, settings)
+  - src/types/ — domain types
+  - src/components/ui/ — shadcn; src/components/invoices/ — domain UI
+  - docs/invoice-template.html — document layout source of truth
+  - docs/requirements.md — numbered FR traceability (IDs preserved in specs)
+  - CONTEXT.md — domain glossary
+  - Design.md — WEG3D Fin UI rules
+  - docs/ARCHITECTURE.md — runtime architecture (browser-first MVP)
+  - docs/adr/0002-browser-first-mvp.md — supersedes ADR-0001
 
   Verification: npm run typecheck && npm run lint && npm run build before merge.
 
@@ -41,16 +43,17 @@ rules:
   proposal:
     - Always include Non-goals and Success criteria sections
     - Reference matching FR IDs from docs/requirements.md when applicable
-    - Keep proposals under 600 words unless the change is large
+    - Align with openspec/specs/ and map.md settled decisions; do not reintroduce chat, Supabase, or payments
   design:
-    - Follow layered structure in docs/ARCHITECTURE.md (UI → actions → domain → infra)
-    - Note auth, validation (Zod), and Server Action security for mutations
-    - UI changes must comply with WEG3D Fin (read Design.md; no raw hex)
+    - Follow docs/ARCHITECTURE.md (browser storage + stateless PDF render)
+    - UI changes MUST comply with Design.md / AGENTS.md design-system rules (no raw hex)
+    - Prefer minimal diffs; no Server Actions or database layers unless spec changes
   tasks:
     - Break work into independently verifiable slices (max ~2 hours each)
-    - Include verification step per task (typecheck, lint, manual check, or test)
+    - Include verification per task (typecheck, lint, manual check, or test)
     - Prefer minimal diffs; do not refactor unrelated code
   specs:
     - Use domain terms from CONTEXT.md consistently
-    - "Requirements use SHALL/MUST; scenarios use Given/When/Then"
+    - "Requirements use SHALL/MUST; scenarios use Given/When/Then (#### Scenario:)"
+    - "Preserve stable FR-* IDs in requirement titles where traceability matters"
     - "Delta specs: mark sections ADDED, MODIFIED, or REMOVED explicitly"

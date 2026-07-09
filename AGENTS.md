@@ -39,18 +39,22 @@ Geist Sans and Geist Mono are loaded in `src/app/layout.tsx` via `next/font/goog
 <!-- BEGIN:openspec-rules -->
 # OpenSpec (Spec-Driven Development)
 
-Invoice Maker uses **OpenSpec** for feature planning and living specifications. Config and workflow live under `openspec/`.
+Invoice Maker uses **OpenSpec** for feature planning and living specifications.
+**Read `openspec/specs/<capability>/spec.md` first** for behavior; use this
+file for agent rules and UI conventions.
 
 ## Quick reference
 
 | Concern | Location |
 | --- | --- |
-| OpenSpec config + project context | `openspec/config.yaml` |
-| Current system behavior (source of truth) | `openspec/specs/<capability>/spec.md` |
+| **Authoritative specs (read first)** | `openspec/specs/<capability>/spec.md` |
+| OpenSpec config + injected context | `openspec/config.yaml` |
 | In-flight changes | `openspec/changes/<change-name>/` |
-| Numbered functional requirements | `docs/requirements.md` |
-| Architecture | `docs/ARCHITECTURE.md` |
+| Numbered FR traceability | `docs/requirements.md` |
+| Architecture (browser-first MVP) | `docs/ARCHITECTURE.md` |
+| ADR (current stack) | `docs/adr/0002-browser-first-mvp.md` |
 | Domain glossary | `CONTEXT.md` |
+| Decisions tracker | `.scratch/mvp-spec-coherence/map.md` |
 
 ## Workflow (Cursor)
 

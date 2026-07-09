@@ -2,12 +2,13 @@
 
 Last updated: 2026-07-09
 
-This document is the **single source of truth** for what the product does and
-what constraints govern it. Every requirement has a stable ID. Specs, tests,
-PRs, and recordings reference these IDs to keep traceability intact.
+This document lists **numbered requirements** for course traceability. Every
+requirement has a stable ID. **Authoritative behavior** lives in
+`openspec/specs/<capability>/spec.md` (run `openspec validate --strict`).
 
 Refer to [docs/product-brief.md](product-brief.md) for narrative context.
 Refer to [docs/research.md](research.md) for original discovery notes (Ukrainian, not translated).
+Refer to [docs/ARCHITECTURE.md](ARCHITECTURE.md) and [ADR-0002](adr/0002-browser-first-mvp.md) for MVP architecture.
 NACE codes per [docs/191_2025.pdf](191_2025.pdf) (NACE 2.1-UA, State Statistics Service order No. 191).
 
 ## ID conventions
@@ -31,23 +32,25 @@ Status values: `proposed` · `accepted` · `shipped` · `dropped`.
 | FR-SHELL-02  | Layout adapts at 768 px breakpoint; invoice preview readable on mobile                                   | proposed |
 | FR-SHELL-03  | Health endpoint `GET /api/health` returns `{ status: "ok", service: "invoice-maker" }`                     | shipped  |
 
-### Chat & invoice initiation (capability `invoice-chat`)
+### Form input (capability `form-input`)
 
-| ID          | Description                                                                                              | Status   |
-| ----------- | -------------------------------------------------------------------------------------------------------- | -------- |
-| FR-CHAT-01  | User can start invoice creation via natural-language triggers defined in `docs/research.md` (e.g. `#invoice`) or a UI button | proposed |
-| FR-CHAT-02  | When required fields are missing, system asks targeted follow-up questions (not a generic error)         | proposed |
-| FR-CHAT-03  | System supports interaction styles: detailed (beginners), concise (experienced), technical               | proposed |
-| FR-CHAT-04  | Help command lists available formats and field names (phrases per `docs/research.md`)                    | proposed |
-
-### Data input & parsing (capability `input-parser`)
+> Replaces chat/LLM input (`invoice-chat`, `input-parser`) — deferred to Future.
 
 | ID           | Description                                                                                              | Status   |
 | ------------ | -------------------------------------------------------------------------------------------------------- | -------- |
 | FR-INPUT-01  | Accept **full structured** input (client, address, contacts, currency, service, qty, amount, terms)      | proposed |
 | FR-INPUT-02  | Accept **short format** with keys: `client`, `addr`, `email`, `phone`, `web`, `curr`, `service`, `qty`, `amount`, `prepay`, `pay_days`, `exec_days` | proposed |
-| FR-INPUT-03  | Accept **informal** single-sentence requests and extract entities (client, amount, currency, service type) | proposed |
 | FR-INPUT-04  | Validate email, phone, numeric amounts, currency (USD \| EUR only in MVP), prepayment % (0–100)            | proposed |
+
+### Chat & LLM input (capability `invoice-chat`) — Future
+
+| ID          | Description                                                                                              | Status   |
+| ----------- | -------------------------------------------------------------------------------------------------------- | -------- |
+| FR-CHAT-01  | User can start invoice creation via natural-language triggers or a UI button                             | dropped  |
+| FR-CHAT-02  | When required fields are missing, system asks targeted follow-up questions                                 | dropped  |
+| FR-CHAT-03  | System supports interaction styles: detailed, concise, technical                                           | dropped  |
+| FR-CHAT-04  | Help command lists available formats and field names                                                     | dropped  |
+| FR-INPUT-03 | Accept **informal** single-sentence requests and extract entities                                          | dropped  |
 
 ### NACE 2.1-UA service catalog (capability `nace-catalog`)
 
@@ -102,13 +105,15 @@ Official UA names are quoted from `docs/191_2025.pdf`. Invoice line text is bili
 | FR-TPL-04    | Optional `{{PROJECT_BLOCK}}` rendered when project name provided; omitted otherwise                        | proposed |
 | FR-TPL-05    | Output is self-contained HTML with embedded CSS; A4 print styles preserved                                 | proposed |
 
-### Preview & export (capability `export`)
+### Preview & export (capability `export-share`)
 
 | ID            | Description                                                                                             | Status   |
 | ------------- | ------------------------------------------------------------------------------------------------------- | -------- |
 | FR-EXPORT-01  | User sees HTML preview of generated invoice in browser                                                  | proposed |
 | FR-EXPORT-02  | User can download invoice as `.html` file                                                               | proposed |
 | FR-EXPORT-03  | User can trigger browser print (A4) from preview                                                        | proposed |
+| FR-EXPORT-04  | User can download a PDF rendered by stateless `POST /api/pdf` (byte-identical to preview content)       | proposed |
+| FR-EXPORT-05  | User can share the PDF via download or Web Share API where supported                                    | proposed |
 
 ### Edit & duplicate (capability `invoice-edit`)
 
@@ -124,8 +129,8 @@ Official UA names are quoted from `docs/191_2025.pdf`. Invoice line text is bili
 | NFR-PERF-01  | `npm run build` (typecheck + next build) completes in < 60 s on clean checkout                          | accepted |
 | NFR-PERF-02  | Invoice HTML generation (template fill) < 200 ms for single invoice on server                             | proposed |
 | NFR-A11Y-01  | Chat/form inputs have accessible labels; preview usable with keyboard                                     | proposed |
-| NFR-I18N-01  | App UI strings in English; generated invoice body bilingual EN+UA per template                           | proposed |
-| NFR-SEC-01   | Supplier tax ID and IBAN never hardcoded in client bundle; use env/config                                | proposed |
+| NFR-I18N-01  | App UI strings in Ukrainian; generated invoice body bilingual EN+UA per template                       | accepted |
+| NFR-SEC-01   | Supplier tax ID and IBAN never hardcoded in client bundle; user data in browser storage only            | accepted |
 | NFR-DX-01    | `npm run lint && npm run typecheck && npm run build` all pass on main branch                              | accepted |
 | NFR-OBS-01   | No console errors on happy-path invoice creation in browser                                              | proposed |
 
@@ -140,7 +145,8 @@ Official UA names are quoted from `docs/191_2025.pdf`. Invoice line text is bili
 | TC-STACK-05  | Zod schemas for invoice input validation (shared client + server)                                        | proposed |
 | TC-STACK-06  | Vitest unit tests for `lib/` (calculations, NACE matcher, template vars)                                 | proposed |
 | TC-DEPLOY-01 | Vercel hosting; preview URL per PR                                                                       | proposed |
-| TC-DATA-01   | MVP may use in-memory or local storage for drafts; Supabase+Drizzle deferred post-MVP                    | proposed |
+| TC-DATA-01   | Invoice register, supplier profiles, and client directory in browser storage (localStorage / IndexedDB) | accepted |
+| TC-PDF-01    | PDF generated server-side via headless Chromium from `docs/invoice-template.html`; route stores no data  | proposed |
 
 ## Business / UX constraints
 
@@ -157,10 +163,10 @@ Official UA names are quoted from `docs/191_2025.pdf`. Invoice line text is bili
 
 ## Out of scope (MVP)
 
-- User accounts, organizations, multi-tenant RLS (see `docs/ARCHITECTURE.md` phase 2+)
-- Payment recording and invoice status lifecycle (`sent` / `paid` / `overdue`)
-- PDF generation server-side (HTML + browser print only in MVP)
-- Email delivery to client
+- User accounts, organizations, multi-tenant RLS, Supabase, Drizzle (see ADR-0002)
+- Payment recording as a ledger entity (`paid` is a manual user label only)
+- Email delivery to client or hosted public invoice URLs
+- Chat / LLM natural-language input (`FR-CHAT-*`, `FR-INPUT-03`)
 - Full NACE 2.1-UA taxonomy (651 classes) — MVP seeds creative-services subset only
 - E-invoicing / tax authority integration
 - Mobile native app
@@ -171,10 +177,15 @@ Official UA names are quoted from `docs/191_2025.pdf`. Invoice line text is bili
 | Capability (slice)   | Requirement IDs                          | Next gate |
 | -------------------- | ---------------------------------------- | --------- |
 | `shell`              | FR-SHELL-01..03                          | G4        |
+| `form-input`         | FR-INPUT-01..02, FR-INPUT-04             | G4        |
 | `nace-catalog`       | FR-NACE-01..06, BC-NACE-01               | G4        |
 | `invoice-calc`       | FR-CALC-01..06                           | G4        |
-| `template-render`    | FR-TPL-01..05, BC-LEGAL-01               | G4        |
-| `invoice-chat`       | FR-CHAT-01..04, FR-INPUT-01..04          | G4        |
-| `export`             | FR-EXPORT-01..03                         | G4        |
+| `banking`            | FR-BANK-01..03                           | G4        |
+| `document-render`    | FR-TPL-01..05, BC-LEGAL-01               | G4        |
+| `export-share`       | FR-EXPORT-01..05, TC-PDF-01              | G4        |
+| `invoice-registry`   | (status + snapshot — see openspec spec)  | G4        |
+| `supplier-profile`   | FR-BANK-02 (partial)                     | G4        |
+| `client-directory`   | (see openspec spec)                      | G4        |
+| `invoice-edit`       | FR-EDIT-01..02                           | G4        |
 
-Recommended **first vertical slice** (slide 46): `nace-catalog` + `invoice-calc` + `template-render` → one green path from structured input to HTML preview without chat (chat layered in slice 2).
+Recommended **first vertical slice**: `nace-catalog` + `invoice-calc` + `document-render` + `form-input` → structured input to HTML preview (PDF in slice 2).

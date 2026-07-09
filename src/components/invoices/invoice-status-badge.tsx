@@ -4,11 +4,11 @@ import {
   INVOICE_STATUS_DOT_COLOR,
   INVOICE_STATUS_LABELS,
 } from "@/lib/design-system";
-import type { InvoiceStatus } from "@/types/invoice";
+import type { InvoiceDisplayStatus } from "@/types/invoice";
 import { cn } from "@/lib/utils";
 
 type InvoiceStatusBadgeProps = {
-  status: InvoiceStatus;
+  status: InvoiceDisplayStatus;
   className?: string;
 };
 

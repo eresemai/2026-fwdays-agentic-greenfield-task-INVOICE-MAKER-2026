@@ -1,66 +1,56 @@
 # Invoice Maker — Architecture
 
-Enterprise invoice management app built on Next.js App Router with a layered, domain-driven structure.
+Browser-first bilingual invoice generator on Next.js App Router. The authoritative
+requirements live in `openspec/specs/`; this document describes how the MVP is
+structured at runtime.
 
 ## Goals
 
-- Multi-tenant invoicing for freelancers and small businesses
-- PDF export, email delivery, payment tracking
-- Secure auth, audit trail, and scalable data layer
-- Clear separation between UI, application logic, and infrastructure
+- Generate bilingual (EN + UA) invoices for a Ukrainian ФОП billing in USD or EUR
+- Live HTML preview in the browser; downloadable PDF via a stateless server render
+- Supplier and client directories plus invoice register in browser storage only
+- No accounts, no server-side data at rest, no payment ledger
 
 ## Tech Stack
 
 | Layer | Choice | Rationale |
 | --- | --- | --- |
-| Framework | Next.js 16 (App Router) | RSC, Server Actions, Vercel deployment |
-| Language | TypeScript (strict) | Type safety across domain and API |
-| UI | shadcn/ui + Tailwind CSS v4 | Accessible components, full ownership |
-| Database | Supabase (Postgres) | Auth, RLS, realtime, storage |
-| ORM | Drizzle | Lightweight, serverless-friendly, SQL-first |
-| Validation | Zod | Shared schemas for forms and server actions |
-| PDF | `@react-pdf/renderer` or Puppeteer | Invoice PDF generation |
-| Auth | Supabase Auth (or Clerk) | Managed auth with SSR support |
+| Framework | Next.js 16 (App Router) | RSC shell, Route Handlers for PDF + health |
+| Language | TypeScript (strict) | Type safety across domain and UI |
+| UI | shadcn/ui + Tailwind CSS v4 | Accessible components, WEG3D Fin tokens |
+| Client storage | localStorage / IndexedDB | Invoice register and directories (browser only) |
+| PDF | puppeteer-core + @sparticuz/chromium | Stateless render of `docs/invoice-template.html` |
+| Validation | Zod (planned) | Shared schemas for form input |
+| Hosting | Vercel | Preview deploys; Fluid Compute for PDF route |
 
 ## High-Level Diagram
 
 ```mermaid
 flowchart TB
-  subgraph client [Browser]
+  subgraph browser [Browser]
     UI[React Client Components]
+    Store[(localStorage / IndexedDB)]
+    Preview[HTML Preview]
   end
 
-  subgraph next [Next.js App Router]
-    RSC[Server Components]
-    SA[Server Actions]
-    RH[Route Handlers]
-    Proxy[proxy.ts]
+  subgraph next [Next.js on Vercel]
+    RSC[Server Components — shell only]
+    Health[GET /api/health]
+    PDF[POST /api/pdf — stateless]
   end
 
-  subgraph domain [Domain Layer]
-    INV[Invoice]
-    CLI[Client]
-    PAY[Payment]
-    ORG[Organization]
+  subgraph domain [Domain Layer — src/lib]
+    NACE[nace-catalog]
+    CALC[invoice-calc]
+    RENDER[document-render]
   end
 
-  subgraph infra [Infrastructure]
-    DB[(Postgres / Supabase)]
-    STG[Object Storage]
-    PDF[PDF Service]
-    MAIL[Email Provider]
-  end
-
-  UI --> RSC
-  UI --> SA
-  RSC --> domain
-  SA --> domain
-  RH --> domain
-  Proxy --> SA
-  domain --> DB
-  domain --> STG
-  domain --> PDF
-  domain --> MAIL
+  UI --> Store
+  UI --> Preview
+  UI --> domain
+  UI -->|invoice payload| PDF
+  PDF -->|application/pdf| UI
+  RSC --> UI
 ```
 
 ## Folder Structure
@@ -68,139 +58,95 @@ flowchart TB
 ```
 src/
 ├── app/
-│   ├── (marketing)/          # Public landing, pricing, legal
-│   ├── (auth)/               # Login, register, password reset
-│   ├── (dashboard)/          # Protected app shell
-│   │   ├── layout.tsx
+│   ├── page.tsx                 # Marketing landing
+│   ├── (dashboard)/             # App shell (no auth gate in MVP)
 │   │   ├── dashboard/
 │   │   ├── invoices/
 │   │   ├── clients/
-│   │   └── settings/
-│   └── api/                  # Webhooks, PDF download, health
-├── actions/                  # Server Actions (mutations)
-│   ├── invoices/
-│   └── clients/
+│   │   └── settings/            # Supplier profiles
+│   └── api/
+│       ├── health/route.ts      # Liveness probe
+│       └── pdf/route.ts         # Stateless PDF render (planned)
 ├── components/
-│   ├── ui/                   # shadcn primitives
-│   ├── layout/               # Sidebar, header, nav
-│   └── invoices/             # Feature-specific UI
+│   ├── ui/                      # shadcn primitives
+│   ├── layout/                  # Sidebar, shell
+│   └── invoices/                # Status badges, form, preview
 ├── lib/
-│   ├── db/                   # Drizzle client, schema, queries
-│   ├── auth/                 # Session helpers
-│   ├── validators/           # Zod schemas
-│   ├── pdf/                  # PDF templates & render
-│   └── utils/                # Shared utilities
-├── types/                    # Domain TypeScript types
-└── hooks/                    # Client-only React hooks
+│   ├── nace/                    # NACE catalog (planned)
+│   ├── invoice/                 # Calculations, numbering (planned)
+│   ├── render/                  # Template variable fill (planned)
+│   └── utils.ts
+└── types/                       # Domain TypeScript types
 ```
+
+Removed from the abandoned enterprise scaffold: `src/lib/db/`, `src/actions/`
+(Server Actions for Supabase mutations). See ADR-0002.
 
 ## Domain Model
 
-### Core Entities
+### Core entities (browser-persisted)
 
-- **Organization** — tenant boundary (company profile, tax ID, branding)
-- **Client** — customer receiving invoices
-- **Invoice** — document with status lifecycle: `draft → sent → paid → overdue → void`
-- **LineItem** — quantity, unit price, tax rate per invoice row
-- **Payment** — partial or full payment against an invoice
+- **Supplier profile** — ФОП details and IBANs per currency
+- **Client** — billing contact; prefills invoice form
+- **Invoice record** — snapshot of printed content + stored status + metadata
 
-### Invoice Status Flow
+### Invoice status
 
-```mermaid
-stateDiagram-v2
-  [*] --> draft
-  draft --> sent: send()
-  sent --> paid: recordPayment()
-  sent --> overdue: dueDatePassed()
-  sent --> void: void()
-  overdue --> paid: recordPayment()
-  overdue --> void: void()
-  paid --> [*]
-  void --> [*]
-```
+| Stored | Meaning |
+| --- | --- |
+| `draft` | Being edited |
+| `sent` | User marked as delivered |
+| `paid` | User marked as settled |
+| `cancelled` | User cancelled |
+
+| Display-only | Rule |
+| --- | --- |
+| `overdue` | `sent` and payment deadline &lt; today (derived, not stored) |
 
 ## Layer Responsibilities
 
 ### Presentation (`app/`, `components/`)
 
-- Server Components for data fetching and layout
-- Client Components only when interactivity is required
-- No direct database access from client components
+- Client Components for forms, preview, and browser storage
+- Server Components for static shell layout where interactivity is not needed
+- No database or Server Actions for mutations in MVP
 
-### Application (`actions/`)
+### Domain (`lib/`, `types/`)
 
-- Server Actions orchestrate use cases
-- Validate input with Zod, call domain services, revalidate paths
-- Return typed success/error results
+- Pure functions: invoice numbering, amounts, date formatting, NACE lookup, template fill
+- Framework-free modules testable without Next.js
 
-### Domain (`types/`, `lib/validators/`, business rules in `lib/`)
+### Infrastructure (`app/api/`)
 
-- Pure functions for totals, tax, numbering
-- Invariants: invoice number uniqueness per org, non-negative amounts
+- `GET /api/health` — deployment health
+- `POST /api/pdf` — receives invoice JSON, renders template, returns PDF, **stores nothing**
 
-### Infrastructure (`lib/db/`, `lib/pdf/`, `lib/auth/`)
+## Security & Privacy
 
-- Database adapters, external APIs
-- Swappable behind narrow interfaces
-
-## Routing Conventions
-
-| Route | Purpose |
-| --- | --- |
-| `/` | Marketing landing |
-| `/login`, `/register` | Auth |
-| `/dashboard` | Overview (revenue, overdue) |
-| `/invoices` | Invoice list |
-| `/invoices/new` | Create invoice |
-| `/invoices/[id]` | View / edit invoice |
-| `/clients` | Client CRUD |
-| `/settings` | Org profile, branding, tax |
-
-Route groups `(marketing)`, `(auth)`, `(dashboard)` do not affect URLs.
-
-## Security
-
-- Row Level Security (RLS) in Supabase scoped by `organization_id`
-- Server Actions verify session on every mutation
-- `proxy.ts` protects `(dashboard)/*` routes
-- Secrets only in server env vars (never `NEXT_PUBLIC_*` for keys)
-- CSRF protection via Next.js Server Actions
-
-## Data Access Pattern
-
-```typescript
-// Server Component or Server Action
-const session = await getSession();
-const invoices = await invoiceQueries.listByOrg(session.orgId);
-```
-
-All queries filter by organization. Never trust client-supplied org IDs without session check.
-
-## Caching Strategy
-
-- Static marketing pages: default cache
-- Dashboard lists: `cache: 'no-store'` or short revalidation
-- Mutations: `revalidatePath('/invoices')` after create/update
-- Invoice PDFs: generate on demand or cache in object storage
+- Supplier tax ID and IBANs live in browser storage or user input — never hardcoded in the client bundle
+- PDF route must not log or persist request bodies (see `issues/14-render-function-must-forget.md`)
+- No `NEXT_PUBLIC_*` secrets; no database credentials in MVP
 
 ## Environment Variables
 
-See `.env.example`. Required for production:
+See `.env.example`. MVP requires only:
 
-- `DATABASE_URL`
-- Auth provider keys
-- Optional: email, storage, PDF service
+- `NEXT_PUBLIC_APP_URL` — canonical app URL for links
+
+PDF route may use platform-provided Chromium on Vercel; no extra env vars required for local dev beyond the app URL.
 
 ## Implementation Phases
 
-1. **Foundation** — Next.js, shadcn, folder structure (current)
-2. **Auth & org** — Supabase auth, organization onboarding
-3. **Clients** — CRUD, search
-4. **Invoices** — create, edit, line items, totals
-5. **PDF & send** — template, download, email
-6. **Payments** — record payments, status automation
-7. **Dashboard** — metrics, overdue alerts
+1. **Spec coherence** — `openspec/specs/`, docs aligned (current)
+2. **Domain modules** — NACE catalog, calculations, template render
+3. **Form + preview** — structured input, live HTML preview
+4. **Browser persistence** — register, supplier/client directories
+5. **PDF export** — stateless `/api/pdf` + download/share
+6. **Polish** — Ukrainian UI copy, demo seed data, course video path
 
 ## ADRs
 
-Architecture decisions are recorded in `docs/adr/`.
+| ADR | Status |
+| --- | --- |
+| [0001-initial-stack.md](adr/0001-initial-stack.md) | Superseded by 0002 |
+| [0002-browser-first-mvp.md](adr/0002-browser-first-mvp.md) | Accepted |

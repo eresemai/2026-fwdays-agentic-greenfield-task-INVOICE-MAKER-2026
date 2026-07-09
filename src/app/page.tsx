@@ -60,20 +60,20 @@ export default function Home() {
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>PDF export</CardTitle>
-              <CardDescription>Share polished documents</CardDescription>
+              <CardTitle>PDF-експорт</CardTitle>
+              <CardDescription>Завантажуйте готовий документ</CardDescription>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              Branded PDFs ready to email or download for your clients.
+              Двомовний PDF через безстанний серверний рендер шаблону.
             </CardContent>
           </Card>
           <Card>
             <CardHeader>
-              <CardTitle>Payment tracking</CardTitle>
-              <CardDescription>Know what is overdue</CardDescription>
+              <CardTitle>Статуси вручну</CardTitle>
+              <CardDescription>Без обліку платежів</CardDescription>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              Status lifecycle from draft to paid, with overdue visibility.
+              Чернетка, надіслано, оплачено, скасовано — ви позначаєте самі.
             </CardContent>
           </Card>
         </div>

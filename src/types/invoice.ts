@@ -1,51 +1,35 @@
-export type InvoiceStatus =
-  | "draft"
-  | "sent"
-  | "paid"
-  | "overdue"
-  | "void";
+/** Stored in browser; user-set manually */
+export type StoredInvoiceStatus = "draft" | "sent" | "paid" | "cancelled";
+
+/** Includes derived overdue for UI display only */
+export type InvoiceDisplayStatus = StoredInvoiceStatus | "overdue";
 
 export interface LineItem {
   id: string;
-  description: string;
+  descriptionEn: string;
+  descriptionUa: string;
   quantity: number;
   unitPrice: number;
-  taxRate: number;
 }
 
 export interface Invoice {
   id: string;
-  organizationId: string;
   clientId: string;
   number: string;
-  status: InvoiceStatus;
+  status: StoredInvoiceStatus;
   issueDate: string;
   dueDate: string;
-  currency: string;
+  currency: "USD" | "EUR";
   lineItems: LineItem[];
   notes?: string;
   createdAt: string;
   updatedAt: string;
 }
 
-export function calculateInvoiceTotal(lineItems: LineItem[]): {
-  subtotal: number;
-  tax: number;
-  total: number;
-} {
-  const subtotal = lineItems.reduce(
-    (sum, item) => sum + item.quantity * item.unitPrice,
-    0,
-  );
-  const tax = lineItems.reduce(
-    (sum, item) =>
-      sum + item.quantity * item.unitPrice * (item.taxRate / 100),
-    0,
-  );
+export function calculateLineTotal(item: LineItem): number {
+  return item.quantity * item.unitPrice;
+}
 
-  return {
-    subtotal,
-    tax,
-    total: subtotal + tax,
-  };
+export function calculateInvoiceSubtotal(lineItems: LineItem[]): number {
+  return lineItems.reduce((sum, item) => sum + calculateLineTotal(item), 0);
 }

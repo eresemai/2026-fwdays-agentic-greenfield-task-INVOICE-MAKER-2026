@@ -118,7 +118,7 @@ Domain statuses map to badge variants in `src/lib/design-system.ts`:
 | `sent` | `sent` | accent-soft / accent |
 | `paid` | `paid` | success-soft / success |
 | `overdue` | `overdue` | danger-soft / danger |
-| `void` | `destructive` | danger-soft / danger |
+| `cancelled` | `destructive` | danger-soft / danger |
 
 Component: `InvoiceStatusBadge` in `src/components/invoices/invoice-status-badge.tsx`.
 

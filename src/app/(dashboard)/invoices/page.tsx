@@ -20,9 +20,11 @@ export default function InvoicesPage() {
         <InvoiceStatusBadge status="sent" />
         <InvoiceStatusBadge status="paid" />
         <InvoiceStatusBadge status="overdue" />
+        <InvoiceStatusBadge status="cancelled" />
       </div>
       <p className="text-[13px] text-wf-text-2">
-        Invoice list will appear here after database integration.
+        Реєстр інвойсів зберігається в браузері (localStorage). Сервер дані не
+        зберігає.
       </p>
     </div>
   );

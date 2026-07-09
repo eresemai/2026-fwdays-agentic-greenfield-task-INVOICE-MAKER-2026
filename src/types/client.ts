@@ -1,6 +1,5 @@
 export interface Client {
   id: string;
-  organizationId: string;
   name: string;
   email: string;
   company?: string;

@@ -8,7 +8,8 @@ export default function ClientsPage() {
         </p>
       </div>
       <p className="text-[13px] text-wf-text-2">
-        Client list will appear here after database integration.
+        Довідник клієнтів зберігається в браузері і підставляє дані в форму
+        інвойсу.
       </p>
     </div>
   );
