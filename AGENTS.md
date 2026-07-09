@@ -35,3 +35,40 @@ Invoice Maker uses the **WEG3D Fin** light theme. Read `Design.md` before changi
 
 Geist Sans and Geist Mono are loaded in `src/app/layout.tsx` via `next/font/google`. CSS variables: `--font-geist-sans`, `--font-geist-mono`.
 <!-- END:design-system-rules -->
+
+<!-- BEGIN:openspec-rules -->
+# OpenSpec (Spec-Driven Development)
+
+Invoice Maker uses **OpenSpec** for feature planning and living specifications. Config and workflow live under `openspec/`.
+
+## Quick reference
+
+| Concern | Location |
+| --- | --- |
+| OpenSpec config + project context | `openspec/config.yaml` |
+| Current system behavior (source of truth) | `openspec/specs/<capability>/spec.md` |
+| In-flight changes | `openspec/changes/<change-name>/` |
+| Numbered functional requirements | `docs/requirements.md` |
+| Architecture | `docs/ARCHITECTURE.md` |
+| Domain glossary | `CONTEXT.md` |
+
+## Workflow (Cursor)
+
+Use slash commands for the SDD loop:
+
+1. **`/opsx:propose <change-name>`** — create a change (proposal, delta specs, design, tasks)
+2. **`/opsx:explore`** — think through ideas without implementing
+3. **`/opsx:apply`** — implement tasks from the active change
+4. **`/opsx:sync`** — merge delta specs into `openspec/specs/` after implementation
+5. **`/opsx:archive`** — archive a completed change
+
+CLI equivalents: `openspec new change <name>`, `openspec status`, `openspec list`.
+
+## Rules for agents
+
+1. **Read specs first** — before changing behavior, check `openspec/specs/` for the relevant capability. If empty (brownfield), infer from code and `docs/requirements.md`, then capture in a change.
+2. **Non-trivial features go through a change** — use `openspec/changes/` for proposal → design → tasks → delta specs before coding.
+3. **Respect existing agent rules** — `AGENTS.md` design-system and Next.js rules still apply during `/opsx:apply`.
+4. **Use domain language** — terms from `CONTEXT.md` (Invoice, Client, LineItem, statuses).
+5. **Archive when done** — after tasks are complete and verified, run `/opsx:sync` then `/opsx:archive`.
+<!-- END:openspec-rules -->

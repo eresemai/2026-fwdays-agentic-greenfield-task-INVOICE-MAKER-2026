@@ -1,0 +1,56 @@
+schema: spec-driven
+
+# Injected into OpenSpec artifact instructions (propose, design, tasks, delta specs).
+context: |
+  Project: Invoice Maker 2026 — web app for fast bilingual (Ukrainian–English) invoices
+  for freelancers/FOPs billing international clients in USD/EUR.
+
+  Product goals (see docs/product-brief.md, docs/requirements.md):
+  - Chat-like or structured invoice creation from a standardized HTML template
+  - NACE 2.1-UA service descriptions (not legacy KVED)
+  - PDF export, email delivery, payment tracking (planned; not all implemented yet)
+
+  Tech stack:
+  - Next.js 16 App Router, React 19, TypeScript (strict)
+  - shadcn/ui + Tailwind CSS v4, WEG3D Fin design system (light theme)
+  - Server Actions for mutations; Route Handlers for webhooks/health
+  - Planned: Supabase (Postgres + Auth), Drizzle ORM, Zod validation
+
+  Architecture (docs/ARCHITECTURE.md):
+  - src/app/(dashboard)/ — protected shell: dashboard, invoices, clients, settings
+  - src/actions/ — Server Actions (must authenticate inside each action)
+  - src/lib/db/ — database client (scaffolded)
+  - src/types/ — domain types (Invoice, Client, InvoiceStatus, LineItem)
+  - src/components/ui/ — shadcn primitives; src/components/invoices/ — domain UI
+
+  Domain glossary (CONTEXT.md): Organization, Client, Invoice, LineItem, Payment;
+  invoice statuses: draft, sent, paid, overdue, void.
+
+  UI conventions (Design.md, AGENTS.md design-system-rules):
+  - Light theme only unless explicitly requested
+  - No raw hex in components — use semantic tokens or wf-* Tailwind classes
+  - Controls: h-9 (36px), 8px radius; amounts use wf-mono
+  - Invoice statuses: <InvoiceStatusBadge status="…" />
+
+  Agent context files: AGENTS.md (rules), CONTEXT.md (terms), Design.md (UI),
+  docs/ARCHITECTURE.md (structure), docs/requirements.md (numbered FRs).
+
+  Verification: npm run typecheck && npm run lint && npm run build before merge.
+
+rules:
+  proposal:
+    - Always include Non-goals and Success criteria sections
+    - Reference matching FR IDs from docs/requirements.md when applicable
+    - Keep proposals under 600 words unless the change is large
+  design:
+    - Follow layered structure in docs/ARCHITECTURE.md (UI → actions → domain → infra)
+    - Note auth, validation (Zod), and Server Action security for mutations
+    - UI changes must comply with WEG3D Fin (read Design.md; no raw hex)
+  tasks:
+    - Break work into independently verifiable slices (max ~2 hours each)
+    - Include verification step per task (typecheck, lint, manual check, or test)
+    - Prefer minimal diffs; do not refactor unrelated code
+  specs:
+    - Use domain terms from CONTEXT.md consistently
+    - "Requirements use SHALL/MUST; scenarios use Given/When/Then"
+    - "Delta specs: mark sections ADDED, MODIFIED, or REMOVED explicitly"
