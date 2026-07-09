@@ -116,3 +116,4 @@ Append-only (newest last).
 | 2026-07-10 | Checker | Maker≠checker review fork PR #2 | Separate chat; Bugbot + synthesis; logged in `.github/HOMEWORK_SUBMISSION.md` Review log; verdict approve-with-follow-ups (yaml dep, invoice-calc.md drift, current-state Next up) |
 | 2026-07-10 | Wayfinder | Ticket 15 resolved (audit) | 6 vanished FRs = accidents; FR-NACE-06 still SHALL despite ticket 03 (→09); no FR-id coverage tool exists |
 | 2026-07-10 | OpenSpec | `add-invoice-calc` change created | proposal + delta specs (FR-CALC-01/03/04/06 MODIFIED, 05 ADDED) + design + tasks; validate --strict green; next: /opsx:apply |
+| 2026-07-10 | OpenSpec | `add-shell` change created on `feat/shell` | FR-SHELL-02 responsive shell: proposal + delta spec (FR-SHELL-02 MODIFIED, 4 scenarios) + design (md: breakpoint, Sheet mobile nav) + tasks; validate green; constraint: no `src/lib`; next: /opsx:apply on feat/shell |
