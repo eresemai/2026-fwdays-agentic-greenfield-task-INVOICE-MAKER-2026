@@ -19,12 +19,15 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <Button
               className="hidden sm:inline-flex"
+              nativeButton={false}
               variant="ghost"
               render={<Link href="/dashboard" />}
             >
               Open app
             </Button>
-            <Button render={<Link href="/invoices/new" />}>Create invoice</Button>
+            <Button nativeButton={false} render={<Link href="/invoices/new" />}>
+              Create invoice
+            </Button>
           </div>
         </div>
       </header>
@@ -39,10 +42,15 @@ export default function Home() {
             freelancers and small teams who need clarity, not complexity.
           </p>
           <div className="flex flex-wrap gap-3 pt-2">
-            <Button size="lg" render={<Link href="/dashboard" />}>
+            <Button
+              nativeButton={false}
+              size="lg"
+              render={<Link href="/dashboard" />}
+            >
               Go to dashboard
             </Button>
             <Button
+              nativeButton={false}
               size="lg"
               variant="outline"
               render={<Link href="/invoices" />}

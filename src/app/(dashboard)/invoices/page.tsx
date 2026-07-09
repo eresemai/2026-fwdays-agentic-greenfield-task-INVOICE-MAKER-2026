@@ -12,7 +12,9 @@ export default function InvoicesPage() {
             Create, send, and track invoices.
           </p>
         </div>
-        <Button render={<Link href="/invoices/new" />}>New invoice</Button>
+        <Button nativeButton={false} render={<Link href="/invoices/new" />}>
+          New invoice
+        </Button>
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <span className="wf-label">Status preview:</span>
