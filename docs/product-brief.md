@@ -72,9 +72,13 @@ service, and amount — the system returns ready-to-save, print, or send HTML.
 
 ## NACE 2.1-UA vs legacy KVED
 
-From **2025**, Ukraine uses **NACE 2.1-UA** (State Statistics Service order
-No. 191 of 28 Oct 2025), which replaces **DK 009:2010 (KVED)**. Codes and
-labels are updated; some former entries are split.
+**NACE 2.1-UA** was approved by State Statistics Service order No. 191 of
+28 Oct 2025 and **takes effect on 1 January 2027** («ввести її в дію з
+01 січня 2027 року» — order body; the appendix PDF carries no effective-date
+clause). Until then **DK 009:2010 (KVED)** remains in force and the ФОП
+register still holds legacy KVED codes. Codes and labels are updated; some
+former entries are split. See the resolved research in
+`.scratch/mvp-spec-coherence/issues/03-nace-effective-date-and-code-display.md`.
 
 | Legacy (KVED DK 009:2010) | Current (NACE 2.1-UA) | Product use |
 | --- | --- | --- |
