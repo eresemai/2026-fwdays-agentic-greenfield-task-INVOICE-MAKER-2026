@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Static design-system gallery, not application code (NFR-DX-01 scope):
+    "docs/**",
   ]),
 ]);
 

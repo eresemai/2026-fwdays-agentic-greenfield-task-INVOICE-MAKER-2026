@@ -66,6 +66,6 @@ rules:
     - When pausing or finishing a slice, update docs/current-state.md (completed work, stopped at, blockers, next up)
   specs:
     - Use domain terms from CONTEXT.md consistently
-    - "Requirements use SHALL/MUST; scenarios use Given/When/Then (#### Scenario:)"
+    - "Requirements use SHALL/MUST; scenarios use '#### Scenario:' headings with '- **WHEN**' / '- **THEN**' bullets (not Given/When/Then prose)"
     - "Preserve stable FR-* IDs in requirement titles where traceability matters"
     - "Delta specs: mark sections ADDED, MODIFIED, or REMOVED explicitly"

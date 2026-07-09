@@ -71,9 +71,24 @@ Specs pass `openspec validate --strict` but may still be wrong per map.md.
 ## Next up (priority order)
 
 1. ~~**Merge** `wayfinder/resolve-01-04` → `main`~~ done (`b686caa` pushed; homework CI sync pending)
-2. **Ship S0** `shell` — finish FR-SHELL-02, mark `shipped` in capability-map.yaml
-3. **Parallel S1** — `/opsx:propose add-nace-catalog` and/or `add-invoice-calc`
-4. Close wayfinder **06** and **07** before implementing invoice-calc
+2. **Wayfinder 15 (AFK)** — audit the `8d45456` migration: six FR ids vanished
+   (incl. `FR-NACE-04` video and `FR-CALC-05` deadlines); `invoice-calc/spec.md`
+   and `src/types/invoice.ts` compute money in opposite directions.
+3. **Wayfinder 06 + 07 (grilling, needs the human)** — money model and invoice
+   numbering. Evidence is already gathered in ticket 02's answer: authority is
+   unit × qty → total (integer cents), number is a sequential counter assigned
+   on issue. These two **gate `invoice-calc`** — do not `/opsx:propose
+   add-invoice-calc` before they close, or the spec freezes the inverted
+   FR-CALC-03 again.
+4. **Ship S0** `shell` — finish FR-SHELL-02, mark `shipped` in
+   capability-map.yaml. Safe to do in parallel; no open ticket gates it.
+5. **S1 `nace-catalog`** may start after 15 confirms the seed entries
+   (`FR-NACE-02/03/04`) are restored; note NACE 2.1-UA is in force only from
+   **2027-01-01**, so the catalog must be able to carry the legacy KVED code
+   alongside (wayfinder 09 decides document display).
+6. **Wayfinder 05 (prototype, needs the human)** — stateless Chromium PDF;
+   gates `export-share pdf` (S6), so it can wait, but its font findings feed
+   ticket 11 → `shell` styling.
 
 ## Repository sync
 
@@ -98,3 +113,4 @@ Append-only (newest last).
 | 2026-07-10 | Agent | Improved tables in capability.md | Per-slice narrow tables |
 | 2026-07-10 | Agent | Merged to `main`, pushed origin | `main` @ `b686caa`; CI syncs `fwdays-submission` |
 | 2026-07-10 | Agent | Deleted `wayfinder/resolve-01-04` | Branch merged; local + remote removed |
+| 2026-07-10 | Wayfinder | Session close: factual fixes | product-brief NACE date corrected (in force 2027-01-01, not 2025); config.yaml scenario format fixed (WHEN/THEN, not Given/When/Then); layout.tsx `subsets: ["cyrillic","latin"]` (ticket 01 evidence); Next-up reordered — 06/07 gate invoice-calc |
