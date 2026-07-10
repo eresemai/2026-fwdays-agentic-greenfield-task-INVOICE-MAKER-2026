@@ -94,8 +94,9 @@ rewritten to say.
 | Fixtures | `src/lib/pdf/fixtures.ts` — VISIO USD (clean division) + Ecivres EUR (uneven) |
 | Smoke | `npm run pdf:smoke` → `.scratch/pdf-prototype/*.pdf` |
 
-**Local smoke (2026-07-10):** 2 PDFs generated in ~7.4 s via system Chrome.
-133 Vitest tests green (4 new template-fill tests; PDF smoke gated by `RUN_PDF_SMOKE=1`).
+**Local smoke (2026-07-10):** 2 PDFs generated in ~4 s via system Chrome (`npm run pdf:smoke`).
+133 Vitest tests green (4 template-fill tests; PDF smoke gated by `RUN_PDF_SMOKE=1`).
+`npm run build` green; `export-share` **not** marked shipped in `capability-map.yaml`.
 
 ### Provisional font strategy (needs human eyes)
 

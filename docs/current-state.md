@@ -3,7 +3,7 @@
 > **Read this file at the start of every agent session.**  
 > **Update it at the end of a session or when stopping mid-task.**
 
-Last updated: 2026-07-10T04:42:00Z
+Last updated: 2026-07-10T05:15:00Z
 
 ## Snapshot
 
@@ -73,6 +73,7 @@ On `main`: S2 complete; next slice `/opsx:propose add-banking`.
 
 | Date (UTC) | Session | Action | Outcome |
 | --- | --- | --- | --- |
+| 2026-07-10 | Wayfinder 05 | Re-verified prototype | build + 133 tests + pdf:smoke (~4s) green |
 | 2026-07-10 | Wayfinder 05 | PDF prototype on `feat/pdf-prototype` | `POST /api/pdf`, puppeteer-core, 2 fixtures, pdf:smoke |
 | 2026-07-10 | OpenSpec | Archived S2 changes | `2026-07-10-add-supplier-profile`, `2026-07-10-add-client-directory` |
 | 2026-07-10 | PRs | #4 + #5 merged to `main` | Both S2 UI capabilities shipped |
