@@ -44,6 +44,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  ClientNotFoundError,
   ClientValidationError,
   deleteClient,
   getClientsServerSnapshot,
@@ -110,9 +111,17 @@ export function ClientsPageContent() {
       saveClient(formValues);
       setDialogOpen(false);
       setFormError(null);
+      setPageError(null);
     } catch (error) {
       if (error instanceof ClientValidationError) {
         setFormError(error.message);
+        return;
+      }
+
+      if (error instanceof ClientNotFoundError) {
+        setFormError(
+          "Цього клієнта вже видалено. Закрийте вікно та оновіть список."
+        );
         return;
       }
 

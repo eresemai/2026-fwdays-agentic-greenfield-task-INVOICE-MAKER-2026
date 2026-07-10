@@ -80,6 +80,9 @@ export function subscribeSupplierProfiles(
   listener: SupplierProfilesListener
 ): () => void {
   if (isBrowser() && listeners.size === 0) {
+    // Cross-tab writes made while nothing was subscribed went unobserved;
+    // drop the cache so the first snapshot after (re)subscribing is fresh.
+    cachedProfiles = null;
     window.addEventListener("storage", handleStorageEvent);
   }
   listeners.add(listener);
@@ -185,9 +188,12 @@ function isNonEmpty(value: string): boolean {
   return value.length > 0;
 }
 
+const IBAN_SHAPE = /^[A-Z]{2}\d{2}[A-Z0-9]+$/;
+
 function isPlausibleIban(value: string): boolean {
   const normalized = normalizeIban(value);
   return (
+    IBAN_SHAPE.test(normalized) &&
     normalized.length >= MIN_IBAN_LENGTH &&
     normalized.length <= MAX_IBAN_LENGTH
   );

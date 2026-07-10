@@ -187,7 +187,12 @@ function invalidateClientsSnapshot(): void {
 }
 
 export function listClients(): readonly Client[] {
-  cachedClients ??= Object.freeze(sortClients(readStore().clients));
+  if (cachedClients === null) {
+    const sorted = sortClients(readStore().clients);
+    // Reuse EMPTY_CLIENTS so an empty store hydrates against the same
+    // reference as the server snapshot (no extra post-hydration render).
+    cachedClients = sorted.length === 0 ? EMPTY_CLIENTS : Object.freeze(sorted);
+  }
   return cachedClients;
 }
 
