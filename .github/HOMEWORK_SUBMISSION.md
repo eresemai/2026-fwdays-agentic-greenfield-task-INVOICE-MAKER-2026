@@ -22,7 +22,7 @@
 
 Video: _to be added after recording_
 
-## Current progress (2026-07-10, `main` @ `95b9b1b`)
+## Current progress (2026-07-10, `main` @ `0678447`)
 
 | Area | Status |
 | --- | --- |
