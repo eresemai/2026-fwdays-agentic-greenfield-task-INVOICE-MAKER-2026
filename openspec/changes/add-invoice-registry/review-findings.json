@@ -6,39 +6,41 @@
   "headRef": "HEAD",
   "dimensions": {
     "correctness": {
-      "confirmed": 3,
+      "confirmed": 2,
+      "contested": 3,
+      "rejected": 1
+    },
+    "security": {
+      "confirmed": 5,
       "contested": 3,
       "rejected": 2
     },
-    "security": {
-      "confirmed": 4,
-      "contested": 0,
-      "rejected": 4
-    },
     "spec-compliance": {
-      "confirmed": 4,
-      "contested": 2,
-      "rejected": 2
+      "confirmed": 5,
+      "contested": 1,
+      "rejected": 1
     },
     "visual": {
-      "confirmed": 0,
-      "contested": 2,
-      "rejected": 1
+      "confirmed": 1,
+      "contested": 0,
+      "rejected": 2
     }
   },
   "confirmedTitles": [
-    "commit() updates the in-memory cache before persisting, so a failed write leaves a phantom-saved record",
-    "isIsoDate accepts structurally-valid but impossible calendar dates",
-    "Dead/misleading input.id in the create branch implies caller-chosen ids that are never honored",
-    "Writes build from stale in-memory cache without re-reading localStorage, enabling cross-tab lost updates (unlike clients.ts)",
-    "npm audit: 2 moderate advisories via next's bundled postcss (no critical/high)",
-    "Clean — FR-REG-03 clone-on-save/read immutability correctly implemented",
-    "Clean — Authorization/IDOR/tenant scoping, auth/session, and injection not applicable to this slice",
-    "tasks.md 4.3 ticked \"traceability green\" but the gate FAILS",
-    "FR-REG-01/02/03 unassigned in docs/mvp-capability-plan.md (G3 owner map)",
-    "Canonical spec hand-edited before archive and left inconsistent with the delta",
-    "Proposal/design still list a src/lib/validation/invoice-record.ts (zod) deliverable that was intentionally not built"
+    "design.md D2 states getInvoice/listInvoices return clones, but neither clones; listInvoices returns shared cached records with an asymmetric read-isolation contract",
+    "Canonical spec is out of sync with the delta: the 'Overdue never persisted' scenario and reworded 'Overdue badge' are missing from openspec/specs",
+    "npm audit: 2 moderate advisories (postcss <8.5.10 CSS-stringify XSS) transitive via next; no critical/high",
+    "Clean — FR-REG-03 clone-on-save correctly implemented via structuredClone before persistence",
+    "Clean — Corrupt-store fallback is robust and consistent with clients.ts",
+    "Clean — No mass-assignment; saveInvoice maps fields explicitly and ignores caller-supplied id on create",
+    "Clean — Secrets hygiene: no secrets in code and no tracked .env files",
+    "Coverage summary",
+    "Canonical spec hand-edited to add FR IDs but left inconsistent with the change delta",
+    "Design claims listInvoices returns clones, but it returns shared cached record refs (untested)",
+    "tasks.md 5.1 ticked complete while its own text says re-review is pending",
+    "Slice scope/tasks residue: validation dir and stale test count",
+    "Canonical spec lags the delta: still asserts UI behavior for a logic-only slice and omits the 'Overdue never persisted' scenario"
   ],
   "clean": false,
-  "generatedAt": "2026-07-10T17:52:41Z"
+  "generatedAt": "2026-07-10T18:13:31Z"
 }

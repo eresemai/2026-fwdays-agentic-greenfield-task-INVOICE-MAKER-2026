@@ -47,10 +47,14 @@ interface InvoiceRecord {
 ```
 
 **Immutability (FR-REG-03):** `saveInvoice` deep-clones the incoming snapshot
-(`structuredClone`) before storing, and `getInvoice`/`listInvoices` return
-clones. So a caller mutating the source object it passed in — e.g. after editing
-a supplier IBAN in the directory — cannot reach into a stored snapshot. The
-snapshot is a value captured at issue time, not a live reference.
+(`structuredClone`) before storing, so a caller mutating the source object it
+passed in — e.g. after editing a supplier IBAN in the directory — cannot reach
+into a stored snapshot. Read isolation follows the `clients.ts` pattern rather
+than per-call cloning: `getInvoice` returns a fresh value because `readStore()`
+re-parses localStorage on every call, and `listInvoices` returns a
+reference-stable `Object.freeze`d snapshot (shallow, like `listClients`) that
+consumers MUST treat as read-only. The persisted register is the source of
+truth; the snapshot is a value captured at issue time, never a live reference.
 
 ## D3 — Derived overdue (FR-REG-02, display-only)
 

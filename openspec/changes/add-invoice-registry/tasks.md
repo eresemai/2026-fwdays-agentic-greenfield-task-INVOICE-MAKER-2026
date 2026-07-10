@@ -1,7 +1,8 @@
 # Tasks: add-invoice-registry
 
-> Storage/logic slice — touches only `src/lib/storage/`, `src/lib/validation/`,
-> `src/types/`. No UI files.
+> Storage/logic slice — touches only `src/lib/storage/` and `src/types/`
+> (validation is inline in the storage module; no `src/lib/validation/` file).
+> No UI files.
 
 ## 1. Preflight
 
@@ -17,7 +18,7 @@
 - [x] 3.1 `src/types/invoice-record.ts`: `InvoiceStatus`, `INVOICE_STATUSES`, `InvoiceSnapshot`, `InvoiceRecord`, `InvoiceRecordInput`.
 - [x] 3.2 Validation is INLINE in the storage module (hand-written type guards), NOT a separate zod schema as design D2 first sketched. **Deviation, on purpose:** the neighboring storage modules `clients.ts` / `supplier-profiles.ts` validate with hand-written guards, and consistency with the surrounding code (AGENTS.md) beats introducing zod into the storage layer for one module.
 - [x] 3.3 `src/lib/storage/invoice-register.ts`: versioned store, CRUD, `setInvoiceStatus`, `deriveOverdue`, clone-on-save + clone-on-read (D1/D3), SSR + corrupt-store guards.
-- [x] 3.4 Ran the test — GREEN, 12/12, no assertion weakened.
+- [x] 3.4 Ran the test — GREEN, 13/13 (12 initial + 1 partial-drop test added in review fixes), no assertion weakened.
 
 ## 4. Validation battery
 
@@ -27,6 +28,6 @@
 
 ## 5. Review + archive
 
-- [x] 5.1 Ran the `review-gate` workflow (fresh agents; maker ≠ checker). 11 confirmed findings. Fixed: storage rewritten to mirror `clients.ts` (write-before-cache ordering, `readStore()`-fresh per op to prevent cross-tab lost updates, reference-stable `listInvoices` + `getInvoicesServerSnapshot`, `createId` crypto fallback, `isIsoDate` calendar check via `Date.parse`); added a partial-drop corrupt-record test; added the FR-REG plan block; reconciled proposal/design to the inline-validation decision. `review-findings.json` persisted (generatedBy: review-gate). Re-review after fixes: pending.
+- [x] 5.1 Ran the `review-gate` workflow twice (fresh agents; maker ≠ checker). Round 1: 11 confirmed (3 major code defects + false task tick). Fixed: storage rewritten to mirror `clients.ts` (write-before-cache ordering, `readStore()`-fresh per op, reference-stable `listInvoices` + `getInvoicesServerSnapshot`, `createId` crypto fallback, `isIsoDate` calendar check); partial-drop test; FR-REG plan block; inline-validation reconciled. Round 2: 0 reachable code defects (5 "Clean" positives); remaining were doc drift — design D2 "clones" wording, canonical spec lagging the delta, tasks residue — all reconciled here. One non-S5 item stands: `npm audit` reports 2 MODERATE transitive advisories via `next`'s bundled postcss (no high/critical); out of this slice's scope, tracked as a dependency note.
 - [ ] 5.2 `npx openspec archive add-invoice-registry --yes`; `check-traceability` + `check-trajectory` green for the slice.
 - [ ] 5.3 Commit with `Slice: add-invoice-registry` + `Refs: FR-REG-01, FR-REG-02, FR-REG-03, TC-DATA-01`, touching `src/lib/`.
