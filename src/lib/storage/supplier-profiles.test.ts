@@ -26,8 +26,8 @@ const validInput: SupplierProfileInput = {
   taxId: "0000000000",
   bankName: "Test Bank",
   swift: "TESTUA2X",
-  ibanUsd: "UA000000000000000000000000000",
-  ibanEur: "UA111111111111111111111111111",
+  ibanUsd: "UA213223130000026007233566001",
+  ibanEur: "UA903223130000026007233566020",
 };
 
 const validRecord: SupplierProfile = {
@@ -207,15 +207,15 @@ describe("supplier-profiles storage", () => {
       ...validInput,
       swift: " testua2x ",
       ibanUsd: "ua21 3223 1300 0002 6007 2335 6600 1",
-      ibanEur: "\tua90 3223 1300 0002 6007 2335 6600 2 ",
+      ibanEur: "\tua903223130000026007233566020",
     });
 
     expect(saved.swift).toBe("TESTUA2X");
     expect(saved.ibanUsd).toBe("UA213223130000026007233566001");
-    expect(saved.ibanEur).toBe("UA903223130000026007233566002");
+    expect(saved.ibanEur).toBe("UA903223130000026007233566020");
     expect(getProfile(saved.id)?.swift).toBe("TESTUA2X");
     expect(getProfile(saved.id)?.ibanUsd).toBe("UA213223130000026007233566001");
-    expect(getProfile(saved.id)?.ibanEur).toBe("UA903223130000026007233566002");
+    expect(getProfile(saved.id)?.ibanEur).toBe("UA903223130000026007233566020");
   });
 
   it("falls back to an empty store when stored JSON is corrupt", () => {

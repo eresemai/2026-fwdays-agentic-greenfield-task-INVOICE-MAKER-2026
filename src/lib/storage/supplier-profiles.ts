@@ -190,12 +190,31 @@ function isNonEmpty(value: string): boolean {
 
 const IBAN_SHAPE = /^[A-Z]{2}\d{2}[A-Z0-9]+$/;
 
+function isValidIbanChecksum(normalized: string): boolean {
+  const rearranged = normalized.slice(4) + normalized.slice(0, 4);
+  let remainder = 0;
+
+  for (const character of rearranged) {
+    const expanded =
+      character >= "A" && character <= "Z"
+        ? String(character.charCodeAt(0) - 55)
+        : character;
+
+    for (const digit of expanded) {
+      remainder = (remainder * 10 + Number(digit)) % 97;
+    }
+  }
+
+  return remainder === 1;
+}
+
 function isPlausibleIban(value: string): boolean {
   const normalized = normalizeIban(value);
   return (
     IBAN_SHAPE.test(normalized) &&
     normalized.length >= MIN_IBAN_LENGTH &&
-    normalized.length <= MAX_IBAN_LENGTH
+    normalized.length <= MAX_IBAN_LENGTH &&
+    isValidIbanChecksum(normalized)
   );
 }
 

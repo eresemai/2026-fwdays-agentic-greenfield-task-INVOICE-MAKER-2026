@@ -36,8 +36,8 @@ export class ClientValidationError extends Error {
 }
 
 export class ClientStorageError extends Error {
-  constructor(message: string) {
-    super(message);
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
     this.name = "ClientStorageError";
   }
 }
@@ -61,6 +61,10 @@ function isStringIfPresent(value: unknown): boolean {
   return value === undefined || typeof value === "string";
 }
 
+function isParseableIsoDate(value: unknown): value is string {
+  return typeof value === "string" && !Number.isNaN(Date.parse(value));
+}
+
 function isValidClientRecord(value: unknown): value is Client {
   if (typeof value !== "object" || value === null) {
     return false;
@@ -70,12 +74,12 @@ function isValidClientRecord(value: unknown): value is Client {
   return (
     isNonEmptyString(record.id) &&
     isNonEmptyString(record.name) &&
-    typeof record.createdAt === "string" &&
-    typeof record.updatedAt === "string" &&
-    isStringIfPresent(record.address) &&
-    isStringIfPresent(record.email) &&
-    isStringIfPresent(record.phone) &&
-    isStringIfPresent(record.website) &&
+    isParseableIsoDate(record.createdAt) &&
+    isParseableIsoDate(record.updatedAt) &&
+    typeof record.address === "string" &&
+    typeof record.email === "string" &&
+    typeof record.phone === "string" &&
+    typeof record.website === "string" &&
     isStringIfPresent(record.company) &&
     isStringIfPresent(record.taxId)
   );
@@ -119,10 +123,10 @@ function writeStore(store: ClientsStore): void {
 
   try {
     window.localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(store));
-  } catch {
-    // Quota exceeded or private browsing restrictions.
+  } catch (error) {
     throw new ClientStorageError(
-      "Failed to persist clients to browser storage."
+      "Failed to persist clients to browser storage.",
+      { cause: error }
     );
   }
 }

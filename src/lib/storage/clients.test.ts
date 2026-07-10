@@ -151,9 +151,29 @@ describe("clients storage", () => {
       createdAt: "2026-07-10T09:00:00.000Z",
       updatedAt: "2026-07-10T09:00:00.000Z",
     };
+    const missingRequiredFields = {
+      id: "client-missing-fields",
+      name: "Incomplete Client",
+      createdAt: "2026-07-10T09:00:00.000Z",
+      updatedAt: "2026-07-10T09:00:00.000Z",
+    };
     window.localStorage.setItem(
       CLIENTS_STORAGE_KEY,
-      JSON.stringify({ version: 1, clients: [null, valid, { id: "", name: 7 }] })
+      JSON.stringify({
+        version: 1,
+        clients: [
+          null,
+          valid,
+          { id: "", name: 7 },
+          missingRequiredFields,
+          {
+            ...valid,
+            id: "client-bad-date",
+            createdAt: "not-a-date",
+            updatedAt: "2026-07-10T09:00:00.000Z",
+          },
+        ],
+      })
     );
 
     expect(listClients()).toEqual([valid]);
@@ -184,6 +204,15 @@ describe("clients storage", () => {
     const unsubscribe = subscribeClients(listener);
 
     expect(() => saveClient(buildClientInput())).toThrow(ClientStorageError);
+    try {
+      saveClient(buildClientInput());
+    } catch (error) {
+      expect(error).toBeInstanceOf(ClientStorageError);
+      expect((error as ClientStorageError).cause).toBeInstanceOf(Error);
+      expect(((error as ClientStorageError).cause as Error).message).toBe(
+        "QuotaExceededError"
+      );
+    }
     expect(listener).not.toHaveBeenCalled();
 
     unsubscribe();
