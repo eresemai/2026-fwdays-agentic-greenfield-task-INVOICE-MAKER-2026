@@ -2,19 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const navItems = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/invoices", label: "Invoices" },
-  { href: "/clients", label: "Clients" },
-  { href: "/settings", label: "Settings" },
-];
+import { navItems } from "@/components/layout/nav-items";
 
 export function AppSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-56 flex-col border-r border-wf-border bg-wf-surface text-foreground">
+    <aside className="hidden w-56 flex-col border-r border-wf-border bg-wf-surface text-foreground md:flex">
       <div className="border-b border-wf-border px-4 py-5">
         <Link
           href="/dashboard"
