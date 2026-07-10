@@ -11,7 +11,7 @@ Last updated: 2026-07-10 (UTC)
 | --- | --- |
 | **Branch** | `main` @ `d812c41` |
 | **Active capability** | S1 — `invoice-calc` or `nace-catalog` (both unblocked) |
-| **Active OpenSpec change** | `add-invoice-calc` (artifacts 4/4, ready for `/opsx:apply`) |
+| **Active OpenSpec change** | `add-invoice-calc` + `add-nace-catalog` (both 4/4, ready for `/opsx:apply`) |
 | **Slice / gate** | S0 `shell` **shipped**; S1 + S2 directories unblocked |
 | **Gate check** | Unblocked: `nace-catalog`, `invoice-calc`, `supplier-profile`, `client-directory` |
 
@@ -111,3 +111,4 @@ Append-only (newest last).
 | 2026-07-10 | OpenSpec | `add-shell` archived; PR #3 opened and merged | Change archived to `openspec/changes/archive/2026-07-10-add-shell`; `feat/shell` merged to `main` via PR #3; S0 done; next: S1 `/opsx:apply add-invoice-calc` or S2 directories |
 | 2026-07-10 | Maker | PR #2 review follow-ups | yaml dep; invoice-calc.md + capability.md pdf row; FR-NACE-06 dropped in requirements/map/spec; current-state Next up refreshed |
 | 2026-07-10 | Agent | `git pull` autostash conflict resolved | Merged upstream shell ship + local PR #2 follow-ups in `docs/current-state.md`; working tree clean on `main` @ `d812c41` |
+| 2026-07-10 | OpenSpec | `add-nace-catalog` change created | proposal + delta (FR-NACE-01/05, BC-NACE-01 MODIFIED per ticket 03: entry id key, class code non-unique, legacy КВЕД data-only; FR-NACE-02/03/04 ADDED with bilingual seed texts recovered from `8d45456:docs/requirements.md`) + design (keyword matcher matched/ambiguous/none; Vitest coordination with add-invoice-calc) + tasks (8); validate --strict green; next: /opsx:apply |
