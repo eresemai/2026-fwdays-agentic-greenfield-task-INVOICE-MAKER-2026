@@ -1,8 +1,4 @@
-## Purpose
-
-Supplier banking details and currency-specific IBAN selection on the invoice.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: FR-BANK-01 Currency selects IBAN
 The system SHALL select the USD IBAN when currency is USD and the EUR IBAN when currency is EUR from the active supplier profile.
@@ -18,13 +14,6 @@ The system SHALL select the USD IBAN when currency is USD and the EUR IBAN when 
 #### Scenario: Missing IBAN for requested currency
 - **WHEN** the supplier profile has no IBAN (or a blank IBAN) for the requested currency
 - **THEN** selection SHALL fail with a typed error naming the missing currency and pointing to Settings → supplier profile (BC-UX-01), and no partial supplier block is produced
-
-### Requirement: FR-BANK-02 Supplier profile fields
-A supplier profile SHALL hold bilingual name and address, tax ID, bank name, SWIFT, and separate IBANs for USD and EUR.
-
-#### Scenario: Profile completeness
-- **WHEN** the user saves a supplier profile with required fields
-- **THEN** both currency IBANs are available for invoice generation
 
 ### Requirement: FR-BANK-03 Supplier block on document
 The invoice SHALL display IBAN, bank name, and SWIFT in the SUPPLIER section per `docs/invoice-template.html` placeholders. The banking module SHALL expose the supplier block as a variable map whose keys match the template placeholders exactly: `SUPPLIER_NAME_EN`, `SUPPLIER_NAME_UA`, `SUPPLIER_ADDRESS_EN`, `SUPPLIER_ADDRESS_UA`, `SUPPLIER_TAX_ID`, `SUPPLIER_BANK`, `SUPPLIER_SWIFT`, and `SUPPLIER_IBAN` (resolved for the invoice currency per FR-BANK-01).
