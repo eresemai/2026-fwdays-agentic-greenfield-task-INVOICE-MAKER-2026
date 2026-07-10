@@ -18,7 +18,7 @@
 
 ## 3. Numbering (FR-CALC-01)
 
-- [ ] 3.1 `src/lib/invoice-calc/numbering.ts`: `nextInvoiceNumber(existing,
+- [x] 3.1 `src/lib/invoice-calc/numbering.ts`: `nextInvoiceNumber(existing,
       year)`, `validateNumber(candidate, existing)`.
       **Verify:** tests — first of year `2026-001`; sequence advances;
       cancelled numbers (still present in `existing`) never reused; duplicate
