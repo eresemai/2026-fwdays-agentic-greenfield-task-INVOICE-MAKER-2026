@@ -42,9 +42,10 @@
 
 ## 6. Type alignment
 
-- [ ] 6.1 Update `src/types/invoice.ts`: `unitPriceCents: Cents`,
-      `number?: string`; fix scaffold references; export module surface from
-      `src/lib/invoice-calc/index.ts`.
+- [x] 6.1 Update `src/types/invoice.ts`: `unitPriceCents: Cents`,
+      `number?: string`; fix scaffold references. (No barrel
+      `src/lib/invoice-calc/index.ts` — barrel files are forbidden by the
+      lint standard; consumers import `@/lib/invoice-calc/<module>`.)
       **Verify:** `npm run lint && npm run typecheck && npm run build` green;
       `npm run test` green.
 
