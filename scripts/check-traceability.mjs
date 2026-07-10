@@ -62,10 +62,19 @@ function* walk(dir, filter) {
 // Ids may be plain (FR-12) or categorized (FR-SHELL-01, NFR-A11Y-02).
 const ID_PATTERN = "(?:FR|NFR|TC|BC|BUG)-(?:[A-Z0-9]+-)?\\d+";
 const idsIn = (text) => [...new Set(text.match(new RegExp(`\\b${ID_PATTERN}\\b`, "g")) ?? [])];
-// `@trace FR-CALC-01` / `@trace FR-12, BUG-3`. Shares ID_PATTERN with idsIn on
-// purpose: a narrower pattern here would demand an annotation (see the
-// test-trace report below) that this parser could never recognize.
-const TRACE_ANNOTATION_RE = new RegExp(`@trace\\s+(${ID_PATTERN}(?:\\s*,\\s*${ID_PATTERN})*)`, "g");
+// `// @trace FR-CALC-01` / ` * @trace FR-12, BUG-3`.
+//
+// Shares ID_PATTERN with idsIn on purpose: a narrower id pattern would demand
+// an annotation (see the test-trace report below) this parser could never read.
+//
+// ANCHORED to the start of a comment (PD-12). Unanchored, any mention became
+// evidence: a comment reading `No @trace FR-X: this test cannot prove it`
+// credited FR-X, and a fixture under tests/ credited a production requirement.
+// A disclaimer must never become proof.
+const TRACE_ANNOTATION_RE = new RegExp(
+  `^[ \\t]*(?://+|\\*|#)[ \\t]*@trace[ \\t]+(${ID_PATTERN}(?:[ \\t]*,[ \\t]*${ID_PATTERN})*)`,
+  "gm",
+);
 
 // ---------- 1. parse requirements ----------
 // Missing requirements file is NORMAL before Phase 1 (the loop installs in
