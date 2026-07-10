@@ -97,11 +97,26 @@ for (const slice of slices) {
   const retrofitted = retrofitSlices.has(trailerName);
 
   // 1. review evidence
+  //
+  // PD-8: `clean:true` alone is not proof — a hand-written stamp is trivial to
+  // forge. Trust it only when the review-gate workflow demonstrably produced it:
+  // `generatedBy: "review-gate"` plus a populated `dimensions` object (the
+  // structural fingerprint of the dimension pipeline). Anything else that claims
+  // clean — a bare `{clean:true}`, a `generatedBy:"retrofit"` shape — is an
+  // unverified stamp and is treated like a missing review.
   let reviewEvidence = "missing";
   const rf = read(join(dir, "review-findings.json"));
   if (rf) {
     try {
-      reviewEvidence = JSON.parse(rf).clean === true ? "clean" : "unclean";
+      const parsed = JSON.parse(rf);
+      const fromReviewGate =
+        parsed.generatedBy === "review-gate" &&
+        parsed.dimensions &&
+        typeof parsed.dimensions === "object" &&
+        Object.keys(parsed.dimensions).length > 0;
+      if (parsed.clean === true && fromReviewGate) reviewEvidence = "clean";
+      else if (parsed.clean === true) reviewEvidence = "unverified-stamp";
+      else reviewEvidence = "unclean";
     } catch {
       reviewEvidence = "unparseable";
     }
