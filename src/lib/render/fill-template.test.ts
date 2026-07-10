@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -34,8 +35,26 @@ describe("escapeHtml", () => {
 });
 
 describe("template drift", () => {
-  it("keeps the generated constant in sync with docs/invoice-template.html", () => {
-    expect(INVOICE_TEMPLATE).toBe(readFileSync(TEMPLATE_PATH, "utf8"));
+  it("regenerating from the template and fonts reproduces the constant", () => {
+    // The constant is no longer byte-identical to the doc: sync-template.mjs
+    // swaps the Google Fonts @import for embedded @font-face rules. Asking the
+    // script covers the template *and* docs/fonts/*.woff2 in one assertion.
+    expect(() =>
+      execFileSync("node", ["scripts/sync-template.mjs", "--check"], {
+        cwd: process.cwd(),
+        stdio: "pipe",
+      })
+    ).not.toThrow();
+  });
+
+  it("preserves every template line except the replaced @import", () => {
+    const dropped = readFileSync(TEMPLATE_PATH, "utf8")
+      .split("\n")
+      .filter((line) => !line.includes("@import url("));
+
+    for (const line of dropped) {
+      expect(INVOICE_TEMPLATE).toContain(line);
+    }
   });
 
   it("declares exactly the placeholders present in the template", () => {
