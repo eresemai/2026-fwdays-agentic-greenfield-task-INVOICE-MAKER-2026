@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -12,7 +13,15 @@ import {
 import { INVOICE_TEMPLATE } from "./template";
 
 const TEMPLATE_PATH = join(process.cwd(), "docs", "invoice-template.html");
+const FONTS_DIR = join(process.cwd(), "docs", "fonts");
 const PLACEHOLDER_PATTERN = /\{\{([A-Z0-9_]+)\}\}/g;
+const DATA_URI_PATTERN = /src: url\(data:font\/woff2;base64,([A-Za-z0-9+/=]+)\)/g;
+const WOFF2_SIGNATURE = "wOF2";
+const EMBEDDED_FONT_FILES = [
+  "inter-cyrillic.woff2",
+  "inter-latin-ext.woff2",
+  "inter-latin.woff2",
+];
 
 function allVars(overrides: Partial<RenderVars> = {}): RenderVars {
   const base = Object.fromEntries(
@@ -34,8 +43,47 @@ describe("escapeHtml", () => {
 });
 
 describe("template drift", () => {
-  it("keeps the generated constant in sync with docs/invoice-template.html", () => {
-    expect(INVOICE_TEMPLATE).toBe(readFileSync(TEMPLATE_PATH, "utf8"));
+  it("regenerating from the template and fonts reproduces the constant", () => {
+    // The constant is no longer byte-identical to the doc: sync-template.mjs
+    // swaps the Google Fonts @import for embedded @font-face rules. Asking the
+    // script covers the template *and* docs/fonts/*.woff2 in one assertion.
+    expect(() =>
+      execFileSync("node", ["scripts/sync-template.mjs", "--check"], {
+        cwd: process.cwd(),
+        stdio: "pipe",
+      })
+    ).not.toThrow();
+  });
+
+  // The --check test above re-runs the same encode path, so a systematic
+  // truncation would corrupt both sides identically and still pass. Decoding
+  // back to the on-disk bytes is the assertion that cannot be fooled that way.
+  it("embeds base64 that decodes to the exact committed woff2 files", () => {
+    const encoded = Array.from(INVOICE_TEMPLATE.matchAll(DATA_URI_PATTERN)).map(
+      (match) => match[1]
+    );
+
+    expect(encoded).toHaveLength(EMBEDDED_FONT_FILES.length);
+
+    // The generator emits subsets in this order; each must round-trip exactly.
+    for (const [index, file] of EMBEDDED_FONT_FILES.entries()) {
+      const decoded = Buffer.from(encoded[index], "base64");
+      const onDisk = readFileSync(join(FONTS_DIR, file));
+
+      expect(decoded.subarray(0, 4).toString("latin1")).toBe(WOFF2_SIGNATURE);
+      expect(decoded.length).toBe(onDisk.length);
+      expect(decoded.equals(onDisk)).toBe(true);
+    }
+  });
+
+  it("preserves every template line except the replaced @import", () => {
+    const dropped = readFileSync(TEMPLATE_PATH, "utf8")
+      .split("\n")
+      .filter((line) => !line.includes("@import url("));
+
+    for (const line of dropped) {
+      expect(INVOICE_TEMPLATE).toContain(line);
+    }
   });
 
   it("declares exactly the placeholders present in the template", () => {

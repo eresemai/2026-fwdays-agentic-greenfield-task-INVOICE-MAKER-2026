@@ -12,6 +12,7 @@ const TERMS_END = "<!-- SIGNATURE SECTION (FIXED) -->";
 const TITLE_MARKUP = '<div class="invoice-title">INVOICE / РАХУНОК</div>';
 const SUBTITLE_MARKUP =
   '<div class="invoice-subtitle">Graphic Design Service</div>';
+const EXTERNAL_URL_PATTERN = /https?:\/\/[^'"\s)]+/g;
 const MAX_RENDER_MS = 200;
 
 // Synthetic fixtures: documentation bank code, sequential account bodies.
@@ -145,24 +146,37 @@ describe("renderInvoice", () => {
     );
   });
 
-  it("embeds its CSS and A4 print rules (FR-TPL-05, partial)", () => {
+  it("embeds its CSS and A4 print rules (FR-TPL-05)", () => {
     const html = renderInvoice(input());
 
     expect(html).toContain("<style>");
     expect(html).toContain("@page");
   });
 
-  it("pins the one KNOWN VIOLATION of FR-TPL-05: the remote font @import", () => {
+  it("has no external network reference at all (FR-TPL-05)", () => {
     const html = renderInvoice(input());
-    const externalUrls = html.match(/https?:\/\/[^'"\s)]+/g) ?? [];
 
-    // FR-TPL-05 allows no external network dependency beyond *bundled* fonts.
-    // Google Fonts is remote, so the requirement is not met — see
-    // docs/capabilities/document-render.md#known-gap and wayfinder 05.
-    // This assertion pins the violation at exactly one URL so it cannot grow
-    // silently; it does NOT certify compliance.
-    expect(externalUrls).toHaveLength(1);
-    expect(externalUrls[0]).toContain("fonts.googleapis.com");
+    expect(html.match(EXTERNAL_URL_PATTERN) ?? []).toHaveLength(0);
+  });
+
+  it("embeds the three Inter subsets as data URIs (FR-TPL-05)", () => {
+    const html = renderInvoice(input());
+
+    expect((html.match(/@font-face/g) ?? []).length).toBe(3);
+    expect((html.match(/src: url\(data:font\/woff2;base64,/g) ?? []).length).toBe(
+      3
+    );
+    // Variable files span the template's weights, including the 800 title.
+    expect(html).toContain("font-weight: 300 800;");
+  });
+
+  it("keeps the Cyrillic subset that owns № (U+2116), used by English invoices", () => {
+    const html = renderInvoice(input());
+
+    expect(html).toContain("U+2116");
+    // Ukrainian ґ lives in the same subset.
+    expect(html).toContain("U+0490-0491");
+    expect(html).toContain("Payment by the invoice №2026-001");
   });
 
   it("escapes hostile customer data (carried-forward security finding)", () => {
