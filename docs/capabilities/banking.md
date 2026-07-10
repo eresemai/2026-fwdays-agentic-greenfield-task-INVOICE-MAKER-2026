@@ -9,7 +9,7 @@
 | Owner | domain |
 | Gate status | **shipped** (2026-07-10, `feat/banking`) |
 | OpenSpec spec | [banking/spec.md](../../openspec/specs/banking/spec.md) |
-| OpenSpec change | `add-banking` (archive after PR merge) |
+| OpenSpec change | `2026-07-10-add-banking` (archived) |
 
 ## Purpose
 
