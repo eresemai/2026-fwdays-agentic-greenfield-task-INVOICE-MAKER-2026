@@ -196,6 +196,9 @@ capabilities:
     status: not_started
     spec: openspec/specs/invoice-registry/spec.md
     owns:
+      - FR-REG-01
+      - FR-REG-02
+      - FR-REG-03
       - TC-DATA-01
     depends_on: [form-input, document-render, invoice-calc]
     blocks: [invoice-edit]
@@ -256,6 +259,9 @@ requirement_owners:
   FR-CLIENT-02: client-directory
   FR-CLIENT-03: client-directory
   FR-CLIENT-04: client-directory
+  FR-REG-01: invoice-registry
+  FR-REG-02: invoice-registry
+  FR-REG-03: invoice-registry
   TC-DATA-01: invoice-registry
   TC-PDF-01: export-share
   BC-NACE-01: nace-catalog

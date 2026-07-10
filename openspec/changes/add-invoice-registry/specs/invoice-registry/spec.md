@@ -1,8 +1,6 @@
-## Purpose
+# Delta: invoice-registry (add-invoice-registry)
 
-Browser-side invoice register with manual statuses and immutable issued snapshots.
-
-## Requirements
+## ADDED Requirements
 
 ### Requirement: FR-REG-01 Stored invoice statuses
 The system SHALL persist invoice status as one of `draft`, `sent`, `paid`, or `cancelled` set manually by the user.
@@ -16,7 +14,11 @@ The system SHALL derive `overdue` for display when status is `sent` and the paym
 
 #### Scenario: Overdue badge
 - **WHEN** an invoice is `sent` and the payment deadline was yesterday
-- **THEN** the UI shows overdue styling while stored status remains `sent`
+- **THEN** the derivation returns overdue while the stored status remains `sent`
+
+#### Scenario: Overdue never persisted
+- **WHEN** any invoice record is saved and read back
+- **THEN** the stored record carries no `overdue` field — it is computed on demand
 
 ### Requirement: FR-REG-03 Issued invoice snapshot
 An issued invoice record SHALL store a snapshot of all fields printed on the document; editing supplier or client directories MUST NOT alter past invoice snapshots.

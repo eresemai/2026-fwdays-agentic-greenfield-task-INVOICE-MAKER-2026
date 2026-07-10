@@ -33,6 +33,9 @@
     "FR-EXPORT-05": "MVP",
     "FR-EDIT-01": "MVP",
     "FR-EDIT-02": "MVP",
+    "FR-REG-01": "MVP",
+    "FR-REG-02": "MVP",
+    "FR-REG-03": "MVP",
     "FR-CLIENT-01": "MVP",
     "FR-CLIENT-02": "MVP",
     "FR-CLIENT-03": "MVP",
@@ -408,6 +411,42 @@
       "recordings": []
     },
     {
+      "id": "FR-REG-01",
+      "specs": [
+        "openspec/specs/invoice-registry/spec.md",
+        "openspec/changes/add-invoice-registry/specs/invoice-registry/spec.md"
+      ],
+      "planned": false,
+      "tests": [
+        "src/lib/storage/invoice-register.test.ts"
+      ],
+      "recordings": []
+    },
+    {
+      "id": "FR-REG-02",
+      "specs": [
+        "openspec/specs/invoice-registry/spec.md",
+        "openspec/changes/add-invoice-registry/specs/invoice-registry/spec.md"
+      ],
+      "planned": false,
+      "tests": [
+        "src/lib/storage/invoice-register.test.ts"
+      ],
+      "recordings": []
+    },
+    {
+      "id": "FR-REG-03",
+      "specs": [
+        "openspec/specs/invoice-registry/spec.md",
+        "openspec/changes/add-invoice-registry/specs/invoice-registry/spec.md"
+      ],
+      "planned": false,
+      "tests": [
+        "src/lib/storage/invoice-register.test.ts"
+      ],
+      "recordings": []
+    },
+    {
       "id": "FR-CLIENT-01",
       "specs": [
         "openspec/specs/client-directory/spec.md"
@@ -452,6 +491,20 @@
     }
   ],
   "failures": [
+    {
+      "check": "plan-ownership",
+      "msg": "FR-REG-01 is not assigned in docs/mvp-capability-plan.md"
+    },
+    {
+      "check": "plan-ownership",
+      "msg": "FR-REG-02 is not assigned in docs/mvp-capability-plan.md"
+    },
+    {
+      "check": "plan-ownership",
+      "msg": "FR-REG-03 is not assigned in docs/mvp-capability-plan.md"
+    }
+  ],
+  "warnings": [
     {
       "check": "test-trace",
       "msg": "FR-SHELL-01 has no test annotated \"@trace FR-SHELL-01\""
@@ -634,6 +687,18 @@
     },
     {
       "check": "recording-evidence",
+      "msg": "FR-REG-01 is not referenced by any recording manifest under docs/qa/"
+    },
+    {
+      "check": "recording-evidence",
+      "msg": "FR-REG-02 is not referenced by any recording manifest under docs/qa/"
+    },
+    {
+      "check": "recording-evidence",
+      "msg": "FR-REG-03 is not referenced by any recording manifest under docs/qa/"
+    },
+    {
+      "check": "recording-evidence",
       "msg": "FR-CLIENT-01 is not referenced by any recording manifest under docs/qa/"
     },
     {
@@ -647,7 +712,10 @@
     {
       "check": "recording-evidence",
       "msg": "FR-CLIENT-04 is not referenced by any recording manifest under docs/qa/"
+    },
+    {
+      "check": "active-changes",
+      "msg": "active change \"add-invoice-registry\" is not archived"
     }
-  ],
-  "warnings": []
+  ]
 }

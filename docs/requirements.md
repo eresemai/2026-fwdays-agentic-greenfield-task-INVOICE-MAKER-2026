@@ -91,6 +91,9 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | FR-EXPORT-05 | export-share | proposed | verify: recording |
 | FR-EDIT-01 | invoice-edit | proposed | verify: local-verifiable |
 | FR-EDIT-02 | invoice-edit | proposed | verify: local-verifiable |
+| FR-REG-01 | invoice-registry | proposed | verify: local-verifiable |
+| FR-REG-02 | invoice-registry | proposed | verify: local-verifiable |
+| FR-REG-03 | invoice-registry | proposed | verify: local-verifiable |
 | FR-CLIENT-01 | client-directory | shipped | verify: local-verifiable |
 | FR-CLIENT-02 | client-directory | shipped | verify: local-verifiable |
 | FR-CLIENT-03 | client-directory | shipped | verify: local-verifiable |
