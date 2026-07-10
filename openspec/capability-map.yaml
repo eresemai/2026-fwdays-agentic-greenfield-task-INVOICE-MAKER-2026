@@ -146,7 +146,7 @@ capabilities:
 
   form-input:
     owner: ui
-    status: not_started
+    status: shipped
     spec: openspec/specs/form-input/spec.md
     owns:
       - FR-INPUT-01

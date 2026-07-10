@@ -1,49 +1,6 @@
-## Purpose
+# Delta: form-input (add-form-input)
 
-Structured invoice form with validation and live preview trigger (no chat/LLM in MVP).
-
-## Requirements
-
-### Requirement: FR-INPUT-01 Full structured input
-The system SHALL accept full structured input on `/invoices/new` covering: client selection or customer name, address, email, phone, website, currency (USD or EUR), service description, quantity, unit price amount, prepayment percentage, payment deadline days, execution term days, optional project name, issue date, and bilingual payment-terms prose derived from those values.
-
-#### Scenario: Complete form submission
-- **WHEN** the user fills all required structured fields with valid values
-- **THEN** the system produces an invoice preview payload without server round-trips for mutation
-
-#### Scenario: Required customer contact
-- **WHEN** the user attempts preview without customer name, address, or email
-- **THEN** the system blocks preview and marks the missing fields
-
-### Requirement: FR-INPUT-02 Short key-value input
-The system SHALL accept a short key-value format with keys `client`, `addr`, `email`, `phone`, `web`, `curr`, `service`, `qty`, `amount`, `prepay`, `pay_days`, `exec_days`, parsing `key: value` lines case-insensitively on keys and populating the structured form.
-
-#### Scenario: Short format parsed
-- **WHEN** the user pastes or enters the short key-value format with recognized keys
-- **THEN** the form fields populate from the parsed values
-
-#### Scenario: Unknown key ignored
-- **WHEN** the short format contains a key outside the recognized set
-- **THEN** the parser ignores that line and continues parsing recognized keys without failing the whole paste
-
-### Requirement: FR-INPUT-04 Field validation
-The system SHALL validate email, phone, numeric amounts, currency (USD or EUR only in MVP), and prepayment percentage (0–100 inclusive) using a shared Zod schema before preview generation.
-
-#### Scenario: Invalid email
-- **WHEN** the user enters a malformed email
-- **THEN** the system shows an error explaining the problem and an example of valid format per BC-UX-01
-
-#### Scenario: Invalid currency
-- **WHEN** the user selects a currency other than USD or EUR
-- **THEN** the system rejects the value before preview generation
-
-#### Scenario: Invalid amount
-- **WHEN** the user enters a unit price that is not a positive monetary amount
-- **THEN** the system rejects the value and shows an example amount format such as `650` or `1,234.56`
-
-#### Scenario: Invalid quantity
-- **WHEN** the user enters a non-positive quantity
-- **THEN** the system rejects the value before preview generation
+## ADDED Requirements
 
 ### Requirement: Client directory prefill
 The invoice creation form SHALL let the user select a client from the browser-stored client directory and SHALL populate customer fields from that record without mutating the directory entry.
@@ -114,3 +71,46 @@ During a normal create-invoice session with valid inputs, the browser console SH
 #### Scenario: Valid preview session
 - **WHEN** the user completes a valid invoice form and the preview renders successfully
 - **THEN** no application-thrown console errors occur during that interaction
+
+## MODIFIED Requirements
+
+### Requirement: FR-INPUT-01 Full structured input
+The system SHALL accept full structured input on `/invoices/new` covering: client selection or customer name, address, email, phone, website, currency (USD or EUR), service description, quantity, unit price amount, prepayment percentage, payment deadline days, execution term days, optional project name, issue date, and bilingual payment-terms prose derived from those values.
+
+#### Scenario: Complete form submission
+- **WHEN** the user fills all required structured fields with valid values
+- **THEN** the system produces an invoice preview payload without server round-trips for mutation
+
+#### Scenario: Required customer contact
+- **WHEN** the user attempts preview without customer name, address, or email
+- **THEN** the system blocks preview and marks the missing fields
+
+### Requirement: FR-INPUT-02 Short key-value input
+The system SHALL accept a short key-value format with keys `client`, `addr`, `email`, `phone`, `web`, `curr`, `service`, `qty`, `amount`, `prepay`, `pay_days`, `exec_days`, parsing `key: value` lines case-insensitively on keys and populating the structured form.
+
+#### Scenario: Short format parsed
+- **WHEN** the user pastes or enters the short key-value format with recognized keys
+- **THEN** the form fields populate from the parsed values
+
+#### Scenario: Unknown key ignored
+- **WHEN** the short format contains a key outside the recognized set
+- **THEN** the parser ignores that line and continues parsing recognized keys without failing the whole paste
+
+### Requirement: FR-INPUT-04 Field validation
+The system SHALL validate email, phone, numeric amounts, currency (USD or EUR only in MVP), and prepayment percentage (0–100 inclusive) using a shared Zod schema before preview generation.
+
+#### Scenario: Invalid email
+- **WHEN** the user enters a malformed email
+- **THEN** the system shows an error explaining the problem and an example of valid format per BC-UX-01
+
+#### Scenario: Invalid currency
+- **WHEN** the user selects a currency other than USD or EUR
+- **THEN** the system rejects the value before preview generation
+
+#### Scenario: Invalid amount
+- **WHEN** the user enters a unit price that is not a positive monetary amount
+- **THEN** the system rejects the value and shows an example amount format such as `650` or `1,234.56`
+
+#### Scenario: Invalid quantity
+- **WHEN** the user enters a non-positive quantity
+- **THEN** the system rejects the value before preview generation

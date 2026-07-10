@@ -62,9 +62,9 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | FR-SHELL-01 | shell | shipped |
 | FR-SHELL-02 | shell | shipped |
 | FR-SHELL-03 | shell | shipped |
-| FR-INPUT-01 | form-input | proposed |
-| FR-INPUT-02 | form-input | proposed |
-| FR-INPUT-04 | form-input | proposed |
+| FR-INPUT-01 | form-input | shipped |
+| FR-INPUT-02 | form-input | shipped |
+| FR-INPUT-04 | form-input | shipped |
 | FR-NACE-01 | nace-catalog | shipped |
 | FR-NACE-02 | nace-catalog | shipped |
 | FR-NACE-03 | nace-catalog | shipped |
@@ -108,11 +108,11 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | --- | --- | --- |
 | NFR-PERF-01 | shell | accepted |
 | NFR-PERF-02 | document-render | shipped |
-| NFR-A11Y-01 | form-input | proposed |
+| NFR-A11Y-01 | form-input | shipped |
 | NFR-I18N-01 | shell | accepted |
 | NFR-SEC-01 | supplier-profile | accepted |
 | NFR-DX-01 | shell | accepted |
-| NFR-OBS-01 | form-input | proposed |
+| NFR-OBS-01 | form-input | shipped |
 
 ## Technical constraints
 
@@ -136,7 +136,7 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | BC-I18N-01 | document-render | accepted |
 | BC-LEGAL-01 | document-render | accepted |
 | BC-LEGAL-02 | shell | proposed |
-| BC-UX-01 | form-input | proposed |
+| BC-UX-01 | form-input | shipped |
 | BC-BRAND-01 | document-render | accepted |
 | BC-DEMO-01 | export-share | accepted |
 | BC-LANG-01 | — (docs policy) | accepted |

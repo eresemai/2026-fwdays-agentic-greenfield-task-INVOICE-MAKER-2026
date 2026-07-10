@@ -22,7 +22,7 @@
 
 Video: _to be added after recording_
 
-## Current progress (2026-07-10, `main` @ `9cc0fb4`)
+## Current progress (2026-07-10, `main` — post loop close-out)
 
 | Area | Status |
 | --- | --- |
@@ -34,20 +34,22 @@ Video: _to be added after recording_
 | **Banking (S2)** | ✅ `banking` shipped — fork PR #7; currency → IBAN from active supplier profile (`FR-BANK-01`, `FR-BANK-03`) |
 | **S2 hardening** | ✅ fork PR #6 — adversarial review fixes (storage snapshots, a11y, IBAN validation) |
 | **Document render (S3)** | ✅ `document-render` shipped — fork PR #8; template fill, escaping, service rows, `render-invoice` |
-| **Embedded fonts (S3)** | ✅ `add-embedded-fonts` archived — Inter v20 subsets vendored; **FR-TPL-05** resolved (zero external font refs) |
-| **Vitest (TC-STACK-06)** | ✅ **199 tests** green (`npm run test`) |
+| **Embedded fonts (S3)** | ✅ `add-embedded-fonts` archived — Inter v20 subsets vendored; **FR-TPL-05** resolved |
+| **Form input (S4)** | ✅ `form-input` shipped — `/invoices/new` structured form + live HTML preview (M4 demo) |
+| **Vitest (TC-STACK-06)** | ✅ **211 tests** green (`npm run test`) |
 | **Template drift guard** | ✅ `npm run template:check` wired into `build` |
-| **OpenSpec specs** | ✅ 11 capabilities; S0–S3 deltas synced to `openspec/specs/`; **8 changes archived** |
+| **OpenSpec specs** | ✅ 11 capabilities; S0–S4 synced; **9 changes archived** (incl. `add-form-input`) |
 | **Capability roadmap** | ✅ `openspec/capability-map.yaml`, `docs/capability.md`, `docs/capabilities/` |
 | **Gate tooling** | ✅ `npm run capability:check` / `capability:list` |
 | **Agent handoff** | ✅ `docs/current-state.md` (session resume between agents) |
-| **Wayfinder planning** | ✅ Tickets 01–04, 06, 07, 15 resolved; **05** (Type 3 PDF glyphs), **11**, **16** open |
-| **Active slice** | 🎯 **S4 `form-input`** — demo milestone **M4** (form → live HTML preview) |
-| **End-to-end invoice flow** | ⏳ Blocked on S4 — all backend libs ready; UI form + preview not wired yet |
+| **Loop log (S4)** | ✅ [`docs/qa/loop-add-form-input.md`](docs/qa/loop-add-form-input.md) — 4-tick close-out |
+| **Wayfinder planning** | ✅ Tickets 01–04, 06, 07, 15 resolved; **05**, **11**, **16** open |
+| **Active slice** | 🎯 **S4b `export-share` preview** — download/share HTML from M4 form |
+| **End-to-end invoice flow** | ✅ **M4** — form → live HTML preview on `/invoices/new` |
 
-**Milestones:** M0 (shell) ✅ · M1 (domain libs) ✅ · M2 (directories + banking) ✅ · M3 (rendered HTML) ✅ · **M4 (form → preview)** ← next · M5/M6 blocked.
+**Milestones:** M0 ✅ · M1 ✅ · M2 ✅ · M3 ✅ · **M4 (form → preview) ✅** · M5/M6 blocked.
 
-**Recent work:** S3 `document-render` + embedded fonts (fork PRs #8, #9 stack), S2 `banking` (PR #7), S2 adversarial hardening (PR #6), 8 OpenSpec archives, 199 Vitest tests, CI auto-sync to this PR.
+**Recent work:** S4 `form-input` (apply + loop close-out + archive), 211 Vitest tests, M4 demo path live.
 
 ## Agentic Engineering practices applied
 
@@ -86,21 +88,21 @@ Honest status for each course practice. Open **TODO** items will be completed be
 
 ---
 
-### 2. Specs first (SDD) — ✅ applied (S0–S3 shipped)
+### 2. Specs first (SDD) — ✅ applied (S0–S4 shipped)
 
 - **OpenSpec** living specs for all 11 MVP capabilities.
 - **Capability map** with slice order S0→S6 and dependency gates (`npm run capability:check`).
 - Workflow: `/opsx:propose` → design + tasks + delta specs → `/opsx:apply` → `/opsx:sync` → `/opsx:archive`.
-- **Shipped through OpenSpec:** S0 `shell` (PR #3), S1 `nace-catalog` + `invoice-calc`, S2 `supplier-profile` (PR #5) + `client-directory` (PR #4) + `banking` (PR #7), S3 `document-render` (PR #8) + `add-embedded-fonts`.
-- **8 archived changes** in `openspec/changes/archive/`.
+- **Shipped through OpenSpec:** S0 `shell` (PR #3), S1 `nace-catalog` + `invoice-calc`, S2 `supplier-profile` (PR #5) + `client-directory` (PR #4) + `banking` (PR #7), S3 `document-render` (PR #8) + `add-embedded-fonts`, **S4 `form-input`** (archived `2026-07-10-add-form-input`).
+- **9 archived changes** in `openspec/changes/archive/`.
 - Traceability: `FR-*` → OpenSpec scenario → implementation + Vitest.
 - `openspec validate --strict` passes locally on every slice gate.
 
 **TODO before final submission:**
 
-- [x] Ship **S0–S3** through full OpenSpec changes (all archived).
-- [ ] Ship **S4 `form-input`** + preview gate of `export-share`.
-- [ ] Reach demo milestone **M4** (form → live HTML preview).
+- [x] Ship **S0–S4 `form-input`** through full OpenSpec changes (all archived).
+- [ ] Ship **S4b `export-share` preview** gate.
+- [x] Reach demo milestone **M4** (form → live HTML preview).
 
 ---
 
@@ -109,7 +111,7 @@ Honest status for each course practice. Open **TODO** items will be completed be
 **Done:**
 
 - Gates: `npm run typecheck`, `npm run lint`, `npm run build` (includes `template:check`).
-- **Vitest:** `npm run test` — **199 tests** (`TC-STACK-06`) covering `nace`, `invoice-calc`, storage CRUD, `banking`, `document-render` (escaping, service rows, template contract, render perf).
+- **Vitest:** `npm run test` — **211 tests** (`TC-STACK-06`) covering domain libs, storage, banking, render, **form-input** validation and mapper.
 - **Capability gates:** `npm run capability:check -- --capability <id>`.
 - `GET /api/health` contract in `openspec/specs/shell/spec.md`.
 - **Responsive shell:** headless Chrome verified 375 px / 768 px — no overflow (S0).
@@ -121,7 +123,7 @@ Honest status for each course practice. Open **TODO** items will be completed be
 
 - [ ] `openspec validate --strict` in CI (G5/G7 automation).
 - [ ] **G6** — Playwright smoke / visual QA.
-- [ ] Smoke / eval: form → preview → PDF (M4 demo).
+- [ ] Smoke / eval: preview → PDF (S6).
 - [ ] **Trajectory evals** (presentation slide 61: output vs route quality).
 
 **CodeRabbit note:** mentor PR exceeds 150-file review limit; reviews run on smaller fork PRs instead.
@@ -145,20 +147,25 @@ Honest status for each course practice. Open **TODO** items will be completed be
 **TODO:**
 
 - [ ] Formal checker log entry for S0/S1 (lessons captured in OpenSpec archives, not yet in this PR body).
-- [ ] Checker pass after **S4 `form-input`** ships.
+- [ ] Checker pass after **S4 `form-input`** — **scheduled in separate chat** (see [`docs/qa/loop-add-form-input.md`](docs/qa/loop-add-form-input.md#checker-handoff-separate-chat))
 - [ ] Address remaining CodeRabbit feedback before **Ready for review**.
 
 ---
 
-### 5. Loop engineering — ❌ not applied yet
+### 5. Loop engineering — ✅ applied (S4 close-out)
 
-Work is **session-based** with `/opsx:*` and handoff via `docs/current-state.md`, not a fully autonomous Cursor loop (G0).
+Dynamic close-out loop for `add-form-input` after `/opsx:apply` (19/19 tasks pre-complete):
+
+- **Log:** [`docs/qa/loop-add-form-input.md`](docs/qa/loop-add-form-input.md)
+- **Ticks:** 4 — apply-check → G4 gates → `openspec validate --strict` → archive + handoff
+- **Result:** `2026-07-10-add-form-input` archived; 211 tests green at close
 
 **TODO:**
 
-- [ ] Run Cursor **loop** for S4 `form-input` (or document manual slice cycle as interim).
-- [ ] Document: “slice X completed in N loop iterations”.
+- [x] Run loop for S4 `form-input` close-out.
+- [x] Document: “S4 closed in 4 loop ticks”.
 - [ ] **G0** — git hooks / loop-first automation (planned in README).
+- [ ] Run loop on next slice (`add-export-share`) with real apply ticks.
 
 ---
 
@@ -243,11 +250,12 @@ https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-20
 - [x] Real name provided (Serhii Rozum)
 - [ ] Video demo link added (1–2 min)
 - [x] Agentic Engineering practices described (with honest TODOs)
-- [ ] Working end-to-end result (target: M4 demo milestone)
-- [ ] Loop engineering — at least one slice through an autonomous loop
-- [x] Vitest + test-first for `src/lib/`, storage, banking, render (**199 tests**)
-- [x] Maker ≠ checker — documented separate review passes (fork PRs #2, #6, #7, #8)
+- [x] Working end-to-end result — **M4 demo milestone** (`/invoices/new` → live preview)
+- [x] Loop engineering — S4 close-out in 4 ticks ([loop log](docs/qa/loop-add-form-input.md))
+- [x] Vitest + test-first (**211 tests**)
+- [x] Maker ≠ checker — documented separate review passes (fork PRs #2, #6, #7, #8); S4 checker scheduled separately
 - [x] S0 `shell` shipped (responsive UI, health API, OpenSpec archived)
 - [x] S1 domain core shipped (`nace-catalog`, `invoice-calc`)
 - [x] S2 shipped (`supplier-profile`, `client-directory`, `banking`)
 - [x] S3 shipped (`document-render` + embedded fonts, FR-TPL-05)
+- [x] S4 shipped (`form-input` — M4 form → live HTML preview, archived)
