@@ -9,7 +9,7 @@
 
 ## 2. Money (FR-CALC-03, FR-CALC-04)
 
-- [ ] 2.1 `src/lib/invoice-calc/money.ts`: `Cents` brand,
+- [x] 2.1 `src/lib/invoice-calc/money.ts`: `Cents` brand,
       `centsFromInput`, `lineAmount(unit, qty)`, `invoiceTotal(lines)`,
       `prepaymentSplit(total, pct)`, `formatAmount` (en-US, 2 dp).
       **Verify:** unit tests incl. property check
