@@ -66,6 +66,7 @@ describe("validateNumber (FR-CALC-01)", () => {
   const malformed = [
     "0305/025",
     "2026-01",
+    "2026-000",
     "2026-0001",
     "2026001",
     "26-001",

@@ -32,9 +32,13 @@ function parseInvoiceNumber(candidate: string): ParsedInvoiceNumber | null {
     return null;
   }
   const [, yearPart, sequencePart] = match;
+  const sequence = Number.parseInt(sequencePart, 10);
+  if (sequence === 0) {
+    return null;
+  }
   return {
     year: Number.parseInt(yearPart, 10),
-    sequence: Number.parseInt(sequencePart, 10),
+    sequence,
   };
 }
 
