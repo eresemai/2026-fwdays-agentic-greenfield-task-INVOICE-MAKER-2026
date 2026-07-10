@@ -5,7 +5,7 @@
 | | |
 | --- | --- |
 | **Відео (1–2 хв)** | https://www.loom.com/share/01ebc7b3403a4b7da8dc785ef2b8205b |
-| **Live demo** | https://invoice-maker-2026.vercel.app |
+| **Live demo** | Local: `npm i && npm run dev` → `/invoices/new` (browser MVP, no secrets) |
 | **Швидкий старт** | `npm i && npm run dev` → http://localhost:3000/invoices/new |
 | **Що працює** | supplier + client → форма → live preview → print / HTML / PDF |
 | **Практики** | OpenSpec (10 archives) · Project Factory · 220 tests · loop log · maker≠checker |
