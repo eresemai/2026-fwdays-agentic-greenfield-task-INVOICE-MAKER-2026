@@ -14,8 +14,12 @@ export const INVOICE_NUMBER_EXAMPLE = "2026-001";
 
 const SEQUENCE_PAD = 3;
 
-/** Canonical `YYYY-NNN`: exactly 3 digits, or 4+ without a leading zero. */
-const INVOICE_NUMBER_PATTERN = /^(\d{4})-(\d{3}|[1-9]\d{3,})$/;
+/**
+ * Canonical `YYYY-NNN`: a real four-digit year (1000–9999, matching the
+ * `nextInvoiceNumber` contract) and a sequence of exactly 3 digits, or 4+
+ * without a leading zero.
+ */
+const INVOICE_NUMBER_PATTERN = /^([1-9]\d{3})-(\d{3}|[1-9]\d{3,})$/;
 
 interface ParsedInvoiceNumber {
   readonly year: number;
@@ -73,7 +77,8 @@ export function validateNumber(
   existing: readonly string[]
 ): NumberValidation {
   const trimmed = candidate.trim();
-  if (!parseInvoiceNumber(trimmed)) {
+  const parsed = parseInvoiceNumber(trimmed);
+  if (!parsed) {
     return {
       ok: false,
       reason: "malformed",
@@ -84,7 +89,7 @@ export function validateNumber(
     return {
       ok: false,
       reason: "duplicate",
-      message: `Invoice number ${trimmed} is already used; the next free number looks like ${INVOICE_NUMBER_EXAMPLE}`,
+      message: `Invoice number ${trimmed} is already used; the next free number is ${nextInvoiceNumber(existing, parsed.year)}`,
     };
   }
   return { ok: true };

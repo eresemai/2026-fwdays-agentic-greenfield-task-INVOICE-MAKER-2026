@@ -53,13 +53,13 @@ describe("validateNumber (FR-CALC-01)", () => {
     expect(validateNumber("2026-1000", [])).toEqual({ ok: true });
   });
 
-  it("rejects a duplicate with the format example in the message", () => {
+  it("rejects a duplicate and points at the actual next free number", () => {
     const result = validateNumber("2026-001", ["2026-001", "2026-002"]);
     expect(result.ok).toBe(false);
     if (!result.ok) {
       expect(result.reason).toBe("duplicate");
-      expect(result.message).toContain("2026-001");
-      expect(result.message).toContain("2026-001");
+      expect(result.message).toContain("2026-001 is already used");
+      expect(result.message).toContain("next free number is 2026-003");
     }
   });
 

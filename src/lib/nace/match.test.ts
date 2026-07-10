@@ -118,3 +118,40 @@ describe("matchNaceEntry — pure over the provided entries", () => {
     expect(matchNaceEntry("logo design", [])).toEqual({ kind: "none" });
   });
 });
+
+describe("matchNaceEntry — keywords anchor at word starts (review regression)", () => {
+  const unrelatedInputs = [
+    // «монтаж» must not fire inside «Демонтаж» (equipment dismantling ≠ video editing)
+    "Демонтаж обладнання",
+    // «лого» must not fire inside «аналогових»
+    "Оцифрування аналогових касет",
+    // «360» must not fire inside the price «3600»
+    "Оренда залу, 3600 грн",
+  ];
+
+  it.each(unrelatedInputs)("unrelated “%s” returns none", (input) => {
+    expect(matchNaceEntry(input)).toEqual({ kind: "none" });
+  });
+
+  it("still matches Ukrainian inflections via prefix stems", () => {
+    expectMatchedId(matchNaceEntry("розробка логотипів"), "graphic-design");
+    expectMatchedId(matchNaceEntry("послуги відеомонтажу"), "video-post-production");
+  });
+});
+
+describe("matchNaceEntry — Unicode normalization (review regression)", () => {
+  it("matches NFD-decomposed Ukrainian input (й/ї as combining marks)", () => {
+    expectMatchedId(matchNaceEntry("дизайн".normalize("NFD")), "graphic-design");
+    expectMatchedId(
+      matchNaceEntry("Створення віртуального туру".normalize("NFD")),
+      "visualization-3d-360"
+    );
+  });
+
+  it("resolves NFC and NFD forms of the same input identically", () => {
+    const input = "ВідеоМОНТАЖ і кольорокорекція";
+    expect(matchNaceEntry(input.normalize("NFD"))).toEqual(
+      matchNaceEntry(input.normalize("NFC"))
+    );
+  });
+});

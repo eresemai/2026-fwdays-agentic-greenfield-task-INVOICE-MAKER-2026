@@ -3,9 +3,10 @@
  *
  * All monetary values are integer minor units (cents), branded as `Cents`.
  * The user enters unit price and quantity; line amounts and the invoice
- * total are derived by multiplication and summation — division never
- * occurs in the money model, and floating-point arithmetic is never
- * performed on money. USD and EUR behave identically (2 decimal places).
+ * total are derived by multiplication and summation. Every stored amount is
+ * an exact integer of cents; the one transient float is the guarded
+ * `Math.round((total × percent) / 100)` inside `prepaymentSplit` (design D1
+ * risk note). USD and EUR behave identically (2 decimal places).
  */
 
 import { type ValidationError, validationError } from "./validation";
@@ -16,6 +17,15 @@ export type Cents = number & { readonly __brand: "cents" };
 const CENTS_PER_UNIT = 100;
 const FRACTION_DIGITS = 2;
 const PERCENT_MAX = 100;
+
+/** FR-CALC-04: prepayment percentage defaults to 50 when the user sets none. */
+export const DEFAULT_PREPAYMENT_PERCENT = 50;
+
+/**
+ * Largest total whose `total × percent` product stays a safe integer for any
+ * percent ≤ 100, keeping `prepaymentSplit` rounding exact.
+ */
+const MAX_SPLITTABLE_TOTAL = Math.floor(Number.MAX_SAFE_INTEGER / PERCENT_MAX);
 
 /** en-US grouping gives the document-wide `1,234.56` format (both EN and UA lines). */
 const wholeUnitsFormatter = new Intl.NumberFormat("en-US", {
@@ -114,6 +124,11 @@ export function prepaymentSplit(total: Cents, percent: number): PrepaymentSplit 
   if (!Number.isFinite(percent) || percent < 0 || percent > PERCENT_MAX) {
     throw new Error(
       `Prepayment percent must be between 0 and ${PERCENT_MAX}, received ${percent}`
+    );
+  }
+  if (total > MAX_SPLITTABLE_TOTAL) {
+    throw new Error(
+      `Total ${total} exceeds the range where the prepayment split stays exact`
     );
   }
   const prepayment = brand(Math.round((total * percent) / PERCENT_MAX));
