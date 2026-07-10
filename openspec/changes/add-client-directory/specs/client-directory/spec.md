@@ -1,8 +1,6 @@
-## Purpose
+# Delta: client-directory (add-client-directory)
 
-Browser-side client directory that prefills invoice forms.
-
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Client record fields
 A client record SHALL store the fields needed to prefill the invoice template customer block: customer name, address line, email, phone, and website, with optional company and tax ID metadata.
@@ -25,6 +23,8 @@ Client directory entries SHALL persist only in browser storage and SHALL survive
 #### Scenario: Reload preserves clients
 - **WHEN** the user saves a client and reloads the application
 - **THEN** the same client list and field values are available without a server round-trip
+
+## MODIFIED Requirements
 
 ### Requirement: Client directory CRUD
 The system SHALL let the user create, edit, and delete client records stored only in the browser, with each record conforming to the client record field requirements.

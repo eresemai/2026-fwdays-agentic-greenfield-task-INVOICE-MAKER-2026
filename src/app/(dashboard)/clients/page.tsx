@@ -1,3 +1,5 @@
+import { ClientsPageContent } from "@/components/clients/clients-page-content";
+
 export default function ClientsPage() {
   return (
     <div className="space-y-6">
@@ -11,6 +13,7 @@ export default function ClientsPage() {
         Довідник клієнтів зберігається в браузері і підставляє дані в форму
         інвойсу.
       </p>
+      <ClientsPageContent />
     </div>
   );
 }
