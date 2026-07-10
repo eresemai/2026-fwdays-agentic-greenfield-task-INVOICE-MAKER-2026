@@ -6,7 +6,7 @@
 
 ## 2. Types and seed catalog
 
-- [ ] 2.1 Create `src/lib/nace/types.ts`: `NaceEntry` with stable kebab-case `id`, `naceClass` (non-unique `XX.XX` string), `officialNameUa`, `lineTextEn`, `lineTextUa`, `legacyKvedClass` (data-only), `keywords` (lowercase UA + EN). `MatchResult` discriminated union `matched | ambiguous | none` (design D1–D3). Verify: `npm run typecheck`.
+- [x] 2.1 Create `src/lib/nace/types.ts`: `NaceEntry` with stable kebab-case `id`, `naceClass` (non-unique `XX.XX` string), `officialNameUa`, `lineTextEn`, `lineTextUa`, `legacyKvedClass` (data-only), `keywords` (lowercase UA + EN). `MatchResult` discriminated union `matched | ambiguous | none` (design D1–D3). Verify: `npm run typecheck`.
 - [ ] 2.2 Create `src/lib/nace/catalog.ts` with the four seed entries from the delta spec (FR-NACE-02/03/04): 74.12 graphic design, 74.12 3D visualization, 74.14 specialized design, 59.12 video post-production — bilingual texts exactly as specified, official UA names from `docs/191_2025.pdf`, legacy КВЕД correspondences (74.10 → 74.12/74.14, 59.12 → 59.12). Verify: `npm run typecheck && npm run lint`.
 - [ ] 2.3 Create `src/lib/nace/catalog.test.ts`: all four entries present with exact bilingual texts; two entries share `naceClass` 74.12 with distinct ids (FR-NACE-01); no `КВЕД`/`ДК 009` substrings in any `lineTextEn`/`lineTextUa` (BC-NACE-01). Verify: `npm run test` green.
 
