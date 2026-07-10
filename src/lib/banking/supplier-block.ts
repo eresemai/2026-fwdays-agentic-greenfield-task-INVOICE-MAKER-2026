@@ -25,7 +25,12 @@ export function selectIban(
   profile: SupplierProfile,
   currency: Currency
 ): string {
-  const iban = (currency === "USD" ? profile.ibanUsd : profile.ibanEur).trim();
+  // Profiles originate in localStorage; a hand-edited record can lack the
+  // field despite the type, and the spec requires MissingIbanError for
+  // "no IBAN", not a raw TypeError.
+  const raw: string | undefined =
+    currency === "USD" ? profile.ibanUsd : profile.ibanEur;
+  const iban = typeof raw === "string" ? raw.trim() : "";
 
   if (iban.length === 0) {
     throw new MissingIbanError(currency);
@@ -36,7 +41,8 @@ export function selectIban(
 
 /**
  * Placeholder names in docs/invoice-template.html owned by this module
- * (FR-BANK-03). Order mirrors the template's SUPPLIER section.
+ * (FR-BANK-03). The contract test asserts this set equals the template's
+ * SUPPLIER_* placeholders exactly.
  */
 export const SUPPLIER_BLOCK_KEYS = [
   "SUPPLIER_NAME_EN",

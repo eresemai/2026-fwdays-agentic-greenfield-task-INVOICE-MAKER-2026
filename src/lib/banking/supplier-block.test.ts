@@ -9,6 +9,8 @@ import {
   selectIban,
 } from "./supplier-block";
 
+// Synthetic fixture: documentation bank code 399622, sequential account
+// bodies — deliberately not checksum-valid real accounts (NFR-SEC-01).
 const PROFILE: SupplierProfile = {
   id: "profile-1",
   label: "Основний",
@@ -19,8 +21,8 @@ const PROFILE: SupplierProfile = {
   taxId: "1234567890",
   bankName: "JSC Universal Bank",
   swift: "UNJSUAUKXXX",
-  ibanUsd: "UA213996220000026007233566001",
-  ibanEur: "UA903052992990004149123456789",
+  ibanUsd: "UA003996220000000000000000001",
+  ibanEur: "UA003996220000000000000000002",
   createdAt: "2026-07-10T00:00:00.000Z",
   updatedAt: "2026-07-10T00:00:00.000Z",
 };
@@ -55,6 +57,14 @@ describe("selectIban", () => {
       expect((error as MissingIbanError).currency).toBe("EUR");
       expect((error as MissingIbanError).message).toContain("EUR");
     }
+  });
+
+  it("throws MissingIbanError, not TypeError, when the field is absent in stored data", () => {
+    const corrupted = {
+      ...PROFILE,
+      ibanUsd: undefined as unknown as string,
+    };
+    expect(() => selectIban(corrupted, "USD")).toThrowError(MissingIbanError);
   });
 });
 
@@ -108,9 +118,7 @@ describe("template contract", () => {
       )
     );
 
-    expect(placeholders.size).toBeGreaterThan(0);
-    for (const placeholder of placeholders) {
-      expect(SUPPLIER_BLOCK_KEYS).toContain(placeholder);
-    }
+    // Bidirectional: a key set drifting in either direction fails here.
+    expect([...placeholders].sort()).toEqual([...SUPPLIER_BLOCK_KEYS].sort());
   });
 });
