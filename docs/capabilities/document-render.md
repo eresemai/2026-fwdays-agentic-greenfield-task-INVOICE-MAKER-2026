@@ -24,7 +24,7 @@ bilingual HTML. Source of truth for both browser preview and PDF route.
 | FR-TPL-02 | Fixed title, subtitle, TERMS, signature unchanged | shipped |
 | FR-TPL-03 | `{{SERVICE_ROWS}}` bilingual table rows | shipped |
 | FR-TPL-04 | Optional `{{PROJECT_BLOCK}}` | shipped |
-| FR-TPL-05 | Self-contained HTML + A4 print CSS | **accepted** (CSS embedded; remote font `@import` unmet — see Known gap) |
+| FR-TPL-05 | Self-contained HTML + A4 print CSS + embedded fonts | shipped |
 | BC-LEGAL-01 | TERMS block immutable | accepted |
 | NFR-PERF-02 | Single render < 200 ms | shipped |
 
@@ -35,11 +35,12 @@ Also: BC-I18N-01, BC-BRAND-01, TC-STACK-03, TC-STACK-06
 | Area | Path |
 | --- | --- |
 | Template source | `docs/invoice-template.html` (read-only; single source of truth) |
-| Generated constant | `src/lib/render/template.ts` via `npm run template:sync` (drift test) |
+| Fonts | `docs/fonts/*.woff2` (Inter v20 variable, 3 subsets) + `OFL.txt` — see [README](../fonts/README.md) |
+| Generated constant | `src/lib/render/template.ts` via `npm run template:sync`; `template:check` runs inside `build` |
 | Render engine | `src/lib/render/fill-template.ts` (escape-by-default, single pass) |
 | Fragment builders | `src/lib/render/service-rows.ts` (`buildServiceRows`, `buildProjectBlock`) |
 | Composition | `src/lib/render/render-invoice.ts` (`renderInvoice`) |
-| Tests | 32 Vitest cases across the three modules |
+| Tests | 37 Vitest cases across the three modules |
 
 ## Verification
 
@@ -48,35 +49,40 @@ Also: BC-I18N-01, BC-BRAND-01, TC-STACK-03, TC-STACK-06
 - [x] TERMS section byte-identical to template
 - [x] Render < 200 ms for single invoice (NFR-PERF-02)
 - [x] Output opens standalone in browser (embedded CSS, A4 `@page`)
-- [ ] **No external network dependency** — one remote font `@import` remains (Known gap)
+- [x] **No external network dependency** — Inter embedded as `data:` URIs
+- [x] `№` (U+2116) covered by the embedded Cyrillic subset, even for English invoices
+- [x] Weights 500–800 are real variable instances (no synthesised bold)
 - [x] Hostile values escaped — no markup injection through invoice data
 
 ## Done when
 
 - Template fill from `docs/invoice-template.html`
-- Self-contained HTML with embedded CSS
+- Self-contained HTML with embedded CSS **and embedded fonts** (no network)
 - SERVICE_ROWS and optional PROJECT_BLOCK expansion
 
-## Known gap — FR-TPL-05 not fully met
+## Fonts (`add-embedded-fonts`)
 
-The template's `@import url('https://fonts.googleapis.com/…')` is the sole
-external reference. FR-TPL-05 permits no network dependency "beyond bundled
-fonts", and Google Fonts is **remote, not bundled** — so the requirement is
-unmet *today*, in the browser preview, not merely in offline PDF. Consequences:
+`scripts/sync-template.mjs` replaces the template's Google Fonts `@import` with
+three `@font-face` rules whose `src` is a base64 `data:` URI. Consequences:
 
-1. every rendered invoice issues a third-party request from a document holding
-   client and supplier PII (request metadata leaks to Google);
-2. offline headless Chromium (S6 PDF) will silently fall back, breaking cyrillic
-   glyph coverage.
+- **Identical everywhere.** Preview, saved HTML, and offline headless Chromium
+  render the same document — a font fallback fails *silently*, so this had to be
+  removed rather than monitored.
+- **No PII leak.** A document holding client and supplier data no longer issues a
+  third-party request on every render.
+- **Real weights.** The vendored files are variable (`font-weight: 300 800`), so
+  the `800` title is a real instance. `pdffonts` on the pre-change prototypes
+  showed synthesised `Inter-Regular_Bold` / `_SemiBold`.
+- **The `№` trap.** `U+2116` belongs to Google's *cyrillic* subset, and
+  `paymentPurpose` (FR-CALC-06) emits it inside an English string — so an
+  English-only invoice depends on that subset too.
 
-`render-invoice.test.ts` pins the external-URL count at exactly **1** so the gap
-cannot grow silently; it does not certify compliance. FR-TPL-05 is therefore
-tracked as `accepted`, not `shipped`.
+Cost: ~198 KB of base64 in `src/lib/render/template.ts` (21 KB → ~220 KB), landing
+in the preview route's chunk. Provenance, hashes and licence: [`docs/fonts/README.md`](../fonts/README.md).
 
-**Decision needed** (wayfinder ticket 05): self-host/inline Inter as a base64
-`@font-face`, or drop the `@import` and accept a system-font fallback
-(BC-BRAND-01 impact). Both touch `docs/invoice-template.html` and belong to a
-separate change.
+Still open in wayfinder ticket 05: Chromium's print path embeds glyphs as
+`Type 3` procedures. Font *availability* is no longer a variable in that
+investigation.
 
 ## After shipping
 
