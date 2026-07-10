@@ -4,7 +4,7 @@ import type {
   InvoiceCustomerFields,
 } from "@/types/client";
 
-const STORAGE_KEY = "invoice-maker:clients:v1";
+export const CLIENTS_STORAGE_KEY = "invoice-maker:clients:v1";
 
 type ClientsStore = {
   version: 1;
@@ -35,8 +35,54 @@ export class ClientValidationError extends Error {
   }
 }
 
+export class ClientStorageError extends Error {
+  constructor(message: string, options?: ErrorOptions) {
+    super(message, options);
+    this.name = "ClientStorageError";
+  }
+}
+
+export class ClientNotFoundError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ClientNotFoundError";
+  }
+}
+
 function isBrowser(): boolean {
   return typeof window !== "undefined";
+}
+
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function isStringIfPresent(value: unknown): boolean {
+  return value === undefined || typeof value === "string";
+}
+
+function isParseableIsoDate(value: unknown): value is string {
+  return typeof value === "string" && !Number.isNaN(Date.parse(value));
+}
+
+function isValidClientRecord(value: unknown): value is Client {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+
+  const record = value as Record<string, unknown>;
+  return (
+    isNonEmptyString(record.id) &&
+    isNonEmptyString(record.name) &&
+    isParseableIsoDate(record.createdAt) &&
+    isParseableIsoDate(record.updatedAt) &&
+    typeof record.address === "string" &&
+    typeof record.email === "string" &&
+    typeof record.phone === "string" &&
+    typeof record.website === "string" &&
+    isStringIfPresent(record.company) &&
+    isStringIfPresent(record.taxId)
+  );
 }
 
 function readStore(): ClientsStore {
@@ -45,17 +91,26 @@ function readStore(): ClientsStore {
   }
 
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(CLIENTS_STORAGE_KEY);
     if (!raw) {
       return { version: 1, clients: [] };
     }
 
-    const parsed = JSON.parse(raw) as ClientsStore;
-    if (parsed.version !== 1 || !Array.isArray(parsed.clients)) {
+    const parsed = JSON.parse(raw) as {
+      version?: unknown;
+      clients?: unknown;
+    } | null;
+    if (
+      parsed === null ||
+      typeof parsed !== "object" ||
+      parsed.version !== 1 ||
+      !Array.isArray(parsed.clients)
+    ) {
       return { version: 1, clients: [] };
     }
 
-    return parsed;
+    // Silently drop corrupt records instead of crashing on render.
+    return { version: 1, clients: parsed.clients.filter(isValidClientRecord) };
   } catch {
     return { version: 1, clients: [] };
   }
@@ -67,9 +122,12 @@ function writeStore(store: ClientsStore): void {
   }
 
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-  } catch {
-    // Ignore quota errors and private browsing restrictions.
+    window.localStorage.setItem(CLIENTS_STORAGE_KEY, JSON.stringify(store));
+  } catch (error) {
+    throw new ClientStorageError(
+      "Failed to persist clients to browser storage.",
+      { cause: error }
+    );
   }
 }
 
@@ -122,8 +180,28 @@ function sortClients(clients: Client[]): Client[] {
   );
 }
 
-export function listClients(): Client[] {
-  return sortClients(readStore().clients);
+const EMPTY_CLIENTS: readonly Client[] = Object.freeze([]);
+
+// Cached snapshot so useSyncExternalStore gets a reference-stable value;
+// invalidated in every write path before listeners are notified.
+let cachedClients: readonly Client[] | null = null;
+
+function invalidateClientsSnapshot(): void {
+  cachedClients = null;
+}
+
+export function listClients(): readonly Client[] {
+  if (cachedClients === null) {
+    const sorted = sortClients(readStore().clients);
+    // Reuse EMPTY_CLIENTS so an empty store hydrates against the same
+    // reference as the server snapshot (no extra post-hydration render).
+    cachedClients = sorted.length === 0 ? EMPTY_CLIENTS : Object.freeze(sorted);
+  }
+  return cachedClients;
+}
+
+export function getClientsServerSnapshot(): readonly Client[] {
+  return EMPTY_CLIENTS;
 }
 
 export function getClient(id: string): Client | null {
@@ -134,11 +212,15 @@ export function saveClient(input: ClientInput): Client {
   const validated = validateClientInput(input);
   const store = readStore();
   const now = new Date().toISOString();
-  const existingIndex = validated.id
-    ? store.clients.findIndex((client) => client.id === validated.id)
-    : -1;
 
-  if (existingIndex >= 0) {
+  if (validated.id) {
+    const existingIndex = store.clients.findIndex(
+      (client) => client.id === validated.id
+    );
+    if (existingIndex === -1) {
+      throw new ClientNotFoundError("Client not found.");
+    }
+
     const existing = store.clients[existingIndex];
     const updated: Client = {
       ...existing,
@@ -149,18 +231,20 @@ export function saveClient(input: ClientInput): Client {
     };
     store.clients[existingIndex] = updated;
     writeStore(store);
+    invalidateClientsSnapshot();
     notifyListeners();
     return updated;
   }
 
   const created: Client = {
     ...validated,
-    id: validated.id ?? createId(),
+    id: createId(),
     createdAt: now,
     updatedAt: now,
   };
   store.clients.push(created);
   writeStore(store);
+  invalidateClientsSnapshot();
   notifyListeners();
   return created;
 }
@@ -174,6 +258,7 @@ export function deleteClient(id: string): boolean {
   }
 
   writeStore({ version: 1, clients: nextClients });
+  invalidateClientsSnapshot();
   notifyListeners();
   return true;
 }
@@ -190,4 +275,9 @@ export function clientToInvoiceCustomerFields(
     customerPhone: client.phone,
     customerWebsite: client.website,
   };
+}
+
+/** Test helper: reset the cached snapshot so the next read hits storage. */
+export function __resetClientsCacheForTests(): void {
+  invalidateClientsSnapshot();
 }

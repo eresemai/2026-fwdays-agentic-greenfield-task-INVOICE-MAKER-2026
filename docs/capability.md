@@ -36,7 +36,7 @@ npm run capability:check -- --capability <id>
 
 ```bash
 npm run capability:check -- --capability document-render
-npm run test   # Vitest
+npm run test   # Vitest (S1 domain + S2 storage & banking suites)
 ```
 
 ### S2 complete ✅
@@ -45,8 +45,9 @@ npm run test   # Vitest
 | --- | --- | --- |
 | `supplier-profile` | #5 merged | `2026-07-10-add-supplier-profile` |
 | `client-directory` | #4 merged | `2026-07-10-add-client-directory` |
+| `banking` | #7 open | `add-banking` (archive after merge) |
 
-Next: `/opsx:propose add-document-render` (S3).
+Next: merge PR #7 → `/opsx:archive add-banking` → `/opsx:propose add-document-render` (S3).
 
 ### Resolved decisions (no longer gate calc)
 
@@ -147,7 +148,7 @@ Blocked until every **Depends on** row is `shipped` in `capability-map.yaml`.
 ```
 shell ✅
   → nace-catalog ✅ ∥ invoice-calc ✅
-  → supplier-profile ✅ ∥ client-directory → banking
+  → supplier-profile ✅ ∥ client-directory ✅ → banking ✅
   → document-render
   → form-input → export-share (preview)
 ```
@@ -225,6 +226,8 @@ S6           export-share (pdf) + invoice-edit
 
 | Priority | Action | Why |
 | --- | --- | --- |
-| 1 | Merge hardening PR #6 + banking PR → `/opsx:archive add-banking` | Lands S2 review fixes and banking on `main` |
-| 2 | `/opsx:propose add-document-render` | S3 unblocked once banking merges | 
+| 1 | Merge [PR #7](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/7) → `/opsx:archive add-banking` | Lands S2 banking on `main` |
+| 2 | `/opsx:propose add-document-render` | S3 unblocked once banking merges |
 | 3 | Wayfinder 05 (human) | Prototype PDF before S6 pdf gate |
+
+PRs [#4](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/4) and [#5](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/5) are merged and both S2 directory changes are archived (see §0). PR #6 (S2 hardening) merged on `main`.

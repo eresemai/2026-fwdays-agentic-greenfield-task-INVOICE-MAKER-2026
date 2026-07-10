@@ -51,6 +51,7 @@ Also: NFR-A11Y-01, NFR-OBS-01, TC-STACK-05 (Zod)
 - Structured and short-format input paths
 - Zod validation with accessible error messages
 - Live preview wired to document-render
+- Client picker prefills invoice form from client-directory records
 
 ## After shipping
 

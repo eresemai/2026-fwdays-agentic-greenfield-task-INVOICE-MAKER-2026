@@ -111,7 +111,7 @@ capabilities:
     blocks: [form-input]
     done_when:
       - CRUD for clients in browser storage
-      - Client picker prefills invoice form only
+      - Client records expose invoice-form prefill fields (picker ships with form-input)
 
   banking:
     owner: domain
@@ -157,6 +157,7 @@ capabilities:
     blocks: [export-share, invoice-registry]
     done_when:
       - Structured and short-format input paths
+      - Client picker prefills invoice form from client-directory records
       - Zod validation with accessible error messages
       - Live preview wired to document-render
 
