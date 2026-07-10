@@ -4,116 +4,75 @@
     {
       "slice": "2026-07-10-add-banking",
       "reviewEvidence": "clean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     },
     {
       "slice": "2026-07-10-add-client-directory",
       "reviewEvidence": "clean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     },
     {
       "slice": "2026-07-10-add-document-render",
       "reviewEvidence": "clean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     },
     {
       "slice": "2026-07-10-add-embedded-fonts",
       "reviewEvidence": "clean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     },
     {
       "slice": "2026-07-10-add-export-share-preview",
       "reviewEvidence": "clean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     },
     {
       "slice": "2026-07-10-add-form-input",
       "reviewEvidence": "clean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     },
     {
       "slice": "2026-07-10-add-invoice-calc",
       "reviewEvidence": "clean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     },
     {
       "slice": "2026-07-10-add-nace-catalog",
       "reviewEvidence": "clean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     },
     {
       "slice": "2026-07-10-add-shell",
       "reviewEvidence": "clean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     },
     {
       "slice": "2026-07-10-add-supplier-profile",
       "reviewEvidence": "clean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     }
   ],
   "overlaps": [],
-  "failures": [
-    {
-      "check": "trailer",
-      "msg": "2026-07-10-add-banking: no commit carries a \"Slice: add-banking\" trailer"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-10-add-client-directory: no commit carries a \"Slice: add-client-directory\" trailer"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-10-add-document-render: no commit carries a \"Slice: add-document-render\" trailer"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-10-add-embedded-fonts: no commit carries a \"Slice: add-embedded-fonts\" trailer"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-10-add-export-share-preview: no commit carries a \"Slice: add-export-share-preview\" trailer"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-10-add-form-input: no commit carries a \"Slice: add-form-input\" trailer"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-10-add-invoice-calc: no commit carries a \"Slice: add-invoice-calc\" trailer"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-10-add-nace-catalog: no commit carries a \"Slice: add-nace-catalog\" trailer"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-10-add-shell: no commit carries a \"Slice: add-shell\" trailer"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-10-add-supplier-profile: no commit carries a \"Slice: add-supplier-profile\" trailer"
-    }
-  ],
+  "failures": [],
   "warnings": []
 }

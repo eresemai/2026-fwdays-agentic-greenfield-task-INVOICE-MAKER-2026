@@ -6,20 +6,20 @@ It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
 Scope: 10 archived slice(s).
-Result: FAIL (10 failures)
+Result: PASS
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
-| 2026-07-10-add-banking | clean | **0** | yes | - |
-| 2026-07-10-add-client-directory | clean | **0** | yes | - |
-| 2026-07-10-add-document-render | clean | **0** | yes | - |
-| 2026-07-10-add-embedded-fonts | clean | **0** | yes | - |
-| 2026-07-10-add-export-share-preview | clean | **0** | yes | - |
-| 2026-07-10-add-form-input | clean | **0** | yes | - |
-| 2026-07-10-add-invoice-calc | clean | **0** | yes | - |
-| 2026-07-10-add-nace-catalog | clean | **0** | yes | - |
-| 2026-07-10-add-shell | clean | **0** | yes | - |
-| 2026-07-10-add-supplier-profile | clean | **0** | yes | - |
+| 2026-07-10-add-banking | clean | 1 | yes | - |
+| 2026-07-10-add-client-directory | clean | 1 | yes | - |
+| 2026-07-10-add-document-render | clean | 1 | yes | - |
+| 2026-07-10-add-embedded-fonts | clean | 1 | yes | - |
+| 2026-07-10-add-export-share-preview | clean | 1 | yes | - |
+| 2026-07-10-add-form-input | clean | 1 | yes | - |
+| 2026-07-10-add-invoice-calc | clean | 1 | yes | - |
+| 2026-07-10-add-nace-catalog | clean | 1 | yes | - |
+| 2026-07-10-add-shell | clean | 1 | yes | - |
+| 2026-07-10-add-supplier-profile | clean | 1 | yes | - |
 
 ## Cross-slice module overlap
 
@@ -27,16 +27,7 @@ None.
 
 ## Failures
 
-- **trailer**: 2026-07-10-add-banking: no commit carries a "Slice: add-banking" trailer
-- **trailer**: 2026-07-10-add-client-directory: no commit carries a "Slice: add-client-directory" trailer
-- **trailer**: 2026-07-10-add-document-render: no commit carries a "Slice: add-document-render" trailer
-- **trailer**: 2026-07-10-add-embedded-fonts: no commit carries a "Slice: add-embedded-fonts" trailer
-- **trailer**: 2026-07-10-add-export-share-preview: no commit carries a "Slice: add-export-share-preview" trailer
-- **trailer**: 2026-07-10-add-form-input: no commit carries a "Slice: add-form-input" trailer
-- **trailer**: 2026-07-10-add-invoice-calc: no commit carries a "Slice: add-invoice-calc" trailer
-- **trailer**: 2026-07-10-add-nace-catalog: no commit carries a "Slice: add-nace-catalog" trailer
-- **trailer**: 2026-07-10-add-shell: no commit carries a "Slice: add-shell" trailer
-- **trailer**: 2026-07-10-add-supplier-profile: no commit carries a "Slice: add-supplier-profile" trailer
+None.
 
 ## Warnings
 
