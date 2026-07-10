@@ -1,6 +1,6 @@
 {
-  "createdAt": "2026-07-10T11:24:21.185Z",
-  "gitHead": "ec284ab3ec02a1e5b14f490c5af500b8e37b820c",
+  "createdAt": "2026-07-10T11:53:22.533Z",
+  "gitHead": "f6069f35e8cbba839445a2172791a49df21e1172",
   "files": {
     ".claude/workflows/eval-suite.js": "f93c99d868b812cfa7412927f52b62d1042525396a9d0265f16cfe435b9c6098",
     ".claude/workflows/review-gate.js": "7295d8e94ba347213120b9d190b9ebbb88dee373173cfc7daba2114b726ca76b",
@@ -10,7 +10,7 @@
     ".claude/workflows/vision-verify.js": "84c893a066088a158d308a3a21cf7cd3b44fdefb4f503ef9bd85507b7364fc69",
     ".githooks/commit-msg": "c6427b364dbc15da31235e4c0f9a8ac74639b7f0512cadce95f301637387fb5c",
     ".githooks/pre-commit": "c64e18049003ddd126e8ac2c61c1ce759923977748f5f044ee34fc1c3212eaea",
-    ".github/workflows/ci.yml": "951aa661dbb46dc537f7cc965459b233577cc3b7340eb780b393d35536ad5fa2",
+    ".github/workflows/ci.yml": "62a335781aab7e2416ff6a8fdd69a9bccc403a62437df76ae2a75474bd80fc98",
     ".github/workflows/sync-homework-pr.yml": "4b7239d7da0c61b19f815b29854166a87a8b2cfa3a523dc42599c225cb3e529b",
     "quality/process-baseline.json": "c4138cf68d31420931034e59d580cc4db6fdd08550de95347c7396bd9b2923d5",
     "quality/telemetry.config.json": "98276dbbd18f9d694f3378aed7ecc042439d99c8e292bb3caeed7a833005835b",
@@ -29,13 +29,6 @@
     "scripts/qa-verify.mjs": "fdcd0b3d4db03837702fc81e94ab27a1ce16aa235e4fb32413b563478243c2c0"
   },
   "adaptations": [
-    "tools=claude only: .claude/agents + .claude/workflows installed; cursor/codex/copilot adapters and the .project-factory/ vendored docs intentionally omitted",
-    "git hooks copied to .githooks/ + scripts/hooks-*.mjs but core.hooksPath deliberately NOT set at G0: check-traceability currently FAILs (FR-NACE-06, FR-INPUT-03 uncited by any spec) and would block every commit; arm with 'git config core.hooksPath .githooks' once the FR chain is green and Refs:/Slice: trailers are adopted",
-    "no verify-commit made: repo had uncommitted export-share work on main; step 4's 'git commit --allow-empty' skipped",
-    "CI trimmed from templates/ci/github-actions.yml: test:integration, test:e2e, playwright install, test:coverage, DATABASE_URL/BETTER_AUTH_* env and 'npm audit --audit-level=high' removed - no mechanism exists (no DB, no Playwright, no coverage provider). Added capability:check + factory-integrity instead. Re-add each step in the commit that lands its mechanism",
-    "package.json: test:coverage / test:integration / test:e2e intentionally NOT wired - an echo stub exiting 0 is laundering (lesson declared-method-needs-mechanism). qa-verify battery kept verbatim so it reports them MISSING rather than hiding the gap",
-    "quality/visual-parity.config.json omitted and scripts/check-parity-suite + parity-block-loop + lib/parity-capture not installed: no pixel-fidelity requirement in this project; check-visual-fidelity correctly renders NOT-EARNED",
-    "Claude Code PostToolUse ESLint hook installed in .claude/settings.json (user-approved after security-classifier block)",
-    "openspec init skipped: repo already carries 10 capability specs + capability-map.yaml + config.yaml (no openspec/project.md by design)"
+    "ci.yml: fetch-depth 0 so check-trajectory Slice trailer grep sees full history on GitHub Actions"
   ]
 }
