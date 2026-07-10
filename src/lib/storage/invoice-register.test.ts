@@ -94,6 +94,18 @@ describe("invoice-register storage", () => {
     it("throws InvoiceNotFoundError when setting status on an unknown id", () => {
       expect(() => setInvoiceStatus("missing", "sent")).toThrow(InvoiceNotFoundError);
     });
+
+    it("trims the invoice number before persisting", () => {
+      const saved = saveInvoice(buildInput({ invoiceNumber: "  2026-042  " }));
+      expect(saved.invoiceNumber).toBe("2026-042");
+      expect(getInvoice(saved.id)?.invoiceNumber).toBe("2026-042");
+    });
+
+    it("rejects a shape-valid but impossible calendar date", () => {
+      expect(() =>
+        saveInvoice(buildInput({ paymentDeadlineIso: "2026-02-30" }))
+      ).toThrow(/ISO date/);
+    });
   });
 
   // @trace FR-REG-02

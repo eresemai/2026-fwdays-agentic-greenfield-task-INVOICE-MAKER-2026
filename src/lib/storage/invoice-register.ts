@@ -60,14 +60,25 @@ function isNonEmptyString(value: unknown): value is string {
 }
 
 function isIsoDate(value: unknown): value is string {
-  // Shape AND calendar validity: `2026-13-45` passes the regex but is not a
-  // real date, so reject it the way clients.ts does (Date.parse) to keep a
-  // corrupt or hand-edited store entry out of deriveOverdue's comparison.
+  // Shape AND true calendar validity: reconstruct the date and require the
+  // components to round-trip, so overflow days (2026-02-30, 2026-04-31) that
+  // Date.parse silently rolls over are rejected, not just impossible months.
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
   return (
-    typeof value === "string" &&
-    /^\d{4}-\d{2}-\d{2}$/.test(value) &&
-    !Number.isNaN(Date.parse(value))
+    date.getUTCFullYear() === year &&
+    date.getUTCMonth() === month - 1 &&
+    date.getUTCDate() === day
   );
+}
+
+// createdAt/updatedAt are full ISO timestamps, not YYYY-MM-DD; validate them the
+// way clients.ts validates its date fields (parseable), not merely non-empty.
+function isIsoTimestamp(value: unknown): value is string {
+  return typeof value === "string" && !Number.isNaN(Date.parse(value));
 }
 
 function isStatus(value: unknown): value is InvoiceStatus {
@@ -82,16 +93,14 @@ function isSnapshot(value: unknown): value is InvoiceSnapshot {
     return false;
   }
   const s = value as Record<string, unknown>;
+  const isObject = (v: unknown) =>
+    typeof v === "object" && v !== null && !Array.isArray(v);
   return (
-    typeof s.supplier === "object" &&
-    s.supplier !== null &&
-    typeof s.customer === "object" &&
-    s.customer !== null &&
+    isObject(s.supplier) &&
+    isObject(s.customer) &&
     Array.isArray(s.serviceRows) &&
-    typeof s.totals === "object" &&
-    s.totals !== null &&
-    typeof s.termsText === "object" &&
-    s.termsText !== null
+    isObject(s.totals) &&
+    isObject(s.termsText)
   );
 }
 
@@ -107,8 +116,8 @@ function isValidRecord(value: unknown): value is InvoiceRecord {
     isIsoDate(record.issueDateIso) &&
     isIsoDate(record.paymentDeadlineIso) &&
     isSnapshot(record.snapshot) &&
-    isNonEmptyString(record.createdAt) &&
-    isNonEmptyString(record.updatedAt)
+    isIsoTimestamp(record.createdAt) &&
+    isIsoTimestamp(record.updatedAt)
   );
 }
 
@@ -197,8 +206,11 @@ function nowIso(): string {
   return new Date().toISOString();
 }
 
-function validateInput(input: InvoiceRecordInput): void {
-  if (!isNonEmptyString(input.invoiceNumber)) {
+// Returns a normalized input (trimmed invoice number) so padded values are not
+// persisted, mirroring validateClientInput in clients.ts.
+function validateInput(input: InvoiceRecordInput): InvoiceRecordInput {
+  const invoiceNumber = input.invoiceNumber?.trim() ?? "";
+  if (!invoiceNumber) {
     throw new InvoiceValidationError("Invoice number is required.");
   }
   if (!isStatus(input.status)) {
@@ -217,6 +229,7 @@ function validateInput(input: InvoiceRecordInput): void {
   if (!isSnapshot(input.snapshot)) {
     throw new InvoiceValidationError("A full invoice snapshot is required.");
   }
+  return { ...input, invoiceNumber };
 }
 
 export function listInvoices(): readonly InvoiceRecord[] {
@@ -239,13 +252,13 @@ export function getInvoice(id: string): InvoiceRecord | null {
 }
 
 export function saveInvoice(input: InvoiceRecordInput): InvoiceRecord {
-  validateInput(input);
+  const validated = validateInput(input);
   const store = readStore();
   const timestamp = nowIso();
 
-  if (input.id) {
+  if (validated.id) {
     const existingIndex = store.invoices.findIndex(
-      (invoice) => invoice.id === input.id
+      (invoice) => invoice.id === validated.id
     );
     if (existingIndex === -1) {
       throw new InvoiceNotFoundError(
@@ -255,13 +268,13 @@ export function saveInvoice(input: InvoiceRecordInput): InvoiceRecord {
     const previous = store.invoices[existingIndex];
     const updated: InvoiceRecord = {
       ...previous,
-      invoiceNumber: input.invoiceNumber,
-      status: input.status,
-      issueDateIso: input.issueDateIso,
-      paymentDeadlineIso: input.paymentDeadlineIso,
+      invoiceNumber: validated.invoiceNumber,
+      status: validated.status,
+      issueDateIso: validated.issueDateIso,
+      paymentDeadlineIso: validated.paymentDeadlineIso,
       // FR-REG-03: store a value copy so a later directory edit to the
       // caller's source object cannot reach into the stored record.
-      snapshot: clone(input.snapshot),
+      snapshot: clone(validated.snapshot),
       updatedAt: timestamp,
     };
     store.invoices[existingIndex] = updated;
@@ -271,11 +284,11 @@ export function saveInvoice(input: InvoiceRecordInput): InvoiceRecord {
 
   const created: InvoiceRecord = {
     id: createId(),
-    invoiceNumber: input.invoiceNumber,
-    status: input.status,
-    issueDateIso: input.issueDateIso,
-    paymentDeadlineIso: input.paymentDeadlineIso,
-    snapshot: clone(input.snapshot),
+    invoiceNumber: validated.invoiceNumber,
+    status: validated.status,
+    issueDateIso: validated.issueDateIso,
+    paymentDeadlineIso: validated.paymentDeadlineIso,
+    snapshot: clone(validated.snapshot),
     createdAt: timestamp,
     updatedAt: timestamp,
   };
@@ -327,7 +340,11 @@ export function deleteInvoice(id: string): boolean {
  * `todayIso` (not a full timestamp) so a same-day deadline is not overdue.
  */
 export function deriveOverdue(record: InvoiceRecord, todayIso: string): boolean {
-  return record.status === "sent" && record.paymentDeadlineIso < todayIso;
+  // Normalize to YYYY-MM-DD so a caller passing a full ISO timestamp
+  // (e.g. new Date().toISOString()) does not flag a same-day deadline overdue.
+  return (
+    record.status === "sent" && record.paymentDeadlineIso < todayIso.slice(0, 10)
+  );
 }
 
 export function __resetInvoiceCacheForTests(): void {
