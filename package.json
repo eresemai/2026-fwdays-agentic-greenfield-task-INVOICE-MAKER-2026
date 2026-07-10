@@ -9,15 +9,18 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "pdf:smoke": "RUN_PDF_SMOKE=1 vitest run src/lib/pdf/render-pdf.test.ts",
     "capability:check": "node scripts/check-capability-gates.mjs",
     "capability:list": "node scripts/check-capability-gates.mjs --list"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
+    "@sparticuz/chromium": "^147.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.21.0",
     "next": "16.2.9",
+    "puppeteer-core": "^25.3.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "shadcn": "^4.11.0",

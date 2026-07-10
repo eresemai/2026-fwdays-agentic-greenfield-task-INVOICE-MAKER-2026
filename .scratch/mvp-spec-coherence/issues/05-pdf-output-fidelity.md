@@ -81,3 +81,33 @@ divide evenly, so ticket `06` has something concrete to look at.
 The prototype, linked from this ticket. The answer records the chosen approach,
 the rejected ones and why, and what `TC-STACK-03` and `BC-LEGAL-01` must be
 rewritten to say.
+
+## Prototype (2026-07-10)
+
+**Branch:** `feat/pdf-prototype` (throwaway; does **not** ship `export-share`).
+
+| Artifact | Path |
+| --- | --- |
+| Route | `POST /api/pdf` → `src/app/api/pdf/route.ts` |
+| Render | `src/lib/pdf/render-pdf.ts` (puppeteer-core + `@sparticuz/chromium` on Vercel) |
+| Template fill | `src/lib/pdf/fill-template.ts` |
+| Fixtures | `src/lib/pdf/fixtures.ts` — VISIO USD (clean division) + Ecivres EUR (uneven) |
+| Smoke | `npm run pdf:smoke` → `.scratch/pdf-prototype/*.pdf` |
+
+**Local smoke (2026-07-10):** 2 PDFs generated in ~7.4 s via system Chrome.
+133 Vitest tests green (4 new template-fill tests; PDF smoke gated by `RUN_PDF_SMOKE=1`).
+
+### Provisional font strategy (needs human eyes)
+
+Prototype keeps the template's Google Fonts `@import` and awaits
+`document.fonts.ready` before `page.pdf()`. **Not validated:** Cyrillic glyphs,
+U+2116 in payment purpose, cold-start on Vercel, or deploy size vs 250 MB cap.
+
+### Still to decide (human review)
+
+- [ ] Open `.scratch/pdf-prototype/visio-usd.pdf` — Ukrainian glyphs + `№` in purpose line
+- [ ] A4 pagination; TERMS block not orphaned
+- [ ] Service row column alignment when UA wraps
+- [ ] Deploy to Vercel preview — measure function size, cold start, render time
+- [ ] Reject or accept: network font fetch vs inlined base64 `@font-face`
+- [ ] Record final answer for `TC-STACK-03` / `BC-LEGAL-01` if PDF primitives differ from HTML-only contract
