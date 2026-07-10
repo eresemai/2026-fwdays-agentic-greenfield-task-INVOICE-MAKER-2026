@@ -274,7 +274,10 @@ for (const line of (reqText ?? "").split("\n")) {
   const m = line.match(/^\|\s*((?:FR|NFR|TC|BC)-(?:[A-Z0-9]+-)?\d+)\s*\|/);
   if (!m) continue;
   const id = m[1];
-  const phase = /\|\s*Future\s*\|/i.test(line) ? "Future" : "MVP";
+  // `dropped` is as non-MVP as `Future` (PD-1): a dropped requirement is not an
+  // acceptance obligation, so it is never demanded a verification tag.
+  const nonMvp = line.match(/\|\s*(Future|dropped)\s*\|/i);
+  const phase = nonMvp ? nonMvp[1].toLowerCase() : "MVP";
   const methods = methodsIn(line);
   if (methods.size) {
     const c = ensure(id);

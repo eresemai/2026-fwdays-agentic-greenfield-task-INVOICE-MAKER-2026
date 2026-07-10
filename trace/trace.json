@@ -37,8 +37,8 @@
     "FR-CLIENT-02": "MVP",
     "FR-CLIENT-03": "MVP",
     "FR-CLIENT-04": "MVP",
-    "FR-NACE-06": "MVP",
-    "FR-INPUT-03": "MVP",
+    "FR-NACE-06": "dropped",
+    "FR-INPUT-03": "dropped",
     "NFR-PERF-01": "MVP",
     "NFR-PERF-02": "MVP",
     "NFR-A11Y-01": "MVP",
@@ -449,24 +449,6 @@
       "planned": true,
       "tests": [],
       "recordings": []
-    },
-    {
-      "id": "FR-NACE-06",
-      "specs": [
-        "openspec/specs/nace-catalog/spec.md"
-      ],
-      "planned": true,
-      "tests": [],
-      "recordings": []
-    },
-    {
-      "id": "FR-INPUT-03",
-      "specs": [
-        "openspec/specs/form-input/spec.md"
-      ],
-      "planned": true,
-      "tests": [],
-      "recordings": []
     }
   ],
   "failures": [],
@@ -522,14 +504,6 @@
     {
       "check": "test-trace",
       "msg": "FR-CLIENT-04 has no test annotated \"@trace FR-CLIENT-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-NACE-06 has no test annotated \"@trace FR-NACE-06\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-INPUT-03 has no test annotated \"@trace FR-INPUT-03\""
     },
     {
       "check": "recording-evidence",
@@ -674,14 +648,6 @@
     {
       "check": "recording-evidence",
       "msg": "FR-CLIENT-04 is not referenced by any recording manifest under docs/qa/"
-    },
-    {
-      "check": "recording-evidence",
-      "msg": "FR-NACE-06 is not referenced by any recording manifest under docs/qa/"
-    },
-    {
-      "check": "recording-evidence",
-      "msg": "FR-INPUT-03 is not referenced by any recording manifest under docs/qa/"
     }
   ]
 }

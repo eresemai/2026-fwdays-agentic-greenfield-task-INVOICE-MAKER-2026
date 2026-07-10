@@ -46,6 +46,7 @@ jobs:
           node tests/check-trajectory-retrofit.test.mjs
           node tests/check-traceability-trace-ids.test.mjs
           node tests/check-traceability-anchor.test.mjs
+          node tests/check-dropped-status.test.mjs
       - name: Traceability chain (and freshness of generated report)
         run: |
           node scripts/check-traceability.mjs --check-fresh

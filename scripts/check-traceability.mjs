@@ -91,7 +91,11 @@ const requirements = new Map(); // id -> { phase }
 for (const line of (reqText ?? "").split("\n")) {
   const m = line.match(/^\|\s*((?:FR|NFR|TC|BC)-(?:[A-Z0-9]+-)?\d+)\s*\|/);
   if (!m) continue;
-  const phase = /\|\s*Future\s*\|/i.test(line) ? "Future" : "MVP";
+  // `dropped` is as non-MVP as `Future` (PD-1). A dropped negative requirement
+  // is satisfied by omission and cannot honestly carry a test or a recording;
+  // counting it among MVP obligations manufactures unclearable warnings.
+  const nonMvp = line.match(/\|\s*(Future|dropped)\s*\|/i);
+  const phase = nonMvp ? nonMvp[1].toLowerCase() : "MVP";
   requirements.set(m[1], { phase });
 }
 const mvpFRs = [...requirements.keys()].filter(
