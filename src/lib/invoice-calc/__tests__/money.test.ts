@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   type Cents,
   centsFromInput,
+  DEFAULT_PREPAYMENT_PERCENT,
   formatAmount,
   invoiceTotal,
   lineAmount,
@@ -171,5 +172,24 @@ describe("toCents", () => {
   it("rejects fractional and negative values", () => {
     expect(() => toCents(1.5)).toThrow(/non-negative safe integer/);
     expect(() => toCents(-1)).toThrow(/non-negative safe integer/);
+  });
+});
+
+describe("prepaymentSplit — review regressions (FR-CALC-04)", () => {
+  it("pins the spec default of 50 percent", () => {
+    expect(DEFAULT_PREPAYMENT_PERCENT).toBe(50);
+    const { prepayment, balance } = prepaymentSplit(
+      cents(65_000),
+      DEFAULT_PREPAYMENT_PERCENT
+    );
+    expect(prepayment).toBe(32_500);
+    expect(balance).toBe(32_500);
+  });
+
+  it("rejects totals whose percent product would leave the safe range", () => {
+    // 9_007_199_254_740_985 is a valid Cents value, but × 100 exceeds 2^53
+    // and used to yield prepayment > total with a negative balance.
+    const hugeTotal = cents(9_007_199_254_740_985);
+    expect(() => prepaymentSplit(hugeTotal, 100)).toThrow(/stays exact/);
   });
 });

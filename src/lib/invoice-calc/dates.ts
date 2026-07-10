@@ -28,6 +28,8 @@ const MONTHS_EN = [
 
 const DAYS_PER_WEEK = 7;
 const TWO_DIGITS = 2;
+const YEAR_DIGITS = 4;
+const MAX_YEAR = 9999;
 
 interface CalendarDate {
   readonly year: number;
@@ -54,9 +56,12 @@ function parseIsoDate(iso: string): CalendarDate | null {
 }
 
 function toIso({ year, month, day }: CalendarDate): string {
+  // Year is padded too: an unpadded year like `999-12-31` breaks the
+  // documented YYYY-MM-DD shape and the lexicographic isOnOrAfter compare.
+  const yyyy = String(year).padStart(YEAR_DIGITS, "0");
   const mm = String(month).padStart(TWO_DIGITS, "0");
   const dd = String(day).padStart(TWO_DIGITS, "0");
-  return `${year}-${mm}-${dd}`;
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 function requireIsoDate(iso: string, label: string): CalendarDate {
@@ -139,5 +144,13 @@ export function computeDeadline(
     );
   }
   const days = "days" in term ? term.days : term.weeks * DAYS_PER_WEEK;
-  return toIso(addDays(issue, days));
+  const deadline = addDays(issue, days);
+  // Past the JS Date range the accessors return NaN; either way a deadline
+  // beyond year 9999 has left the module's own YYYY-MM-DD contract.
+  if (!Number.isSafeInteger(deadline.year) || deadline.year > MAX_YEAR) {
+    return validationError(
+      `Term of ${termAmount} ${"days" in term ? "days" : "weeks"} pushes the deadline past year ${MAX_YEAR}`
+    );
+  }
+  return toIso(deadline);
 }

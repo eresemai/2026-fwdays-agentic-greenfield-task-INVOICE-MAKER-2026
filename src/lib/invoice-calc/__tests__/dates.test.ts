@@ -88,3 +88,30 @@ describe("computeDeadline (FR-CALC-05)", () => {
     expect(computeDeadline("2026-05-03", { days: 0 })).toBe("2026-05-03");
   });
 });
+
+describe("computeDeadline — review regressions (FR-CALC-05)", () => {
+  it("rejects terms that push the deadline past year 9999 instead of returning garbage", () => {
+    // These used to return the success strings "NaN-NaN-NaN" / "15715-11-15".
+    expect(
+      isValidationError(computeDeadline("2026-05-03", { days: 1_000_000_000 }))
+    ).toBe(true);
+    expect(
+      isValidationError(computeDeadline("2026-05-03", { weeks: 200_000_000 }))
+    ).toBe(true);
+    expect(
+      isValidationError(computeDeadline("2026-05-03", { days: 5_000_000 }))
+    ).toBe(true);
+  });
+
+  it("still accepts terms that stay within year 9999", () => {
+    expect(computeDeadline("9999-12-01", { days: 30 })).toBe("9999-12-31");
+    expect(isValidationError(computeDeadline("9999-12-01", { days: 31 }))).toBe(
+      true
+    );
+  });
+
+  it("keeps the YYYY-MM-DD shape for low four-digit years", () => {
+    // toIso used to drop the leading zero, emitting "999-01-06".
+    expect(computeDeadline("0999-01-01", { days: 5 })).toBe("0999-01-06");
+  });
+});
