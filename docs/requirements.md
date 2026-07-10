@@ -77,7 +77,7 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | FR-CALC-05 | invoice-calc | shipped |
 | FR-CALC-06 | invoice-calc | shipped |
 | FR-BANK-01 | banking | proposed |
-| FR-BANK-02 | supplier-profile | proposed |
+| FR-BANK-02 | supplier-profile | shipped |
 | FR-BANK-03 | banking | proposed |
 | FR-TPL-01 | document-render | proposed |
 | FR-TPL-02 | document-render | proposed |
