@@ -91,7 +91,7 @@ capabilities:
 
   supplier-profile:
     owner: ui
-    status: not_started
+    status: shipped
     spec: openspec/specs/supplier-profile/spec.md
     owns:
       - FR-BANK-02

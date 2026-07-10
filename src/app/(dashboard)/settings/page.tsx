@@ -1,3 +1,5 @@
+import { SupplierSettingsPanel } from "@/components/supplier/supplier-settings-panel";
+
 export default function SettingsPage() {
   return (
     <div className="space-y-6">
@@ -8,6 +10,7 @@ export default function SettingsPage() {
           лише в браузері.
         </p>
       </div>
+      <SupplierSettingsPanel />
     </div>
   );
 }
