@@ -57,44 +57,44 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 
 ## All functional requirements (by ID)
 
-| ID | Capability | Status |
-| --- | --- | --- |
-| FR-SHELL-01 | shell | shipped |
-| FR-SHELL-02 | shell | shipped |
-| FR-SHELL-03 | shell | shipped |
-| FR-INPUT-01 | form-input | shipped |
-| FR-INPUT-02 | form-input | shipped |
-| FR-INPUT-04 | form-input | shipped |
-| FR-NACE-01 | nace-catalog | shipped |
-| FR-NACE-02 | nace-catalog | shipped |
-| FR-NACE-03 | nace-catalog | shipped |
-| FR-NACE-04 | nace-catalog | shipped |
-| FR-NACE-05 | nace-catalog | shipped |
-| FR-CALC-01 | invoice-calc | shipped |
-| FR-CALC-02 | invoice-calc | shipped |
-| FR-CALC-03 | invoice-calc | shipped |
-| FR-CALC-04 | invoice-calc | shipped |
-| FR-CALC-05 | invoice-calc | shipped |
-| FR-CALC-06 | invoice-calc | shipped |
-| FR-BANK-01 | banking | proposed |
-| FR-BANK-02 | supplier-profile | shipped |
-| FR-BANK-03 | banking | proposed |
-| FR-TPL-01 | document-render | shipped |
-| FR-TPL-02 | document-render | shipped |
-| FR-TPL-03 | document-render | shipped |
-| FR-TPL-04 | document-render | shipped |
-| FR-TPL-05 | document-render | shipped |
-| FR-EXPORT-01 | export-share | shipped |
-| FR-EXPORT-02 | export-share | shipped |
-| FR-EXPORT-03 | export-share | shipped |
-| FR-EXPORT-04 | export-share | proposed |
-| FR-EXPORT-05 | export-share | proposed |
-| FR-EDIT-01 | invoice-edit | proposed |
-| FR-EDIT-02 | invoice-edit | proposed |
-| FR-CLIENT-01 | client-directory | shipped |
-| FR-CLIENT-02 | client-directory | shipped |
-| FR-CLIENT-03 | client-directory | shipped |
-| FR-CLIENT-04 | client-directory | proposed |
+| ID | Capability | Status | Verification |
+| --- | --- | --- | --- |
+| FR-SHELL-01 | shell | shipped | verify: recording |
+| FR-SHELL-02 | shell | shipped | verify: recording |
+| FR-SHELL-03 | shell | shipped | verify: local-verifiable |
+| FR-INPUT-01 | form-input | shipped | verify: recording |
+| FR-INPUT-02 | form-input | shipped | verify: local-verifiable |
+| FR-INPUT-04 | form-input | shipped | verify: local-verifiable |
+| FR-NACE-01 | nace-catalog | shipped | verify: local-verifiable |
+| FR-NACE-02 | nace-catalog | shipped | verify: local-verifiable |
+| FR-NACE-03 | nace-catalog | shipped | verify: local-verifiable |
+| FR-NACE-04 | nace-catalog | shipped | verify: local-verifiable |
+| FR-NACE-05 | nace-catalog | shipped | verify: local-verifiable |
+| FR-CALC-01 | invoice-calc | shipped | verify: local-verifiable |
+| FR-CALC-02 | invoice-calc | shipped | verify: local-verifiable |
+| FR-CALC-03 | invoice-calc | shipped | verify: local-verifiable |
+| FR-CALC-04 | invoice-calc | shipped | verify: local-verifiable |
+| FR-CALC-05 | invoice-calc | shipped | verify: local-verifiable |
+| FR-CALC-06 | invoice-calc | shipped | verify: local-verifiable |
+| FR-BANK-01 | banking | proposed | verify: local-verifiable |
+| FR-BANK-02 | supplier-profile | shipped | verify: local-verifiable |
+| FR-BANK-03 | banking | proposed | verify: local-verifiable |
+| FR-TPL-01 | document-render | shipped | verify: local-verifiable |
+| FR-TPL-02 | document-render | shipped | verify: local-verifiable |
+| FR-TPL-03 | document-render | shipped | verify: local-verifiable |
+| FR-TPL-04 | document-render | shipped | verify: local-verifiable |
+| FR-TPL-05 | document-render | shipped | verify: local-verifiable |
+| FR-EXPORT-01 | export-share | shipped | verify: recording |
+| FR-EXPORT-02 | export-share | shipped | verify: recording |
+| FR-EXPORT-03 | export-share | shipped | verify: recording |
+| FR-EXPORT-04 | export-share | proposed | verify: recording |
+| FR-EXPORT-05 | export-share | proposed | verify: recording |
+| FR-EDIT-01 | invoice-edit | proposed | verify: local-verifiable |
+| FR-EDIT-02 | invoice-edit | proposed | verify: local-verifiable |
+| FR-CLIENT-01 | client-directory | shipped | verify: local-verifiable |
+| FR-CLIENT-02 | client-directory | shipped | verify: local-verifiable |
+| FR-CLIENT-03 | client-directory | shipped | verify: local-verifiable |
+| FR-CLIENT-04 | client-directory | proposed | verify: recording |
 
 ### Dropped
 
@@ -108,15 +108,15 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 
 ## Non-functional requirements
 
-| ID | Primary capability | Status |
-| --- | --- | --- |
-| NFR-PERF-01 | shell | accepted |
-| NFR-PERF-02 | document-render | shipped |
-| NFR-A11Y-01 | form-input | shipped |
-| NFR-I18N-01 | shell | accepted |
-| NFR-SEC-01 | supplier-profile | accepted |
-| NFR-DX-01 | shell | accepted |
-| NFR-OBS-01 | form-input | shipped |
+| ID | Primary capability | Status | Verification |
+| --- | --- | --- | --- |
+| NFR-PERF-01 | shell | accepted | verify: deploy-gated |
+| NFR-PERF-02 | document-render | shipped | verify: deploy-gated |
+| NFR-A11Y-01 | form-input | shipped | verify: a11y |
+| NFR-I18N-01 | shell | accepted | verify: local-verifiable |
+| NFR-SEC-01 | supplier-profile | accepted | verify: local-verifiable |
+| NFR-DX-01 | shell | accepted | verify: local-verifiable |
+| NFR-OBS-01 | form-input | shipped | verify: local-verifiable |
 
 ## Technical constraints
 
