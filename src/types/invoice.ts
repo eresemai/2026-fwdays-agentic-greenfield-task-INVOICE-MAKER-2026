@@ -1,3 +1,5 @@
+import type { Cents } from "@/lib/invoice-calc/money";
+
 /** Stored in browser; user-set manually */
 export type StoredInvoiceStatus = "draft" | "sent" | "paid" | "cancelled";
 
@@ -9,13 +11,18 @@ export interface LineItem {
   descriptionEn: string;
   descriptionUa: string;
   quantity: number;
-  unitPrice: number;
+  /** Integer minor units; line amount = unitPriceCents × quantity (FR-CALC-03). */
+  unitPriceCents: Cents;
 }
 
 export interface Invoice {
   id: string;
   clientId: string;
-  number: string;
+  /**
+   * Sequential `YYYY-NNN`, assigned on issue (`draft → sent`); drafts carry
+   * no number and are addressed by `id` (FR-CALC-01).
+   */
+  number?: string;
   status: StoredInvoiceStatus;
   issueDate: string;
   dueDate: string;
@@ -24,12 +31,4 @@ export interface Invoice {
   notes?: string;
   createdAt: string;
   updatedAt: string;
-}
-
-export function calculateLineTotal(item: LineItem): number {
-  return item.quantity * item.unitPrice;
-}
-
-export function calculateInvoiceSubtotal(lineItems: LineItem[]): number {
-  return lineItems.reduce((sum, item) => sum + calculateLineTotal(item), 0);
 }

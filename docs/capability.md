@@ -7,6 +7,7 @@ Last updated: 2026-07-10
 | Read this for… | File |
 | --- | --- |
 | Order, dependencies, next steps | **This file** |
+| Session handoff & active work | [current-state.md](current-state.md) |
 | Expanded scope per capability | [capabilities/](capabilities/) |
 | Authoritative behavior | `openspec/specs/<id>/spec.md` |
 | Gate enforcement | `openspec/capability-map.yaml` |
@@ -20,36 +21,84 @@ npm run capability:check -- --capability <id>
 
 ---
 
+## 0. Where we are now
+
+| Field | Value |
+| --- | --- |
+| **Last shipped** | S1 `nace-catalog` + `invoice-calc` (`main` @ `851b97a`) |
+| **Previously shipped** | S0 `shell` (PR #3, archived `add-shell`) |
+| **Active slice** | S2 directories + S3 render pipeline |
+| **OpenSpec ready to apply** | `/opsx:propose add-supplier-profile`, `add-client-directory`, `add-document-render` |
+| **Demo target** | M4 — form → live HTML preview (S4) |
+
+**Unblocked now:** `supplier-profile`, `client-directory` (S2); `document-render` blocked on `banking`
+
+```bash
+npm run capability:check
+npm run test   # 104 tests, Vitest
+```
+
+### Parallel lanes (safe today)
+
+| Lane | Capability | Branch hint | Touch only | OpenSpec change |
+| --- | --- | --- | --- | --- |
+| C | `supplier-profile` | `feat/supplier-profile` | settings UI, storage | `/opsx:propose add-supplier-profile` |
+| D | `client-directory` | `feat/client-directory` | clients UI, storage | `/opsx:propose add-client-directory` |
+
+Lanes C ∥ D — no file overlap. After both ship → `banking` → `document-render`.
+
+### Resolved decisions (no longer gate calc)
+
+| Ticket | Decision | Affects |
+| --- | --- | --- |
+| 06 | Integer cents; user enters unit price × qty → line total; display `1,234.56` everywhere | `invoice-calc` |
+| 07 | Sequential `YYYY-NNN` on issue, per supplier; opaque record id; `DDMM/0YY` retired | `invoice-calc`, `invoice-registry` |
+| 15 | Vanished FRs were spec accidents; propagated to map | all specs |
+
+### Open decisions (still gate later slices)
+
+| Ticket | Topic | Blocks |
+| --- | --- | --- |
+| 05 | PDF fidelity (stateless Chromium) | `export-share` pdf (S6) |
+| 16 | Edit after send / immutability | `invoice-edit` |
+| 11 | Design system reconciliation | `form-input` polish |
+
+---
+
 ## 1. Roadmap by slice
 
 Work top → bottom. Within a slice, rows without mutual dependency can run **in parallel**.
 
-### S0 — Foundation
+### S0 — Foundation ✅
 
 | Step | Capability | Owner | Status | Doc |
 | --- | --- | --- | --- | --- |
-| 1 | `shell` | ui | in_progress | [detail](capabilities/shell.md) |
+| 1 | `shell` | ui | **shipped** | [detail](capabilities/shell.md) |
 
-### S1 — Domain core (parallel, no UI)
+### S1 — Domain core (parallel, no UI) ✅
 
-| Step | Capability | Owner | Status | Doc |
-| --- | --- | --- | --- | --- |
-| 2a | `nace-catalog` | domain | not_started | [detail](capabilities/nace-catalog.md) |
-| 2b | `invoice-calc` | domain | not_started | [detail](capabilities/invoice-calc.md) |
+| Step | Capability | Owner | Status | OpenSpec | Doc |
+| --- | --- | --- | --- | --- | --- |
+| 2a | `nace-catalog` | domain | **shipped** | `add-nace-catalog` synced | [detail](capabilities/nace-catalog.md) |
+| 2b | `invoice-calc` | domain | **shipped** | `add-invoice-calc` synced | [detail](capabilities/invoice-calc.md) |
 
-### S2 — Directories
+### S2 — Directories ← **active**
 
-| Step | Capability | Owner | Status | Doc |
-| --- | --- | --- | --- | --- |
-| 3a | `supplier-profile` | ui | not_started | [detail](capabilities/supplier-profile.md) |
-| 3b | `client-directory` | ui | not_started | [detail](capabilities/client-directory.md) |
-| 3c | `banking` | domain | not_started | [detail](capabilities/banking.md) |
+| Step | Capability | Owner | Status | Depends on | Doc |
+| --- | --- | --- | --- | --- | --- |
+| 3a | `supplier-profile` | ui | not_started | shell ✅ | [detail](capabilities/supplier-profile.md) |
+| 3b | `client-directory` | ui | not_started | shell ✅ | [detail](capabilities/client-directory.md) |
+| 3c | `banking` | domain | not_started | supplier-profile | [detail](capabilities/banking.md) |
+
+3a ∥ 3b in parallel; 3c after 3a.
 
 ### S3 — Render
 
 | Step | Capability | Owner | Status | Doc |
 | --- | --- | --- | --- | --- |
 | 4 | `document-render` | domain | not_started | [detail](capabilities/document-render.md) |
+
+Blocked until S1 + `banking` shipped.
 
 ### S4 — Create flow (demo milestone)
 
@@ -66,12 +115,12 @@ Work top → bottom. Within a slice, rows without mutual dependency can run **in
 
 ### S6 — Lifecycle
 
-| Step | Capability | Owner | Status | Doc |
-| --- | --- | --- | --- | --- |
-| 7a | `export-share` (pdf) | ui | not_started | [detail](capabilities/export-share.md#pdf-gate-s6) |
-| 7b | `invoice-edit` | ui | not_started | [detail](capabilities/invoice-edit.md) |
+| Step | Capability | Owner | Status | Gate | Doc |
+| --- | --- | --- | --- | --- | --- |
+| 7a | `export-share` (pdf) | ui | not_started | `npm run capability:check -- --capability export-share --gate pdf` | [detail](capabilities/export-share.md#pdf-gate-s6) |
+| 7b | `invoice-edit` | ui | not_started | — | [detail](capabilities/invoice-edit.md) |
 
-**Unblocked now:** `shell`, `nace-catalog`, `invoice-calc` — run `npm run capability:check`
+`export-share` is one capability with two gates: **preview** (S4) ships first; **pdf** (S6) ships after preview + wayfinder 05.
 
 ---
 
@@ -97,9 +146,9 @@ Blocked until every **Depends on** row is `shipped` in `capability-map.yaml`.
 ### Critical path to demo (M4)
 
 ```
-shell
-  → nace-catalog ∥ invoice-calc
-  → supplier-profile + client-directory → banking
+shell ✅
+  → nace-catalog ✅ ∥ invoice-calc ✅
+  → supplier-profile ∥ client-directory → banking
   → document-render
   → form-input → export-share (preview)
 ```
@@ -109,16 +158,16 @@ shell
 ## 3. Dependency graph
 
 ```
-S0  shell ─────────────────────────────────────────────► shipped?
-         │
-         ├──────────────────┬─────────────────────────────┐
-         ▼                  ▼                             ▼
-S1  nace-catalog      invoice-calc                    (parallel)
+S0  shell ── shipped ✅ ────────────────────────────────┐
+         │                                              │
+         ├──────────────────┬──────────────────────────┤
+         ▼                  ▼                          ▼
+S1  nace-catalog ✅   invoice-calc ✅
          │                  │
          ▼                  │
-S2  supplier-profile ──► banking                        client-directory
-         │                  │                             │
-         └────────┬─────────┴─────────────┬───────────────┘
+S2  supplier-profile ──► banking              client-directory  ← active
+         │                  │                          │
+         └────────┬─────────┴─────────────┬────────────┘
                   ▼                       │
 S3           document-render ◄────────────┘
                   │
@@ -138,8 +187,8 @@ S6           export-share (pdf) + invoice-edit
 
 | Finish slice | Unlocks | User sees |
 | --- | --- | --- |
-| S0 | S2 directories | App shell + nav |
-| S1 | (part of S3) | Domain tests in Vitest |
+| S0 ✅ | S2 directories | App shell + nav |
+| S1 ✅ | S2 + part of S3 | Domain libs + Vitest (104 tests) |
 | S2 | S3 render | Supplier/client in browser |
 | S3 | S4 create flow | HTML from template |
 | S4 | S5 registry | **Form → live preview** |
@@ -150,22 +199,34 @@ S6           export-share (pdf) + invoice-edit
 
 ## 5. Milestones
 
-| ID | Slice | Outcome |
-| --- | --- | --- |
-| M0 | S0 | Shell + health |
-| M1 | S1 | `src/lib/` + Vitest |
-| M2 | S2 | Directories |
-| M3 | S3 | Rendered HTML |
-| **M4** | **S4** | **Form → preview** |
-| M5 | S5 | Invoice register |
-| M6 | S6 | PDF + edit |
+| ID | Slice | Outcome | Status |
+| --- | --- | --- | --- |
+| M0 | S0 | Shell + health | **done** |
+| M1 | S1 | `src/lib/` + Vitest | **done** |
+| M2 | S2 | Directories | **active** |
+| M3 | S3 | Rendered HTML | blocked |
+| **M4** | **S4** | **Form → preview** | blocked |
+| M5 | S5 | Invoice register | blocked |
+| M6 | S6 | PDF + edit | blocked |
 
 ---
 
 ## 6. Workflow
 
-1. Pick a step from **§1** — check **§2** dependencies are shipped
-2. `npm run capability:check -- --capability <id>`
-3. Read expanded doc in [capabilities/](capabilities/)
-4. `/opsx:propose add-<id>` → `/opsx:apply`
-5. `status: shipped` in `capability-map.yaml`
+1. Read [current-state.md](current-state.md) for active session context
+2. Pick a step from **§1** — check **§2** dependencies are shipped
+3. `npm run capability:check -- --capability <id>`
+4. Read expanded doc in [capabilities/](capabilities/)
+5. `/opsx:propose add-<id>` → `/opsx:apply` (or apply existing change)
+6. Verify: `npm run typecheck && npm run lint && npm run build` (+ Vitest when added)
+7. `/opsx:sync` → `status: shipped` in `capability-map.yaml` → `/opsx:archive`
+8. Append session row to [current-state.md](current-state.md)
+
+### Recommended next actions
+
+| Priority | Action | Why |
+| --- | --- | --- |
+| 1 | `/opsx:propose add-supplier-profile` + `add-client-directory` | S2 unblocked; parallel UI lanes |
+| 2 | `/opsx:propose add-document-render` after `banking` | Template fill → HTML output |
+| 3 | `/opsx:archive add-nace-catalog` + `add-invoice-calc` | Close S1 OpenSpec changes |
+| 4 | Wayfinder 05 (human) | Prototype PDF before S6 pdf gate |

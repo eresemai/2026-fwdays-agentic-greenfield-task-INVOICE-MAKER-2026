@@ -65,17 +65,17 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | FR-INPUT-01 | form-input | proposed |
 | FR-INPUT-02 | form-input | proposed |
 | FR-INPUT-04 | form-input | proposed |
-| FR-NACE-01 | nace-catalog | proposed |
-| FR-NACE-02 | nace-catalog | proposed |
-| FR-NACE-03 | nace-catalog | proposed |
-| FR-NACE-04 | nace-catalog | proposed |
-| FR-NACE-05 | nace-catalog | proposed |
-| FR-CALC-01 | invoice-calc | accepted |
-| FR-CALC-02 | invoice-calc | proposed |
-| FR-CALC-03 | invoice-calc | accepted |
-| FR-CALC-04 | invoice-calc | accepted |
-| FR-CALC-05 | invoice-calc | proposed |
-| FR-CALC-06 | invoice-calc | proposed |
+| FR-NACE-01 | nace-catalog | shipped |
+| FR-NACE-02 | nace-catalog | shipped |
+| FR-NACE-03 | nace-catalog | shipped |
+| FR-NACE-04 | nace-catalog | shipped |
+| FR-NACE-05 | nace-catalog | shipped |
+| FR-CALC-01 | invoice-calc | shipped |
+| FR-CALC-02 | invoice-calc | shipped |
+| FR-CALC-03 | invoice-calc | shipped |
+| FR-CALC-04 | invoice-calc | shipped |
+| FR-CALC-05 | invoice-calc | shipped |
+| FR-CALC-06 | invoice-calc | shipped |
 | FR-BANK-01 | banking | proposed |
 | FR-BANK-02 | supplier-profile | proposed |
 | FR-BANK-03 | banking | proposed |
@@ -121,9 +121,9 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | TC-STACK-01 | shell | accepted |
 | TC-STACK-02 | shell | accepted |
 | TC-STACK-03 | document-render | accepted |
-| TC-STACK-04 | nace-catalog | proposed |
+| TC-STACK-04 | nace-catalog | shipped |
 | TC-STACK-05 | form-input | proposed |
-| TC-STACK-06 | nace-catalog, invoice-calc, document-render | proposed |
+| TC-STACK-06 | nace-catalog, invoice-calc, document-render | shipped |
 | TC-DEPLOY-01 | shell | proposed |
 | TC-DATA-01 | invoice-registry (+ directories) | accepted |
 | TC-PDF-01 | export-share | proposed |

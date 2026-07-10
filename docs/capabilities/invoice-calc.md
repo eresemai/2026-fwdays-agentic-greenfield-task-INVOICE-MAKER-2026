@@ -7,9 +7,9 @@
 | Slice | S1 — Domain core |
 | Order | #2b (parallel with nace-catalog) |
 | Owner | domain |
-| Gate status | not_started |
+| Gate status | **shipped** |
 | OpenSpec spec | [invoice-calc/spec.md](../../openspec/specs/invoice-calc/spec.md) |
-| OpenSpec change | `add-invoice-calc` (delta ready; apply then sync) |
+| OpenSpec change | `add-invoice-calc` (synced; archive pending) |
 
 ## Purpose
 
@@ -26,30 +26,31 @@ deadlines, payment purpose string. Framework-free — testable without Next.js.
 
 | ID | Description | Status |
 | --- | --- | --- |
-| FR-CALC-01 | Sequential `YYYY-NNN` on issue, per supplier; editable with uniqueness check | accepted |
-| FR-CALC-02 | Date EN + UA formats | proposed |
-| FR-CALC-03 | Unit price × qty → line total; integer cents; display `1,234.56` everywhere | accepted |
-| FR-CALC-04 | Prepayment % and balance (`prepay + balance == total` exactly) | accepted |
-| FR-CALC-05 | Deadline / execution term (days, weeks, date) | proposed |
-| FR-CALC-06 | Payment purpose string (`Payment by the invoice №{number} from …`) | accepted |
+| FR-CALC-01 | Sequential `YYYY-NNN` on issue, per supplier; editable with uniqueness check | shipped |
+| FR-CALC-02 | Date EN + UA formats | shipped |
+| FR-CALC-03 | Unit price × qty → line total; integer cents; display `1,234.56` everywhere | shipped |
+| FR-CALC-04 | Prepayment % and balance (`prepay + balance == total` exactly) | shipped |
+| FR-CALC-05 | Deadline / execution term (days, weeks, date) | shipped |
+| FR-CALC-06 | Payment purpose string (`Payment by the invoice №{number} from …`) | shipped |
 
 ## Implementation scope
 
-| Area | Planned path |
+| Area | Path |
 | --- | --- |
-| Numbering | `src/lib/invoice/number.ts` |
-| Dates | `src/lib/invoice/dates.ts` |
-| Money | `src/lib/invoice/money.ts` |
-| Terms | `src/lib/invoice/terms.ts` |
-| Tests | `src/lib/invoice/*.test.ts` |
+| Numbering | `src/lib/invoice-calc/numbering.ts` |
+| Dates | `src/lib/invoice-calc/dates.ts` |
+| Money | `src/lib/invoice-calc/money.ts` |
+| Purpose | `src/lib/invoice-calc/purpose.ts` |
+| Validation | `src/lib/invoice-calc/validation.ts` |
+| Tests | `src/lib/invoice-calc/__tests__/*.test.ts` |
 
 ## Verification
 
-- [ ] First invoice of year is `2026-001`; drafts have no number (placeholder)
-- [ ] Bilingual date pairs match FR-CALC-02
-- [ ] `unit × qty` equals printed AMOUNT; no division in money model
-- [ ] Prepayment 50% on odd totals: `prepay + balance == total` exactly
-- [ ] Vitest edge cases: zero qty, 100% prepay, timezone (Europe/Kyiv TBD)
+- [x] First invoice of year is `2026-001`; drafts have no number
+- [x] Bilingual date pairs match FR-CALC-02
+- [x] `unit × qty` equals line amount; no division in money model
+- [x] Prepayment 50% on odd totals: `prepay + balance == total` exactly
+- [x] Vitest edge cases: property tests on money split
 
 ## Done when
 

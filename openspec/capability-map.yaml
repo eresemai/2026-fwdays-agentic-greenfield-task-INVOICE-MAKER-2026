@@ -55,7 +55,7 @@ capabilities:
 
   nace-catalog:
     owner: domain
-    status: not_started
+    status: shipped
     spec: openspec/specs/nace-catalog/spec.md
     owns:
       - FR-NACE-01
@@ -73,7 +73,7 @@ capabilities:
 
   invoice-calc:
     owner: domain
-    status: not_started
+    status: shipped
     spec: openspec/specs/invoice-calc/spec.md
     owns:
       - FR-CALC-01
