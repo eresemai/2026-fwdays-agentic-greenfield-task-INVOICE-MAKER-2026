@@ -12,7 +12,7 @@
 
 ## 3. Keyword matcher
 
-- [ ] 3.1 Create `src/lib/nace/match.ts`: normalize input (trim, lowercase, strip punctuation), score entries by matched keywords, return `matched` on a single top score, `ambiguous` with tied candidates, `none` on zero score (FR-NACE-05, design D3). Pure function, no I/O. Verify: `npm run typecheck && npm run lint`.
+- [x] 3.1 Create `src/lib/nace/match.ts`: normalize input (trim, lowercase, strip punctuation), score entries by matched keywords, return `matched` on a single top score, `ambiguous` with tied candidates, `none` on zero score (FR-NACE-05, design D3). Pure function, no I/O. Verify: `npm run typecheck && npm run lint`.
 - [ ] 3.2 Create `src/lib/nace/match.test.ts`: each seed entry found by its own UA and EN keywords in mixed case; overlap input («3D дизайн»-style) returns `ambiguous` with both design candidates, never a silent pick; gibberish returns `none`; UA and EN descriptions of the same service resolve to the same entry. Verify: `npm run test` green.
 
 ## 4. Verification and handoff
