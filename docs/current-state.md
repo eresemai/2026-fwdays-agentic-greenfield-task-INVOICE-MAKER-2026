@@ -86,6 +86,7 @@ Append-only (newest last).
 | Date (UTC) | Session | Action | Outcome |
 | --- | --- | --- | --- |
 | 2026-07-10 | Agent | Docs refresh + spec sync | S0/S1 marked shipped; PR #50 body updated |
+| 2026-07-10 | Agent | Branch/worktree cleanup | Deleted merged locals `test/coderabbit-integration`, `wayfinder/mvp-spec-coherence` (+ its remote), stale local `fwdays-submission` (origin copy is CI-managed, untouched); agent worktrees already removed post-merge; only `main` remains locally |
 | 2026-07-10 | OpenSpec | S1 changes archived | `add-invoice-calc` + `add-nace-catalog` → `openspec/changes/archive/2026-07-10-*`; deltas verified in-sync with main specs before move; no active changes remain |
 | 2026-07-10 | OpenSpec | S1 adversarial review + hardening (`a63c4a4`) | Workflow: 5 lenses × 2 refuters, 13 raw → 10 confirmed (2 major in matcher). Fixed: NFC + prefix-anchored token matching (Демонтаж/аналогових/3600 → none; NFD й/ї works), prepaymentSplit overflow guard + DEFAULT_PREPAYMENT_PERCENT=50, computeDeadline ≤ 9999 bound + toIso year pad, duplicate-number message names real next free number. 115 tests green |
 | 2026-07-10 | OpenSpec | S1 `add-nace-catalog` + `add-invoice-calc` applied | `src/lib/nace/`, `src/lib/invoice-calc/`; 104 Vitest tests |
