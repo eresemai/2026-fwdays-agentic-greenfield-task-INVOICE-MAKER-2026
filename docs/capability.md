@@ -36,7 +36,7 @@ npm run capability:check -- --capability <id>
 
 ```bash
 npm run capability:check -- --capability banking
-npm run test   # 129 tests, Vitest
+npm run test   # 119 tests, Vitest
 ```
 
 ### S2 branches (clean split)
