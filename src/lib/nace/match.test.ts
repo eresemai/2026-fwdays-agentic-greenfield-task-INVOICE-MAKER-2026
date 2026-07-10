@@ -9,6 +9,7 @@ const expectMatchedId = (result: MatchResult, expectedId: string): void => {
   }
 };
 
+// @trace FR-NACE-05
 describe("matchNaceEntry — unambiguous matches (FR-NACE-05)", () => {
   const matchedCases = [
     {
@@ -61,6 +62,7 @@ describe("matchNaceEntry — unambiguous matches (FR-NACE-05)", () => {
   );
 });
 
+// @trace FR-NACE-05
 describe("matchNaceEntry — language-insensitive resolution (FR-NACE-05)", () => {
   const bilingualPairs = [
     {
@@ -84,6 +86,7 @@ describe("matchNaceEntry — language-insensitive resolution (FR-NACE-05)", () =
   );
 });
 
+// @trace FR-NACE-05
 describe("matchNaceEntry — ambiguous tie, never a silent pick (FR-NACE-05)", () => {
   const overlapInputs = ["3D дизайн", "3Д Дизайн", "3d design"];
 
@@ -100,6 +103,7 @@ describe("matchNaceEntry — ambiguous tie, never a silent pick (FR-NACE-05)", (
   );
 });
 
+// @trace FR-NACE-05
 describe("matchNaceEntry — no match (FR-NACE-05)", () => {
   const noMatchInputs = [
     "xyzzy qwerty",

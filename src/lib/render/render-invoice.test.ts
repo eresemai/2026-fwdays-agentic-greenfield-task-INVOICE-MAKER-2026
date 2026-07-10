@@ -127,6 +127,7 @@ describe("renderInvoice", () => {
     expect(rendered).toBe(source);
   });
 
+  // @trace FR-TPL-02
   it("keeps the placeholder-free title and subtitle byte-identical (FR-TPL-02)", () => {
     const html = renderInvoice(input());
 
@@ -136,6 +137,7 @@ describe("renderInvoice", () => {
     }
   });
 
+  // @trace FR-TPL-02
   it("preserves the fixed signature markup, substituting only the names (FR-TPL-02)", () => {
     const html = renderInvoice(input());
 
@@ -146,6 +148,7 @@ describe("renderInvoice", () => {
     );
   });
 
+  // @trace FR-TPL-05
   it("embeds its CSS and A4 print rules (FR-TPL-05)", () => {
     const html = renderInvoice(input());
 
@@ -153,12 +156,14 @@ describe("renderInvoice", () => {
     expect(html).toContain("@page");
   });
 
+  // @trace FR-TPL-05
   it("has no external network reference at all (FR-TPL-05)", () => {
     const html = renderInvoice(input());
 
     expect(html.match(EXTERNAL_URL_PATTERN) ?? []).toHaveLength(0);
   });
 
+  // @trace FR-TPL-05
   it("embeds the three Inter subsets as data URIs (FR-TPL-05)", () => {
     const html = renderInvoice(input());
 
@@ -170,6 +175,7 @@ describe("renderInvoice", () => {
     expect(html).toContain("font-weight: 300 800;");
   });
 
+  // @trace FR-TPL-05
   it("keeps the Cyrillic subset that owns № (U+2116), used by English invoices", () => {
     const html = renderInvoice(input());
 
@@ -187,6 +193,7 @@ describe("renderInvoice", () => {
     expect(html).toContain("&lt;script&gt;alert(1)&lt;/script&gt;");
   });
 
+  // @trace FR-TPL-04
   it("omits the project block when no project is supplied (FR-TPL-04)", () => {
     expect(renderInvoice(input())).not.toContain("Project / Проєкт:");
     expect(renderInvoice(input({ projectName: "Rebrand 2026" }))).toContain(

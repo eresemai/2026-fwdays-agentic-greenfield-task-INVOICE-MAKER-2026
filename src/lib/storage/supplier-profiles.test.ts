@@ -243,6 +243,12 @@ describe("supplier-profiles storage", () => {
     expect(getActiveProfileId()).toBeNull();
   });
 
+  // @trace FR-BANK-02
+  // `toEqual([validRecord])` is a STRICT object comparison over the full nine
+  // -field set (nameEn/nameUa/addressEn/addressUa/taxId/bankName/swift/ibanUsd
+  // /ibanEur). Drop any one of them from the storage round-trip and this fails.
+  // It is the only test in this suite that proves field-set completeness; the
+  // save/edit tests assert a subset only.
   it("drops invalid records and keeps valid ones", () => {
     __seedRawStoreForTests(
       JSON.stringify({

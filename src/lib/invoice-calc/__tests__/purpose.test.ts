@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { paymentPurpose } from "@/lib/invoice-calc/purpose";
 
+// @trace FR-CALC-06
 describe("paymentPurpose (FR-CALC-06)", () => {
   it("produces the exact purpose string", () => {
     expect(paymentPurpose("2026-001", "May 03, 2026")).toBe(

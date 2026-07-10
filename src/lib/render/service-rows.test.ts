@@ -15,6 +15,7 @@ function item(overrides: Partial<LineItem> = {}): LineItem {
   };
 }
 
+// @trace FR-TPL-03
 describe("buildServiceRows", () => {
   it("renders one row with bilingual text and formatted amounts", () => {
     const rows = buildServiceRows([item()]);
@@ -61,6 +62,7 @@ describe("buildServiceRows", () => {
   });
 });
 
+// @trace FR-TPL-04
 describe("buildProjectBlock", () => {
   it("renders a labelled block when a project name is supplied", () => {
     const block = buildProjectBlock("Rebrand 2026");

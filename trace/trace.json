@@ -103,7 +103,9 @@
         "openspec/specs/form-input/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/validation/invoice-input.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -112,7 +114,9 @@
         "openspec/specs/form-input/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/validation/invoice-input.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -121,7 +125,10 @@
         "openspec/specs/nace-catalog/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/nace/catalog.test.ts",
+        "src/lib/nace/catalog.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -130,7 +137,9 @@
         "openspec/specs/nace-catalog/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/nace/catalog.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -139,7 +148,9 @@
         "openspec/specs/nace-catalog/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/nace/catalog.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -148,7 +159,9 @@
         "openspec/specs/nace-catalog/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/nace/catalog.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -157,7 +170,12 @@
         "openspec/specs/nace-catalog/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/nace/match.test.ts",
+        "src/lib/nace/match.test.ts",
+        "src/lib/nace/match.test.ts",
+        "src/lib/nace/match.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -175,7 +193,9 @@
         "openspec/specs/invoice-calc/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/invoice-calc/__tests__/dates.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -184,7 +204,11 @@
         "openspec/specs/invoice-calc/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/invoice-calc/__tests__/money.test.ts",
+        "src/lib/invoice-calc/__tests__/money.test.ts",
+        "src/lib/invoice-calc/__tests__/money.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -193,7 +217,9 @@
         "openspec/specs/invoice-calc/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/invoice-calc/__tests__/money.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -202,7 +228,9 @@
         "openspec/specs/invoice-calc/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/invoice-calc/__tests__/dates.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -212,7 +240,9 @@
         "openspec/specs/invoice-calc/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/invoice-calc/__tests__/purpose.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -221,7 +251,9 @@
         "openspec/specs/banking/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/banking/supplier-block.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -231,7 +263,9 @@
         "openspec/specs/supplier-profile/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/storage/supplier-profiles.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -240,7 +274,9 @@
         "openspec/specs/banking/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/banking/supplier-block.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -249,7 +285,9 @@
         "openspec/specs/document-render/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/render/fill-template.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -258,7 +296,10 @@
         "openspec/specs/document-render/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/render/render-invoice.test.ts",
+        "src/lib/render/render-invoice.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -267,7 +308,9 @@
         "openspec/specs/document-render/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/render/service-rows.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -276,7 +319,10 @@
         "openspec/specs/document-render/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/render/render-invoice.test.ts",
+        "src/lib/render/service-rows.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -285,7 +331,13 @@
         "openspec/specs/document-render/spec.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "src/lib/render/fill-template.test.ts",
+        "src/lib/render/render-invoice.test.ts",
+        "src/lib/render/render-invoice.test.ts",
+        "src/lib/render/render-invoice.test.ts",
+        "src/lib/render/render-invoice.test.ts"
+      ],
       "recordings": []
     },
     {
@@ -370,7 +422,8 @@
       "recordings": []
     }
   ],
-  "failures": [
+  "failures": [],
+  "warnings": [
     {
       "check": "test-trace",
       "msg": "FR-SHELL-01 has no test annotated \"@trace FR-SHELL-01\""
@@ -389,87 +442,7 @@
     },
     {
       "check": "test-trace",
-      "msg": "FR-INPUT-02 has no test annotated \"@trace FR-INPUT-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-INPUT-04 has no test annotated \"@trace FR-INPUT-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-NACE-01 has no test annotated \"@trace FR-NACE-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-NACE-02 has no test annotated \"@trace FR-NACE-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-NACE-03 has no test annotated \"@trace FR-NACE-03\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-NACE-04 has no test annotated \"@trace FR-NACE-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-NACE-05 has no test annotated \"@trace FR-NACE-05\""
-    },
-    {
-      "check": "test-trace",
       "msg": "FR-CALC-01 has no test annotated \"@trace FR-CALC-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-CALC-02 has no test annotated \"@trace FR-CALC-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-CALC-03 has no test annotated \"@trace FR-CALC-03\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-CALC-04 has no test annotated \"@trace FR-CALC-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-CALC-05 has no test annotated \"@trace FR-CALC-05\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-CALC-06 has no test annotated \"@trace FR-CALC-06\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-BANK-01 has no test annotated \"@trace FR-BANK-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-BANK-02 has no test annotated \"@trace FR-BANK-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-BANK-03 has no test annotated \"@trace FR-BANK-03\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-TPL-01 has no test annotated \"@trace FR-TPL-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-TPL-02 has no test annotated \"@trace FR-TPL-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-TPL-03 has no test annotated \"@trace FR-TPL-03\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-TPL-04 has no test annotated \"@trace FR-TPL-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-TPL-05 has no test annotated \"@trace FR-TPL-05\""
     },
     {
       "check": "test-trace",
@@ -655,6 +628,5 @@
       "check": "active-changes",
       "msg": "active change \"improve-PD-9\" is not archived"
     }
-  ],
-  "warnings": []
+  ]
 }

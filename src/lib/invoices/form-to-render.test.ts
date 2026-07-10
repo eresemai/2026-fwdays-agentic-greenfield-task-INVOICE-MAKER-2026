@@ -64,6 +64,9 @@ function parsedFormValues() {
 }
 
 describe("formToRenderInput", () => {
+  // Deliberately untraced. This asserts only that no {{TOKEN}} survives — a
+  // template-completeness property, not FR-INPUT-01. It would still pass if a
+  // required input field were dropped or hardcoded. See docs/qa/trace-gaps.md.
   it("renders HTML without surviving placeholders", () => {
     const naceEntry = naceCatalog.find((entry) => entry.id === "graphic-design");
     expect(naceEntry).toBeDefined();

@@ -4,7 +4,11 @@ import {
   validateNumber,
 } from "@/lib/invoice-calc/numbering";
 
-describe("nextInvoiceNumber (FR-CALC-01)", () => {
+// Deliberately untraced. These are pure-function tests over a flat string
+// array: they prove the YYYY-NNN arithmetic, but not FR-CALC-01's
+// identity-defining behaviors — per-supplier scoping, draft-carries-no-number,
+// and assignment on draft->sent. See docs/qa/trace-gaps.md.
+describe("nextInvoiceNumber (numbering arithmetic)", () => {
   it("assigns 2026-001 for the first invoice of the year", () => {
     expect(nextInvoiceNumber([], 2026)).toBe("2026-001");
   });
@@ -18,8 +22,10 @@ describe("nextInvoiceNumber (FR-CALC-01)", () => {
     expect(nextInvoiceNumber(["2025-014", "2025-015"], 2026)).toBe("2026-001");
   });
 
-  it("never reuses a cancelled number still present in the register", () => {
-    // 2026-002 was cancelled; the record (and its number) stays in existing.
+  it("skips every number present in the register, whatever its status", () => {
+    // Behaviourally identical to "advances the sequence": this pure function
+    // only sees the numbers it is handed. Whether a cancelled invoice's number
+    // stays in `existing` is the CALLER's contract, and no test covers it yet.
     const existing = ["2026-001", "2026-002"];
     expect(nextInvoiceNumber(existing, 2026)).toBe("2026-003");
   });
@@ -44,7 +50,9 @@ describe("nextInvoiceNumber (FR-CALC-01)", () => {
   });
 });
 
-describe("validateNumber (FR-CALC-01)", () => {
+// Deliberately untraced too: this proves the format + uniqueness check, one of
+// FR-CALC-01's five scenarios. See docs/qa/trace-gaps.md.
+describe("validateNumber (format and uniqueness)", () => {
   it("accepts a canonical unused number", () => {
     expect(validateNumber("2026-007", ["2026-001"])).toEqual({ ok: true });
   });

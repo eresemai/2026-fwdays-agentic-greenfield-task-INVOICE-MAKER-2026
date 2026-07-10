@@ -7,6 +7,7 @@ import {
   emptyInvoiceFormValues,
 } from "./invoice-input";
 
+// @trace FR-INPUT-04
 describe("invoiceFormSchema", () => {
   const valid = emptyInvoiceFormValues();
   valid.customerName = "Acme Studio";
@@ -75,6 +76,7 @@ describe("invoiceFormSchema", () => {
   });
 });
 
+// @trace FR-INPUT-02
 describe("parseShortFormat", () => {
   it("maps recognized keys to form fields", () => {
     const parsed = parseShortFormat(`client: Acme

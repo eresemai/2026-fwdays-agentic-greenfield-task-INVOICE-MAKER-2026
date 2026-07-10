@@ -6,6 +6,7 @@ import {
 } from "@/lib/invoice-calc/dates";
 import { isValidationError } from "@/lib/invoice-calc/validation";
 
+// @trace FR-CALC-02
 describe("renderDateEn / renderDateUa (FR-CALC-02)", () => {
   const cases: Array<{ iso: string; en: string; ua: string }> = [
     { iso: "2026-05-03", en: "May 03, 2026", ua: "03.05.2026" },
@@ -28,6 +29,7 @@ describe("renderDateEn / renderDateUa (FR-CALC-02)", () => {
   });
 });
 
+// @trace FR-CALC-05
 describe("computeDeadline (FR-CALC-05)", () => {
   it("adds a term in days: 2026-05-03 + 3 days = 2026-05-06", () => {
     expect(computeDeadline("2026-05-03", { days: 3 })).toBe("2026-05-06");
