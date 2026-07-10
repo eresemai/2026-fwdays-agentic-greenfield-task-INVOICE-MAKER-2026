@@ -3,18 +3,17 @@
 > **Read this file at the start of every agent session.**  
 > **Update it at the end of a session or when stopping mid-task.**
 
-Last updated: 2026-07-10T04:00:00Z (S2 branch split — lane D)
+Last updated: 2026-07-10T04:05:00Z (S2 PRs opened)
 
 ## Snapshot
 
 | Field | Value |
 | --- | --- |
-| **Branch** | `feat/client-directory` — lane D only (committed) |
-| **Active capability** | S2 — `client-directory` **shipped** on this branch |
-| **Active OpenSpec change** | `add-client-directory` (apply complete; archive after PR merge) |
-| **Sibling branch** | `feat/supplier-profile` — lane C (`supplier-profile`); open separate PR |
-| **Slice / gate** | S0 + S1 **shipped**; this branch ships `client-directory`; `banking` unblocks after **both** S2 PRs merge |
-| **Gate check** | `npm run capability:check -- --capability client-directory` |
+| **Branch** | `feat/client-directory` — lane D (committed) · sibling `feat/supplier-profile` |
+| **Active capability** | S2 — `client-directory` **shipped** on lane D branch |
+| **Active OpenSpec change** | `add-client-directory` (archive after PR #4 merge) |
+| **Open PRs** | [#4 client-directory](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/4) · [#5 supplier-profile](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/5) |
+| **Slice / gate** | Review both S2 PRs; `banking` unblocks after **both** merge to `main` |
 
 ## Branch situation (clean split)
 
@@ -46,21 +45,21 @@ Source: `openspec/capability-map.yaml` · order: [capability.md](capability.md)
 
 ## Stopped at
 
-`add-client-directory` ready for PR. Archive with `/opsx:archive add-client-directory` after merge.
+Both S2 PRs open for review. Archive with `/opsx:archive` after each merges.
 
 ## Blockers & open decisions
 
 | Ticket | Topic | Blocks capability |
 | --- | --- | --- |
-| — | Merge sibling `feat/supplier-profile` for full S2 | `banking` gate on `main` |
+| — | Merge both S2 PRs | `banking` gate on `main` |
 | 05 | PDF output fidelity | export-share pdf |
 | 16 | Edit after send (immutability) | invoice-edit |
 | 11 | Design system reconciliation | form-input polish |
 
 ## Next up (priority order)
 
-1. **Open PR** from `feat/client-directory` → `main`
-2. **Open PR** from `feat/supplier-profile` → `main` (parallel)
+1. **Review** [PR #4](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/4) (`feat/client-directory`) and [PR #5](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/5) (`feat/supplier-profile`)
+2. **Merge** both to `main` (order independent)
 3. **`/opsx:archive`** each change after its PR merges
 4. **`/opsx:propose add-banking`** once both S2 capabilities are on `main`
 
@@ -76,5 +75,5 @@ Source: `openspec/capability-map.yaml` · order: [capability.md](capability.md)
 
 | Date (UTC) | Session | Action | Outcome |
 | --- | --- | --- | --- |
-| 2026-07-10 | Split | Isolate lane D on `feat/client-directory` | Clean commit; docs updated; tests run on branch |
+| 2026-07-10 | PRs | Opened #4 + #5 on `origin` | Ready for review in separate windows |
 | 2026-07-10 | Lane D | `/opsx:apply add-client-directory` | CRUD + UI + spec synced |
