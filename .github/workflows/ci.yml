@@ -1,0 +1,71 @@
+# CI — the loop nobody can skip. Mirrors the local gates deterministically:
+# if it isn't green here, it isn't done, regardless of what any agent claims.
+#
+# ADAPTED from templates/ci/github-actions.yml at G0 (project-factory init).
+# Removed, because no mechanism exists for them in this project yet — a step
+# pointing at a missing npm script would either hard-fail every PR or invite an
+# echo stub, and an echo stub is laundering, not verification (lesson:
+# declared-method-needs-mechanism):
+#   - test:integration + DATABASE_URL/BETTER_AUTH_* env (no DB; browser-first MVP)
+#   - test:e2e + `playwright install` (no Playwright installed)
+#   - test:coverage + coverage ratchet (no coverage reporter configured)
+#   - `npm audit --audit-level=high`
+# Re-add each step in the same commit that lands its mechanism.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # --- static, fast, deterministic ---
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Capability gates
+        run: npm run capability:check
+      - name: Traceability chain (and freshness of generated report)
+        run: |
+          node scripts/check-traceability.mjs --check-fresh
+          node scripts/check-traceability.mjs ${{ github.ref_name == 'main' && '--release' || '' }}
+      - name: Trajectory process audit (and freshness)
+        run: |
+          node scripts/check-trajectory.mjs --check-fresh
+          node scripts/check-trajectory.mjs ${{ github.ref_name == 'main' && '--release' || '' }}
+      - name: Factory integrity (gate-bearing script drift + stub scan)
+        run: node scripts/check-factory-integrity.mjs
+      - name: OpenSpec strict validation
+        run: npx openspec validate --all --strict
+
+      # --- test battery ---
+      - name: Unit tests
+        run: npm run test:run
+
+      # --- production build ---
+      - name: Build
+        run: npm run build
+
+      # --- evidence ---
+      - name: Upload QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-evidence
+          path: |
+            docs/qa/traceability-report.md
+            docs/qa/trajectory-report.md
+            trace/trace.json
+          if-no-files-found: ignore

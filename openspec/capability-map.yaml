@@ -176,8 +176,9 @@ capabilities:
     blocks: [invoice-edit]
     gates:
       preview:
+        status: shipped
         depends_on: [document-render, form-input]
-        requirements: [FR-EXPORT-01]
+        requirements: [FR-EXPORT-01, FR-EXPORT-02, FR-EXPORT-03]
       pdf:
         depends_on: [document-render, form-input, export-share.preview]
         requirements: [FR-EXPORT-04, FR-EXPORT-05, TC-PDF-01]

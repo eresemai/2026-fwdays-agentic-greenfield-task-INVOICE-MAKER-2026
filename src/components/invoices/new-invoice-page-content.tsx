@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 import {
   InvoiceForm,
@@ -11,6 +11,7 @@ import { InvoicePreviewPanel } from "@/components/invoices/invoice-preview-panel
 import { Button } from "@/components/ui/button";
 import {
   getActiveProfile,
+  getServerActiveProfile,
   subscribeSupplierProfiles,
 } from "@/lib/storage/supplier-profiles";
 import {
@@ -19,17 +20,30 @@ import {
   subscribeClients,
 } from "@/lib/storage/clients";
 
+const PREVIEW_DEBOUNCE_MS = 150;
+
 const EMPTY_PREVIEW: InvoicePreviewState = {
   html: null,
+  invoiceNumber: null,
   error: null,
   isPending: false,
+};
+
+type DebouncedPreview = {
+  html: string | null;
+  invoiceNumber: string | null;
+};
+
+const EMPTY_DEBOUNCED_PREVIEW: DebouncedPreview = {
+  html: null,
+  invoiceNumber: null,
 };
 
 export function NewInvoicePageContent() {
   const supplier = useSyncExternalStore(
     subscribeSupplierProfiles,
     getActiveProfile,
-    () => null
+    getServerActiveProfile
   );
   const clients = useSyncExternalStore(
     subscribeClients,
@@ -38,10 +52,45 @@ export function NewInvoicePageContent() {
   );
 
   const [preview, setPreview] = useState<InvoicePreviewState>(EMPTY_PREVIEW);
+  const [debouncedPreview, setDebouncedPreview] = useState<DebouncedPreview>(
+    EMPTY_DEBOUNCED_PREVIEW
+  );
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedPreview({
+        html: preview.html,
+        invoiceNumber: preview.invoiceNumber,
+      });
+    }, PREVIEW_DEBOUNCE_MS);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [preview.html, preview.invoiceNumber]);
 
   const handlePreviewChange = useCallback((state: InvoicePreviewState) => {
-    setPreview(state);
+    setPreview((prev) =>
+      prev.html === state.html &&
+      prev.invoiceNumber === state.invoiceNumber &&
+      prev.error === state.error &&
+      prev.isPending === state.isPending
+        ? prev
+        : state
+    );
   }, []);
+
+  const exportDisabled =
+    preview.isPending ||
+    preview.error !== null ||
+    debouncedPreview.html === null ||
+    debouncedPreview.invoiceNumber === null;
+
+  const exportDisabledReason = preview.error
+    ? "Виправте помилки перед експортом."
+    : preview.isPending
+      ? "Зачекайте, поки оновиться попередній перегляд."
+      : "Заповніть форму, щоб увімкнути експорт.";
 
   return (
     <div className="space-y-6">
@@ -80,7 +129,10 @@ export function NewInvoicePageContent() {
 
         <div className="min-w-0 space-y-3">
           {preview.error ? (
-            <p className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive" role="alert">
+            <p
+              className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive"
+              role="alert"
+            >
               {preview.error}
               {preview.error.includes("IBAN") ? (
                 <>
@@ -92,7 +144,13 @@ export function NewInvoicePageContent() {
               ) : null}
             </p>
           ) : null}
-          <InvoicePreviewPanel html={preview.html} isPending={preview.isPending} />
+          <InvoicePreviewPanel
+            html={debouncedPreview.html}
+            invoiceNumber={debouncedPreview.invoiceNumber}
+            isPending={preview.isPending}
+            exportDisabled={exportDisabled}
+            exportDisabledReason={exportDisabledReason}
+          />
         </div>
       </div>
     </div>

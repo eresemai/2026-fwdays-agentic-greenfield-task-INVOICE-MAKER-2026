@@ -7,9 +7,9 @@
 | Slice | S4 preview → S6 pdf |
 | Order | #5b preview, #7a pdf |
 | Owner | ui |
-| Gate status | not_started |
+| Gate status | preview **shipped** · pdf not_started |
 | OpenSpec spec | [export-share/spec.md](../../openspec/specs/export-share/spec.md) |
-| OpenSpec change | `add-export-share` |
+| OpenSpec change | `add-export-share-preview` |
 
 ## Purpose
 
@@ -24,24 +24,25 @@ Ship when `document-render` + `form-input` are `shipped`.
 
 | ID | Description | Status |
 | --- | --- | --- |
-| FR-EXPORT-01 | HTML preview in browser | proposed |
-| FR-EXPORT-02 | Download `.html` file | proposed |
-| FR-EXPORT-03 | Browser print A4 | proposed |
+| FR-EXPORT-01 | HTML preview in browser | shipped |
+| FR-EXPORT-02 | Download `.html` file | shipped |
+| FR-EXPORT-03 | Browser print A4 | shipped |
 | BC-DEMO-01 | Core flow for 1–2 min demo video | accepted |
 
 ### Implementation scope (preview)
 
-| Area | Planned path |
+| Area | Path |
 | --- | --- |
-| Preview panel | `src/components/invoices/invoice-preview.tsx` |
-| HTML download | client-side Blob from render output |
-| Print | `window.print()` on preview surface |
+| Preview panel | `src/components/invoices/invoice-preview-panel.tsx` |
+| Export actions | `src/components/invoices/invoice-export-actions.tsx` |
+| HTML download | `src/lib/export/download-invoice-html.ts` |
+| Print | `src/lib/export/print-invoice-html.ts` |
 
 ### Verification (preview)
 
-- [ ] Preview matches document-render output
-- [ ] Downloaded HTML opens offline with styles
-- [ ] Print dialog shows A4 layout
+- [x] Preview matches document-render output
+- [x] Downloaded HTML opens offline with styles
+- [x] Print dialog shows A4 layout
 
 ---
 

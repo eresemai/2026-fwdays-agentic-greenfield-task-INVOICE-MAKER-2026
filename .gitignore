@@ -13,6 +13,10 @@
 # testing
 /coverage
 
+# project-factory: raw recording scratch dirs only.
+# docs/qa/** is committed PROOF and must never be ignored.
+**/raw/
+
 # next.js
 /.next/
 /out/

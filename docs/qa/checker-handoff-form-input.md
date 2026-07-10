@@ -1,6 +1,6 @@
 # Checker handoff: S4 `form-input` (maker ≠ checker)
 
-**Status:** pending — run in a **new Cursor chat**, not the apply/loop session.
+**Status:** complete — PASS WITH NOTES (see `docs/qa/loop-add-form-input.md` → Checker findings).
 
 ## Scope
 

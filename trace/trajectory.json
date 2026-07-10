@@ -1,0 +1,159 @@
+{
+  "generatedBy": "scripts/check-trajectory.mjs",
+  "slices": [
+    {
+      "slice": "2026-07-10-add-banking",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-client-directory",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-document-render",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-embedded-fonts",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-export-share-preview",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-form-input",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-invoice-calc",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-nace-catalog",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-shell",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-supplier-profile",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    }
+  ],
+  "overlaps": [],
+  "failures": [],
+  "warnings": [
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-add-banking: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-add-banking: no commit carries a \"Slice: add-banking\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-add-client-directory: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-add-client-directory: no commit carries a \"Slice: add-client-directory\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-add-document-render: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-add-document-render: no commit carries a \"Slice: add-document-render\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-add-embedded-fonts: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-add-embedded-fonts: no commit carries a \"Slice: add-embedded-fonts\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-add-export-share-preview: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-add-export-share-preview: no commit carries a \"Slice: add-export-share-preview\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-add-form-input: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-add-form-input: no commit carries a \"Slice: add-form-input\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-add-invoice-calc: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-add-invoice-calc: no commit carries a \"Slice: add-invoice-calc\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-add-nace-catalog: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-add-nace-catalog: no commit carries a \"Slice: add-nace-catalog\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-add-shell: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-add-shell: no commit carries a \"Slice: add-shell\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-add-supplier-profile: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-add-supplier-profile: no commit carries a \"Slice: add-supplier-profile\" trailer"
+    }
+  ]
+}

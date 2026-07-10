@@ -103,6 +103,15 @@ describe("supplier-profiles storage", () => {
     expect(getActiveProfile()?.id).toBe(saved.id);
   });
 
+  it("returns a reference-stable getActiveProfile snapshot until the store changes", () => {
+    saveProfile(validInput);
+
+    const first = getActiveProfile();
+    const second = getActiveProfile();
+
+    expect(first).toBe(second);
+  });
+
   it("keeps the active profile unchanged when a second profile is created", () => {
     const first = saveProfile(validInput);
     randomUUIDMock.mockReturnValueOnce("profile-uuid-2");

@@ -84,9 +84,9 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | FR-TPL-03 | document-render | shipped |
 | FR-TPL-04 | document-render | shipped |
 | FR-TPL-05 | document-render | shipped |
-| FR-EXPORT-01 | export-share | proposed |
-| FR-EXPORT-02 | export-share | proposed |
-| FR-EXPORT-03 | export-share | proposed |
+| FR-EXPORT-01 | export-share | shipped |
+| FR-EXPORT-02 | export-share | shipped |
+| FR-EXPORT-03 | export-share | shipped |
 | FR-EXPORT-04 | export-share | proposed |
 | FR-EXPORT-05 | export-share | proposed |
 | FR-EDIT-01 | invoice-edit | proposed |

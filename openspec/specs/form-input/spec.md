@@ -114,3 +114,10 @@ During a normal create-invoice session with valid inputs, the browser console SH
 #### Scenario: Valid preview session
 - **WHEN** the user completes a valid invoice form and the preview renders successfully
 - **THEN** no application-thrown console errors occur during that interaction
+
+### Requirement: FR-INPUT-03 Dropped — no chat/LLM natural-language input
+**Status: dropped (post-MVP).** The system SHALL NOT expose chat or LLM natural-language invoice input in MVP; only structured form (FR-INPUT-01) and short-format paste (FR-INPUT-02) are available.
+
+#### Scenario: Not implemented by design
+- **WHEN** the user creates an invoice in MVP
+- **THEN** only the structured form and short-format paste paths are available; no chat or LLM input surface is shown

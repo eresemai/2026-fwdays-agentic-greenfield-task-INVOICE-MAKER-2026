@@ -37,6 +37,7 @@ import type { SupplierProfile } from "@/types/supplier";
 
 export type InvoicePreviewState = {
   html: string | null;
+  invoiceNumber: string | null;
   error: string | null;
   isPending: boolean;
 };
@@ -86,12 +87,16 @@ export function InvoiceForm({
   const {
     register,
     watch,
+    getValues,
     setValue,
     reset,
     formState: { errors },
   } = form;
 
-  const watchedValues = watch();
+  const clientId = watch("clientId");
+  const currency = watch("currency");
+  const naceEntryId = watch("naceEntryId");
+  const serviceText = watch("serviceText");
 
   const resolveNaceFromServiceText = useCallback(
     (serviceText: string, selectedEntryId: string) => {
@@ -129,74 +134,115 @@ export function InvoiceForm({
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      resolveNaceFromServiceText(
-        watchedValues.serviceText,
-        watchedValues.naceEntryId
-      );
+      resolveNaceFromServiceText(serviceText, naceEntryId);
     }, 200);
     return () => {
       window.clearTimeout(timer);
     };
-  }, [
-    watchedValues.serviceText,
-    watchedValues.naceEntryId,
-    resolveNaceFromServiceText,
-  ]);
+  }, [serviceText, naceEntryId, resolveNaceFromServiceText]);
 
   const selectedNaceEntry = useMemo(() => {
     if (naceState.kind === "matched") {
       return naceState.entry;
     }
-    if (watchedValues.naceEntryId) {
-      return findNaceEntryById(watchedValues.naceEntryId);
+    if (naceEntryId) {
+      return findNaceEntryById(naceEntryId);
     }
     return null;
-  }, [naceState, watchedValues.naceEntryId]);
+  }, [naceState, naceEntryId]);
 
   useEffect(() => {
-    if (!supplier) {
+    let timer: number | undefined;
+
+    const updatePreview = () => {
+      if (timer) {
+        window.clearTimeout(timer);
+        timer = undefined;
+      }
+
+      if (!supplier) {
+        onPreviewChange({
+          html: null,
+          invoiceNumber: null,
+          error:
+            "Додайте профіль постачальника в Налаштуваннях, щоб побачити попередній перегляд.",
+          isPending: false,
+        });
+        return;
+      }
+
+      const values = getValues();
+      const parsed = parseInvoiceFormValues(values);
+      if (parsed instanceof Error || !selectedNaceEntry) {
+        onPreviewChange({
+          html: null,
+          invoiceNumber: null,
+          error: null,
+          isPending: false,
+        });
+        return;
+      }
+
       onPreviewChange({
         html: null,
-        error:
-          "Додайте профіль постачальника в Налаштуваннях, щоб побачити попередній перегляд.",
-        isPending: false,
+        invoiceNumber: null,
+        error: null,
+        isPending: true,
       });
-      return;
-    }
 
-    const parsed = parseInvoiceFormValues(watchedValues);
-    if (parsed instanceof Error || !selectedNaceEntry) {
-      onPreviewChange({ html: null, error: null, isPending: false });
-      return;
-    }
-
-    onPreviewChange({ html: null, error: null, isPending: true });
-
-    const timer = window.setTimeout(() => {
-      try {
-        const renderInput = formToRenderInput(parsed, {
-          supplier,
-          naceEntry: selectedNaceEntry,
-        });
-        const html = renderInvoice(renderInput);
-        onPreviewChange({ html, error: null, isPending: false });
-      } catch (error) {
-        if (error instanceof MissingIbanError) {
-          onPreviewChange({ html: null, error: error.message, isPending: false });
+      timer = window.setTimeout(() => {
+        const currentValues = getValues();
+        const currentParsed = parseInvoiceFormValues(currentValues);
+        if (currentParsed instanceof Error || !selectedNaceEntry) {
           return;
         }
-        const message =
-          error instanceof Error
-            ? error.message
-            : "Не вдалося згенерувати попередній перегляд.";
-        onPreviewChange({ html: null, error: message, isPending: false });
-      }
-    }, 150);
+
+        try {
+          const renderInput = formToRenderInput(currentParsed, {
+            supplier,
+            naceEntry: selectedNaceEntry,
+          });
+          const html = renderInvoice(renderInput);
+          onPreviewChange({
+            html,
+            invoiceNumber: renderInput.invoiceNumber,
+            error: null,
+            isPending: false,
+          });
+        } catch (error) {
+          if (error instanceof MissingIbanError) {
+            onPreviewChange({
+              html: null,
+              invoiceNumber: null,
+              error: error.message,
+              isPending: false,
+            });
+            return;
+          }
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Не вдалося згенерувати попередній перегляд.";
+          onPreviewChange({
+            html: null,
+            invoiceNumber: null,
+            error: message,
+            isPending: false,
+          });
+        }
+      }, 150);
+    };
+
+    updatePreview();
+    const subscription = watch(updatePreview);
 
     return () => {
-      window.clearTimeout(timer);
+      subscription.unsubscribe();
+      if (timer) {
+        window.clearTimeout(timer);
+      }
     };
-  }, [supplier, watchedValues, selectedNaceEntry, onPreviewChange]);
+  }, [supplier, selectedNaceEntry, getValues, watch, onPreviewChange]);
 
   function handleClientSelect(clientId: string | null) {
     if (!clientId || clientId === "manual") {
@@ -232,7 +278,7 @@ export function InvoiceForm({
     }
 
     setShortFormatError(null);
-    reset(mergeShortFormatIntoForm(watchedValues, partial));
+    reset(mergeShortFormatIntoForm(getValues(), partial));
   }
 
   function handleNaceCandidateSelect(entryId: string) {
@@ -276,7 +322,7 @@ export function InvoiceForm({
             Клієнт з довідника
           </Label>
           <Select
-            value={watchedValues.clientId || "manual"}
+            value={clientId || "manual"}
             onValueChange={handleClientSelect}
           >
             <SelectTrigger id="invoice-client" className="h-9 w-full">
@@ -358,7 +404,7 @@ export function InvoiceForm({
               Валюта
             </Label>
             <Select
-              value={watchedValues.currency}
+              value={currency}
               onValueChange={(value) => {
                 if (value === "USD" || value === "EUR") {
                   setValue("currency", value, { shouldValidate: true });
@@ -409,7 +455,7 @@ export function InvoiceForm({
                     <input
                       type="radio"
                       name="nace-candidate"
-                      checked={watchedValues.naceEntryId === candidate.id}
+                      checked={naceEntryId === candidate.id}
                       onChange={() => handleNaceCandidateSelect(candidate.id)}
                       className="mt-1"
                     />
