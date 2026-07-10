@@ -12,7 +12,7 @@
 
 **Flow (target MVP):** form input → NACE 2.1-UA service description → invoice calculations → bilingual HTML/PDF from `docs/invoice-template.html` → user shares the file manually. Data lives in the browser (browser-first); PDF rendering via a stateless Route Handler (ADR-0002).
 
-**Stack:** Next.js 16, React 19, TypeScript (strict), Tailwind v4, shadcn/ui, OpenSpec (SDD).
+**Stack:** Next.js 16, React 19, TypeScript (strict), Tailwind v4, shadcn/ui, OpenSpec (SDD), Vitest.
 
 **Repository:** https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026
 
@@ -22,25 +22,32 @@
 
 Video: _to be added after recording_
 
-## Current progress (2026-07-10, `main` @ `0678447`)
+## Current progress (2026-07-10, `main` @ `9cc0fb4`)
 
 | Area | Status |
 | --- | --- |
 | **App scaffold** | ✅ Next.js shell, dashboard routes, WEG3D Fin design system |
-| **Responsive shell (S0)** | ✅ `shell` shipped — PR #3, `add-shell` archived (`FR-SHELL-01..03`) |
+| **Responsive shell (S0)** | ✅ `shell` shipped — fork PR #3, `add-shell` archived (`FR-SHELL-01..03`) |
 | **Health API** | ✅ `GET /api/health` (`FR-SHELL-03`) |
 | **Domain core (S1)** | ✅ `nace-catalog` + `invoice-calc` shipped — `src/lib/nace/`, `src/lib/invoice-calc/` |
-| **Directories (S2)** | ✅ `supplier-profile` (PR #5) + `client-directory` (PR #4) shipped — settings + clients UI, browser storage CRUD |
-| **Vitest (TC-STACK-06)** | ✅ 129 tests green (`npm run test`) |
-| **OpenSpec specs** | ✅ 11 capabilities; S0–S2 deltas synced to `openspec/specs/`; **5 changes archived** |
+| **Directories (S2)** | ✅ `supplier-profile` (fork PR #5) + `client-directory` (fork PR #4) — settings + clients UI, browser storage CRUD |
+| **Banking (S2)** | ✅ `banking` shipped — fork PR #7; currency → IBAN from active supplier profile (`FR-BANK-01`, `FR-BANK-03`) |
+| **S2 hardening** | ✅ fork PR #6 — adversarial review fixes (storage snapshots, a11y, IBAN validation) |
+| **Document render (S3)** | ✅ `document-render` shipped — fork PR #8; template fill, escaping, service rows, `render-invoice` |
+| **Embedded fonts (S3)** | ✅ `add-embedded-fonts` archived — Inter v20 subsets vendored; **FR-TPL-05** resolved (zero external font refs) |
+| **Vitest (TC-STACK-06)** | ✅ **199 tests** green (`npm run test`) |
+| **Template drift guard** | ✅ `npm run template:check` wired into `build` |
+| **OpenSpec specs** | ✅ 11 capabilities; S0–S3 deltas synced to `openspec/specs/`; **8 changes archived** |
 | **Capability roadmap** | ✅ `openspec/capability-map.yaml`, `docs/capability.md`, `docs/capabilities/` |
 | **Gate tooling** | ✅ `npm run capability:check` / `capability:list` |
 | **Agent handoff** | ✅ `docs/current-state.md` (session resume between agents) |
-| **Wayfinder planning** | ✅ Tickets 01–04, 06, 07, 15 resolved; 05, 11, 16 open |
-| **Active slice** | 🔄 **S2 remainder** — `banking` next (currency → IBAN from active supplier profile) |
-| **End-to-end invoice flow** | ⏳ Demo milestone M4 (S4: form → live HTML preview) |
+| **Wayfinder planning** | ✅ Tickets 01–04, 06, 07, 15 resolved; **05** (Type 3 PDF glyphs), **11**, **16** open |
+| **Active slice** | 🎯 **S4 `form-input`** — demo milestone **M4** (form → live HTML preview) |
+| **End-to-end invoice flow** | ⏳ Blocked on S4 — all backend libs ready; UI form + preview not wired yet |
 
-**Recent commits:** S2 directories (PR #4 `client-directory`, PR #5 `supplier-profile`), S1 domain libs, Vitest harness (129 tests), S0 responsive shell (PR #3), 5 OpenSpec changes archived, CI auto-sync to this PR.
+**Milestones:** M0 (shell) ✅ · M1 (domain libs) ✅ · M2 (directories + banking) ✅ · M3 (rendered HTML) ✅ · **M4 (form → preview)** ← next · M5/M6 blocked.
+
+**Recent work:** S3 `document-render` + embedded fonts (fork PRs #8, #9 stack), S2 `banking` (PR #7), S2 adversarial hardening (PR #6), 8 OpenSpec archives, 199 Vitest tests, CI auto-sync to this PR.
 
 ## Agentic Engineering practices applied
 
@@ -72,28 +79,27 @@ Honest status for each course practice. Open **TODO** items will be completed be
 | `/opsx:*` slash commands | Cursor, Claude Code, Codex, Copilot, Pi, Windsurf |
 | `openspec/capability-map.yaml` | Gate status (`not_started` / `in_progress` / `shipped`) |
 
+**Presentation alignment (slide 49):** _«Агент забуває — репозиторій ні»_ — `docs/current-state.md` + capability map keep state across agent sessions.
+
 **Human:** product vision, domain decisions (NACE 2.1-UA, browser-first, snapshot model), slice prioritization.  
 **Agent:** spec authoring, capability docs, scaffold UI, refactors per `AGENTS.md`.
 
 ---
 
-### 2. Specs first (SDD) — ✅ applied (S0 + S1 + S2 directories shipped)
+### 2. Specs first (SDD) — ✅ applied (S0–S3 shipped)
 
 - **OpenSpec** living specs for all 11 MVP capabilities.
 - **Capability map** with slice order S0→S6 and dependency gates (`npm run capability:check`).
 - Workflow: `/opsx:propose` → design + tasks + delta specs → `/opsx:apply` → `/opsx:sync` → `/opsx:archive`.
-- **Shipped through OpenSpec:** S0 `shell` (PR #3), S1 `nace-catalog` + `invoice-calc` (`src/lib/`), S2 `supplier-profile` (PR #5) + `client-directory` (PR #4).
-- **5 archived changes** in `openspec/changes/archive/` (`add-shell`, `add-nace-catalog`, `add-invoice-calc`, `add-supplier-profile`, `add-client-directory`).
+- **Shipped through OpenSpec:** S0 `shell` (PR #3), S1 `nace-catalog` + `invoice-calc`, S2 `supplier-profile` (PR #5) + `client-directory` (PR #4) + `banking` (PR #7), S3 `document-render` (PR #8) + `add-embedded-fonts`.
+- **8 archived changes** in `openspec/changes/archive/`.
 - Traceability: `FR-*` → OpenSpec scenario → implementation + Vitest.
-- `openspec validate --strict` passes; wayfinder ticket **15** resolved (migration audit).
+- `openspec validate --strict` passes locally on every slice gate.
 
 **TODO before final submission:**
 
-- [x] Ship **S0 `shell`** through full OpenSpec change (`add-shell` archived).
-- [x] Ship **S1** domain core (`nace-catalog`, `invoice-calc`) with Vitest.
-- [x] Ship **S2 directories** (`supplier-profile`, `client-directory`) through OpenSpec changes.
-- [x] Close wayfinder tickets **06** (money model) and **07** (invoice number).
-- [ ] Ship **S2 `banking`**, then S3–S4 capabilities through OpenSpec changes.
+- [x] Ship **S0–S3** through full OpenSpec changes (all archived).
+- [ ] Ship **S4 `form-input`** + preview gate of `export-share`.
 - [ ] Reach demo milestone **M4** (form → live HTML preview).
 
 ---
@@ -102,55 +108,63 @@ Honest status for each course practice. Open **TODO** items will be completed be
 
 **Done:**
 
-- Gates: `npm run typecheck`, `npm run lint`, `npm run build`.
-- **Vitest:** `npm run test` — 129 tests (`TC-STACK-06`) for `src/lib/` (nace, invoice-calc) and S2 storage CRUD (`supplier-profile`, `client-directory`).
+- Gates: `npm run typecheck`, `npm run lint`, `npm run build` (includes `template:check`).
+- **Vitest:** `npm run test` — **199 tests** (`TC-STACK-06`) covering `nace`, `invoice-calc`, storage CRUD, `banking`, `document-render` (escaping, service rows, template contract, render perf).
 - **Capability gates:** `npm run capability:check -- --capability <id>`.
 - `GET /api/health` contract in `openspec/specs/shell/spec.md`.
 - **Responsive shell:** headless Chrome verified 375 px / 768 px — no overflow (S0).
-- **CodeRabbit** enabled on the fork; reviews this PR (verified).
+- **CodeRabbit** enabled on the fork (PR too large for auto-review on mentor repo — see note below).
 - Wayfinder tickets document acceptance criteria and spec conflicts.
 - **CI:** `.github/workflows/sync-homework-pr.yml` keeps this draft PR in sync with `main`.
 
 **Not done yet:**
 
-- [ ] `openspec validate --strict` in CI or pre-push hook.
+- [ ] `openspec validate --strict` in CI (G5/G7 automation).
+- [ ] **G6** — Playwright smoke / visual QA.
 - [ ] Smoke / eval: form → preview → PDF (M4 demo).
+- [ ] **Trajectory evals** (presentation slide 61: output vs route quality).
+
+**CodeRabbit note:** mentor PR exceeds 150-file review limit; reviews run on smaller fork PRs instead.
 
 ---
 
-### 4. Maker ≠ checker — 🔄 partial
+### 4. Maker ≠ checker — 🔄 partial (improving)
 
 **Done:**
 
 - Rule in README and engineering pipeline (G7).
 - Cursor subagents: `code-reviewer`, `bugbot`, `ultracite-reviewer`.
-- **CodeRabbit** as external checker on this PR.
-- Wayfinder sessions used separate planning agents (Claude Opus) vs implementation agents (Cursor).
-- **Checker pass (separate chat):** fork [PR #2](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/2) (`wayfinder/resolve-01-04`, merged 2026-07-09) reviewed by Cursor Bugbot subagent + human synthesis — see [Review log](#review-log-fork-pr-2) below.
+- **CodeRabbit** as external checker on fork PRs.
+- Wayfinder sessions: separate planning agents (Claude Opus) vs implementation agents (Cursor).
+- **Checker passes (separate chats / adversarial review):**
+  - fork [PR #2](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/2) — wayfinder 01–04 (see [Review log](#review-log-fork-pr-2))
+  - fork [PR #6](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/6) — S2 storage hardening (4 lenses × 2 refuters)
+  - fork [PR #7](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/7) — `banking` adversarial review
+  - fork [PR #8](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/8) — `document-render` adversarial review (spec + quality lenses)
 
 **TODO:**
 
-- [x] Systematic checker pass after each shipped slice (separate agent / chat) — **PR #2 done**
-- [x] Document checker findings in PR or change log — **see Review log below**
-- [ ] Checker pass for **S0 `shell`** (PR #3) and **S1** domain slice.
-- [ ] Address CodeRabbit feedback before **Ready for review**.
+- [ ] Formal checker log entry for S0/S1 (lessons captured in OpenSpec archives, not yet in this PR body).
+- [ ] Checker pass after **S4 `form-input`** ships.
+- [ ] Address remaining CodeRabbit feedback before **Ready for review**.
 
 ---
 
 ### 5. Loop engineering — ❌ not applied yet
 
-Work is still **session-based** with `/opsx:*` and handoff via `docs/current-state.md`, not a fully autonomous loop.
+Work is **session-based** with `/opsx:*` and handoff via `docs/current-state.md`, not a fully autonomous Cursor loop (G0).
 
 **TODO:**
 
-- [ ] Run Cursor **loop** for one vertical slice (S1 or S0 completion).
+- [ ] Run Cursor **loop** for S4 `form-input` (or document manual slice cycle as interim).
 - [ ] Document: “slice X completed in N loop iterations”.
+- [ ] **G0** — git hooks / loop-first automation (planned in README).
 
 ---
 
 ### 6. Project Factory — ⏭️ intentionally skipped (optional)
 
-Not run. Lighter stack: OpenSpec + `AGENTS.md` + capability gates + slash commands.
+Not run. Lighter stack: OpenSpec + `AGENTS.md` + capability gates + `/opsx:*` across 6 IDEs.
 
 ---
 
@@ -159,9 +173,9 @@ Not run. Lighter stack: OpenSpec + `AGENTS.md` + capability gates + slash comman
 | Tool | Usage |
 | --- | --- |
 | **Cursor** | Primary Agentic IDE, Composer, `/opsx:*`, subagents |
-| **Claude Code** | Wayfinder planning, `.claude/commands` OpenSpec integration |
-| **OpenSpec CLI** | Propose, validate, sync |
-| **CodeRabbit** | Automated PR review on this draft |
+| **Claude Code** | Wayfinder planning, adversarial review, `.claude/commands` OpenSpec |
+| **OpenSpec CLI** | Propose, validate, sync, archive |
+| **CodeRabbit** | Automated PR review on fork PRs |
 | **GitHub Actions** | Auto-sync `main` → `fwdays-submission` → updates PR diff |
 | **MCP Context7** | Library docs during implementation |
 | **MCP Vercel** | Deploy / logs (planned for PDF route) |
@@ -175,7 +189,7 @@ Not run. Lighter stack: OpenSpec + `AGENTS.md` + capability gates + slash comman
 | Product, MVP priorities, domain (NACE, FOP, bilingual docs) | Code and docs generation from specs |
 | Architecture (browser-first, ADR-0002), slice order | UI scaffold, capability docs, refactors |
 | Final acceptance, video recording | Wayfinder analysis, spec migration, handoff updates |
-| Direction and judgment | Iteration within given context |
+| Merge decisions, adversarial review synthesis | Iteration within given context |
 
 ## (Optional) Code link
 
@@ -188,13 +202,13 @@ https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-20
 **Subject:** [eresemai/…#2](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/2) — *docs: wayfinder 01–04, capability gates, and WEG3D Fin design skill*  
 **Merged:** 2026-07-09 · **+3025 / −173** across 33 files · 5 commits  
 **Checker:** separate Cursor chat (maker ≠ checker) · Bugbot subagent + synthesis  
-**Verdict:** **Approved** — follow-ups from checker pass resolved 2026-07-10.
+**Verdict:** **Approved** — follow-ups resolved 2026-07-10.
 
 ### Scope reviewed
 
 | Area | Assessment |
 | --- | --- |
-| Wayfinder tickets 01–04 | ✅ Evidence-backed; opens new tickets 15–16 correctly |
+| Wayfinder tickets 01–04 | ✅ Evidence-backed; opens tickets 15–16 correctly |
 | `openspec/capability-map.yaml` + gate script | ✅ Sound slice order and CLI |
 | `docs/capability.md` + `docs/capabilities/` | ✅ Clear human roadmap |
 | `docs/current-state.md` | ✅ Good handoff pattern |
@@ -206,18 +220,21 @@ https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-20
 | Severity | Location | Finding | Resolution |
 | --- | --- | --- | --- |
 | **High** | `scripts/check-capability-gates.mjs` | `yaml` missing from `package.json` | Added `yaml` to `devDependencies` |
-| **High** | `docs/capabilities/invoice-calc.md` | Stale `DDMM/0YY` / inverted FR-CALC-03 | Synced with Wayfinder 06+07 decisions |
-| **High** | `docs/current-state.md` | Stale `Next up` vs resolved tickets | Refreshed priorities and blockers |
-| **Medium** | `docs/capability.md:94` | Incomplete pdf gate deps | Added `document-render`, `form-input`, preview |
-| **Medium** | `FR-NACE-06` traceability | Still `proposed` after ticket 03 drop | Dropped in requirements, map, nace spec |
+| **High** | `docs/capabilities/invoice-calc.md` | Stale `DDMM/0YY` / inverted FR-CALC-03 | Synced with Wayfinder 06+07 |
+| **High** | `docs/current-state.md` | Stale `Next up` vs resolved tickets | Refreshed priorities |
+| **Medium** | `docs/capability.md` pdf gate deps | Incomplete | Added `document-render`, `form-input`, preview |
+| **Medium** | `FR-NACE-06` traceability | Still `proposed` after ticket 03 drop | Dropped in requirements + spec |
 | **Low** | PR test plan | `capability:check` on clean install | Fixed via `yaml` dependency |
 
-### Recommended follow-ups (maker chat)
+---
 
-1. ~~Add `yaml` to `devDependencies` and re-lock.~~ **Done**
-2. ~~Sync `invoice-calc.md`, `current-state.md` Next up, and `capability.md` pdf row.~~ **Done**
-3. ~~Propagate FR-NACE-06 drop into traceability + `nace-catalog/spec.md`.~~ **Done**
-4. `/opsx:apply add-invoice-calc` then sync delta to authoritative spec.
+## Review log (adversarial passes — S2/S3)
+
+| PR | Slice | Checker | Outcome |
+| --- | --- | --- | --- |
+| [#6](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/6) | S2 storage + UI | Claude Fable 5 adversarial (4×2 lenses) | Critical hydration crash fixed; IBAN mod-97; a11y labels |
+| [#7](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/7) | S2 `banking` | Adversarial review | Template contract bidirectional equality; `MissingIbanError` guards |
+| [#8](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/8) | S3 `document-render` | Adversarial review | FR-TPL-02 wording fixed; `template:check` in build; font gap → PR #9 |
 
 ---
 
@@ -228,8 +245,9 @@ https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-20
 - [x] Agentic Engineering practices described (with honest TODOs)
 - [ ] Working end-to-end result (target: M4 demo milestone)
 - [ ] Loop engineering — at least one slice through an autonomous loop
-- [x] Vitest + test-first for `src/lib/` and storage (129 tests)
-- [x] Maker ≠ checker — documented separate review pass (fork PR #2)
+- [x] Vitest + test-first for `src/lib/`, storage, banking, render (**199 tests**)
+- [x] Maker ≠ checker — documented separate review passes (fork PRs #2, #6, #7, #8)
 - [x] S0 `shell` shipped (responsive UI, health API, OpenSpec archived)
 - [x] S1 domain core shipped (`nace-catalog`, `invoice-calc`)
-- [x] S2 directories shipped (`supplier-profile` PR #5, `client-directory` PR #4)
+- [x] S2 shipped (`supplier-profile`, `client-directory`, `banking`)
+- [x] S3 shipped (`document-render` + embedded fonts, FR-TPL-05)
