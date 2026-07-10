@@ -59,8 +59,8 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 
 | ID | Capability | Status |
 | --- | --- | --- |
-| FR-SHELL-01 | shell | accepted |
-| FR-SHELL-02 | shell | proposed |
+| FR-SHELL-01 | shell | shipped |
+| FR-SHELL-02 | shell | shipped |
 | FR-SHELL-03 | shell | shipped |
 | FR-INPUT-01 | form-input | proposed |
 | FR-INPUT-02 | form-input | proposed |

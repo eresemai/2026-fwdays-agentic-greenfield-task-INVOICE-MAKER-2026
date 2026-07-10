@@ -40,7 +40,7 @@ slices:
 capabilities:
   shell:
     owner: ui
-    status: in_progress
+    status: shipped
     spec: openspec/specs/shell/spec.md
     owns:
       - FR-SHELL-01

@@ -7,7 +7,7 @@
 | Slice | S0 — Foundation |
 | Order | #1 |
 | Owner | ui |
-| Gate status | in_progress |
+| Gate status | shipped |
 | OpenSpec spec | [shell/spec.md](../../openspec/specs/shell/spec.md) |
 | OpenSpec change | `add-shell` |
 
@@ -20,8 +20,8 @@ No invoice domain logic here — only routes and layout that later capabilities 
 
 | ID | Description | Status |
 | --- | --- | --- |
-| FR-SHELL-01 | Landing + dashboard nav to invoice creation, list, clients, settings | accepted |
-| FR-SHELL-02 | Layout adapts at 768 px; preview area readable on mobile | proposed |
+| FR-SHELL-01 | Landing + dashboard nav to invoice creation, list, clients, settings | shipped |
+| FR-SHELL-02 | Layout adapts at 768 px; preview area readable on mobile | shipped |
 | FR-SHELL-03 | `GET /api/health` → `{ status: "ok", service: "invoice-maker" }` | shipped |
 
 | Related | ID |
@@ -42,11 +42,11 @@ No invoice domain logic here — only routes and layout that later capabilities 
 
 ## Verification
 
-- [ ] Navigate landing → dashboard without auth
-- [ ] All sidebar links resolve
-- [ ] `curl /api/health` returns 200 + JSON
-- [ ] Viewport 375 px: no horizontal overflow on shell
-- [ ] `npm run build` < 60 s (NFR-PERF-01)
+- [x] Navigate landing → dashboard without auth
+- [x] All sidebar links resolve
+- [x] `curl /api/health` returns 200 + JSON
+- [x] Viewport 375 px: no horizontal overflow on shell
+- [x] `npm run build` < 60 s (NFR-PERF-01)
 
 ## Done when
 
