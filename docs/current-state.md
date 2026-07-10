@@ -3,17 +3,55 @@
 > **Read this file at the start of every agent session.**  
 > **Update it at the end of a session or when stopping mid-task.**
 
-Last updated: 2026-07-10T14:00:00Z
+Last updated: 2026-07-10T19:10:00Z (Project Factory orchestration session)
 
 ## Snapshot
 
 | Field | Value |
 | --- | --- |
-| **Branch** | `main` — S4b `export-share` preview archived |
-| **Active capability** | Submission-ready MVP — post-MVP: S5 `invoice-registry` or S6 pdf |
+| **Branch** | `main` — gate chain made honest; G3 acceptance contract declared |
+| **Active capability** | Gate hardening done; **next: S5 `invoice-registry` (first EARNED slice)** |
 | **Active OpenSpec changes** | none |
-| **Slice / gate** | `export-share.preview` **shipped** · pdf not_started |
-| **Gate check** | `npm run capability:check -- --capability invoice-registry` |
+| **Slice / gate** | G0–G3 green/earned · G4+ NOT-EARNED (no earned slice yet) |
+| **Gate check** | `node scripts/gate-status.mjs` — Result FAIL (honest: retrofit + no artifacts) |
+
+## Session summary — gate honesty + G3 (2026-07-10 PM)
+
+Project Factory installed (G0). A parallel session had laundered the trajectory
+gate; a fresh `process-auditor` confirmed it. Six process fixes landed, each
+with an EXECUTED red→green proof and a `Refs: PD-x` trailer:
+
+| Commit | Fix |
+| --- | --- |
+| `3d5efd1` | PD-3/4/5 — retrofit slices render RETROFITTED, not PASS; 10 forged `review-findings.json` deleted (one contradicted its own review doc) |
+| `ce7d62d` | PD-9 — `@trace` regex now matches categorized ids |
+| `f829e01` | PD-7 — CI runs `gate-status` + the red→green proofs |
+| `988ce25` | PD-12 — `@trace` anchored to comment start (a disclaimer had become evidence) |
+| `2bc736c` | PD-1 — both checkers treat `dropped` as non-MVP |
+| `13518f0` | 20 MVP FRs annotated; **5 of 24 claims refuted** by fresh agents; 14 gaps in `docs/qa/trace-gaps.md` |
+| `1ff3b28` | FR-CLIENT-01..04 numbered (capability was outside the trace chain); improvements moved to `retro/improvements/` (PD-13) |
+| `069793c` | G3: 43 acceptance-method tags; `@playwright/test` installed; deploy-gated PERF waived |
+| `5cb2967` | waiver recorded as correction COR-1 (OPEN) |
+
+**Traceability:** 23/38 MVP FRs honestly traced. `docs/qa/trace-gaps.md` lists
+the 14 gaps (4 not-implemented, 2 dropped, 8 needing recording/e2e).
+
+### Two decisions waiting on the human
+1. **Disposition correction COR-1** (`retro/corrections/001-*.json`) — the
+   deploy-gated PERF waiver. OPEN until a human marks it `resolved|waived|invalid`.
+   Keeps `gate-status` showing an open-correction line. `npm run correct` to view.
+2. **CI on `main` is RED and that is correct** — `check-trajectory --release`
+   exits 1 because all 10 archived slices are RETROFITTED, none earned red-first.
+   It goes green when S5 is earned, or via a waiver. Do NOT drop `--release`.
+
+### Open, unfixed process defects (not approved to fix)
+- **PD-8, PD-10** — the review-findings and `Slice:` trailer predicates are both
+  still forgeable for FUTURE slices (auditor gave the fix: bind trailer to the
+  slice's files + `git interpret-trailers`). Fix before the first earned slice
+  archives or S5 inherits the weak contract.
+- **PD-11** — `factory-lock` over-captures non-gate workflows (`sync-homework-pr.yml`).
+- **PD-13** — the upstream factory template puts improvements in `openspec/changes/`,
+  which breaks `openspec validate --all --strict`.
 
 ## Capability backlog
 
