@@ -1,0 +1,78 @@
+{
+  "generatedBy": "scripts/check-trajectory.mjs",
+  "slices": [
+    {
+      "slice": "2026-07-10-add-banking",
+      "reviewEvidence": "clean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-client-directory",
+      "reviewEvidence": "clean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-document-render",
+      "reviewEvidence": "clean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-embedded-fonts",
+      "reviewEvidence": "clean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-export-share-preview",
+      "reviewEvidence": "clean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-form-input",
+      "reviewEvidence": "clean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-invoice-calc",
+      "reviewEvidence": "clean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-nace-catalog",
+      "reviewEvidence": "clean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-shell",
+      "reviewEvidence": "clean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-add-supplier-profile",
+      "reviewEvidence": "clean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    }
+  ],
+  "overlaps": [],
+  "failures": [],
+  "warnings": []
+}

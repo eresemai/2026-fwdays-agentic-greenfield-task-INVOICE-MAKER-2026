@@ -69,3 +69,10 @@ The system SHALL use NACE 2.1-UA (State Statistics Service order No. 191, 2025) 
 #### Scenario: No KVED in line texts
 - **WHEN** bilingual invoice line texts are produced from the catalog
 - **THEN** they contain no `КВЕД` or `ДК 009` references
+
+### Requirement: FR-NACE-06 Dropped — no NACE code on printed invoice
+**Status: dropped (Wayfinder 03).** The system SHALL NOT print a standalone NACE class code on the invoice document; bilingual service line text from the catalog entry is sufficient.
+
+#### Scenario: Not implemented by design
+- **WHEN** an invoice is rendered
+- **THEN** no NACE class code field is injected into the document beyond bilingual service line text from the catalog entry

@@ -53,6 +53,14 @@ const listeners = new Set<SupplierProfilesListener>();
 /** Memoized snapshot for useSyncExternalStore; invalidated on every write. */
 let cachedProfiles: SupplierProfile[] | null = null;
 
+/** Cached active profile for useSyncExternalStore; `undefined` = not computed yet. */
+let cachedActiveProfile: SupplierProfile | null | undefined;
+
+function invalidateProfileSnapshots(): void {
+  cachedProfiles = null;
+  cachedActiveProfile = undefined;
+}
+
 function isBrowser(): boolean {
   return typeof window !== "undefined";
 }
@@ -68,7 +76,7 @@ function handleStorageEvent(event: StorageEvent): void {
   if (event.key !== null && event.key !== SUPPLIER_PROFILES_STORAGE_KEY) {
     return;
   }
-  cachedProfiles = null;
+  invalidateProfileSnapshots();
   notifyListeners();
 }
 
@@ -82,7 +90,7 @@ export function subscribeSupplierProfiles(
   if (isBrowser() && listeners.size === 0) {
     // Cross-tab writes made while nothing was subscribed went unobserved;
     // drop the cache so the first snapshot after (re)subscribing is fresh.
-    cachedProfiles = null;
+    invalidateProfileSnapshots();
     window.addEventListener("storage", handleStorageEvent);
   }
   listeners.add(listener);
@@ -161,7 +169,7 @@ function writeStore(store: SupplierProfilesStore): void {
 /** Persist the store, then invalidate the snapshot and notify subscribers. */
 function commitStore(store: SupplierProfilesStore): void {
   writeStore(store);
-  cachedProfiles = null;
+  invalidateProfileSnapshots();
   notifyListeners();
 }
 
@@ -268,16 +276,33 @@ export function getServerActiveProfileId(): string | null {
   return null;
 }
 
+/** Server snapshot for useSyncExternalStore: always null on the server. */
+export function getServerActiveProfile(): SupplierProfile | null {
+  return null;
+}
+
 export function getProfile(id: string): SupplierProfile | null {
   return readStore().profiles.find((profile) => profile.id === id) ?? null;
 }
 
+/**
+ * Reference-stable active profile snapshot. Safe as useSyncExternalStore
+ * getSnapshot; the reference only changes after a store write.
+ */
 export function getActiveProfile(): SupplierProfile | null {
-  const store = readStore();
-  if (!store.activeProfileId) {
+  if (cachedActiveProfile !== undefined) {
+    return cachedActiveProfile;
+  }
+
+  const activeId = readStore().activeProfileId;
+  if (!activeId) {
+    cachedActiveProfile = null;
     return null;
   }
-  return getProfile(store.activeProfileId);
+
+  const profiles = listProfiles();
+  cachedActiveProfile = profiles.find((profile) => profile.id === activeId) ?? null;
+  return cachedActiveProfile;
 }
 
 export function getActiveProfileId(): string | null {
@@ -365,12 +390,12 @@ export function __seedRawStoreForTests(raw: string): void {
     return;
   }
   window.localStorage.setItem(SUPPLIER_PROFILES_STORAGE_KEY, raw);
-  cachedProfiles = null;
+  invalidateProfileSnapshots();
 }
 
 /** Test helper: clear storage key and reset the cached snapshot. */
 export function __clearStoreForTests(): void {
-  cachedProfiles = null;
+  invalidateProfileSnapshots();
   if (!isBrowser()) {
     return;
   }

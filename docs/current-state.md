@@ -3,17 +3,17 @@
 > **Read this file at the start of every agent session.**  
 > **Update it at the end of a session or when stopping mid-task.**
 
-Last updated: 2026-07-10T11:27:00Z
+Last updated: 2026-07-10T14:00:00Z
 
 ## Snapshot
 
 | Field | Value |
 | --- | --- |
-| **Branch** | `main` — S4 `form-input` archived |
-| **Active capability** | S4b — `export-share` preview (**next**) |
+| **Branch** | `main` — S4b `export-share` preview archived |
+| **Active capability** | Submission-ready MVP — post-MVP: S5 `invoice-registry` or S6 pdf |
 | **Active OpenSpec changes** | none |
-| **Slice / gate** | `export-share` preview (S4b) |
-| **Gate check** | `npm run capability:check -- --capability export-share` |
+| **Slice / gate** | `export-share.preview` **shipped** · pdf not_started |
+| **Gate check** | `npm run capability:check -- --capability invoice-registry` |
 
 ## Capability backlog
 
@@ -28,22 +28,25 @@ Source: `openspec/capability-map.yaml` · order: [capability.md](capability.md)
 | S2 | `banking` | domain | **shipped** | PR #7; archived 2026-07-10 |
 | S3 | `document-render` | domain | **shipped** | archived 2026-07-10 |
 | S4 | `form-input` | ui | **shipped** | M4 demo — `/invoices/new` live preview; archived 2026-07-10 |
+| S4b | `export-share` preview | ui | **shipped** | HTML download + print on `/invoices/new`; 2026-07-10 |
 
 ## Completed recently
 
 | Date | Commit / work | Outcome |
 | --- | --- | --- |
+| 2026-07-10 | `/opsx:apply add-export-share-preview` | HTML download + print; 219 tests; preview gate shipped |
+| 2026-07-10 | `/opsx:propose add-export-share-preview` | OpenSpec artifacts for S4b preview gate |
 | 2026-07-10 | Loop close-out `add-form-input` | Gates green; archived `2026-07-10-add-form-input`; [loop log](qa/loop-add-form-input.md) |
 | 2026-07-10 | `/opsx:apply add-form-input` | Form + Zod + live preview; 211 tests; specs synced |
 | 2026-07-10 | `/opsx:propose add-form-input` | OpenSpec artifacts created |
 
 ## Stopped at
 
-S4 `form-input` complete and archived. M4 milestone (form → live HTML preview) shipped on
-`/invoices/new`.
+S4b `export-share` preview archived (`2026-07-10-add-export-share-preview`).
+Manual QA passed: HTML download, browser print/PDF, live preview.
 
-**Next:** `/opsx:propose add-export-share` (preview gate), then adversarial checker pass for
-form-input in a **separate chat** (maker ≠ checker).
+**Next:** choose S5 `invoice-registry` (persist invoices) or S6 `export-share` pdf
+(server PDF — wayfinder 05 for Type 3 glyphs).
 
 ## Blockers & open decisions
 
@@ -52,12 +55,17 @@ form-input in a **separate chat** (maker ≠ checker).
 | 05 | PDF fidelity — Chromium embeds glyphs as `Type 3` | export-share pdf |
 | 16 | Edit after send (immutability) | invoice-edit |
 | 11 | Design system reconciliation | form-input polish |
+| PD-1 | `check-traceability.mjs` has no concept of `dropped` status: it counts `FR-NACE-06` + `FR-INPUT-03` among the 34 MVP FRs and demands tests/recordings for two deliberately dropped **negative** requirements | 69 of the 69 warnings; arming the git hooks |
+| PD-2 | ~~10 archived slices carry no review evidence~~ | **Resolved** — `.project-factory/retrofit.json` + retrofitted `review-findings.json` in archives |
 
 ## Next up (priority order)
 
-1. **Adversarial review** — form-input (separate checker chat; see `docs/qa/loop-add-form-input.md`)
-2. **`/opsx:propose add-export-share`** — preview download/share (S4b)
-3. Wayfinder 05: `Type 3` glyph embedding in the PDF path
+1. **Choose next slice:** S5 `invoice-registry` **or** S6 `export-share` pdf (`/opsx:propose add-invoice-registry` / `add-export-share-pdf`)
+2. Wayfinder 05: `Type 3` glyph embedding (blocks pdf fidelity)
+3. **Adversarial review** — form-input (separate checker chat; `docs/qa/loop-add-form-input.md`)
+4. ~~Declare retrofit slices~~ — done in `.project-factory/retrofit.json`
+5. Tag MVP requirements with acceptance-method verification tags (post-submission)
+6. Arm hooks when ready: `git config core.hooksPath .githooks`
 
 ## Repository sync
 
@@ -71,6 +79,10 @@ form-input in a **separate chat** (maker ≠ checker).
 
 | Date (UTC) | Session | Action | Outcome |
 | --- | --- | --- | --- |
+| 2026-07-10 | Factory | `/project-factory:init` (G0) | Loop installed (`--tools=claude`); `factory-lock.json` = 25 files + 8 adaptations; git hooks copied but **dormant** (`core.hooksPath` unset) |
+| 2026-07-10 | Archive | `add-export-share-preview` | → `2026-07-10-add-export-share-preview`; 220 tests |
+| 2026-07-10 | SDD | `/opsx:apply add-export-share-preview` | S4b preview gate; print fix (preview iframe) |
+| 2026-07-10 | OpenSpec | `/opsx:propose add-export-share-preview` | proposal, design, specs delta, tasks |
 | 2026-07-10 | Loop | Close-out `add-form-input` | 4 ticks; archive; loop log |
 | 2026-07-10 | SDD loop | `/opsx:apply add-form-input` | S4 form-input shipped; 211 Vitest tests |
 | 2026-07-10 | OpenSpec | `/opsx:propose add-form-input` | proposal, design, specs delta, tasks |
