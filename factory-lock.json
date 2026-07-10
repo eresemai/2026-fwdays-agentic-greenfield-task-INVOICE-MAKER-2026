@@ -1,13 +1,13 @@
 {
-  "createdAt": "2026-07-10T18:38:04.042Z",
-  "gitHead": "bb948849794d396cb3e96c4d661aa2a32bc6c190",
+  "createdAt": "2026-07-10T18:40:46.378Z",
+  "gitHead": "5a5427b10b71788f83732438706a3933d3f2c402",
   "files": {
-    ".claude/workflows/eval-suite.js": "f93c99d868b812cfa7412927f52b62d1042525396a9d0265f16cfe435b9c6098",
+    ".claude/workflows/eval-suite.js": "9a264172c0b712657014c4cf1d4eeb9ee4429509209495cebd7841f427717b68",
     ".claude/workflows/review-gate.js": "cd85d5ce8621defa5d7f790bb39c42068bd2b1c97ef8629aaeab7221964f6f09",
-    ".claude/workflows/spec-pipeline.js": "00c689d129ecf8a9e6603d08fd1054976e2caea97a8929980d4fe3c3102fa3a3",
-    ".claude/workflows/trajectory-eval.js": "ea229b3a57f6e0723c27e9f3148fdd5df17181225349d8b0770dc346efe47715",
-    ".claude/workflows/uat-triage.js": "bcad8666cf3358fa37ece9c6c5096281520f516470675a9aabd8361cbdf45ad2",
-    ".claude/workflows/vision-verify.js": "84c893a066088a158d308a3a21cf7cd3b44fdefb4f503ef9bd85507b7364fc69",
+    ".claude/workflows/spec-pipeline.js": "639f5c52855d84aa7a385dcc6c90a1f8b57e230b07d16cbc9985fb7fdc7767d1",
+    ".claude/workflows/trajectory-eval.js": "036d274d6fcf3d1e28cb02a6c79debfe623847eea3485c3f974b0200c0ca34dc",
+    ".claude/workflows/uat-triage.js": "c1338b81a606a2c368f8b82818893a02a6add3efd8a8d0056acdea735e2c01d1",
+    ".claude/workflows/vision-verify.js": "8a7f45cd391b9824aee9676b11ec57e4f107f9715379d490c7a39d1aabf53741",
     ".githooks/commit-msg": "c6427b364dbc15da31235e4c0f9a8ac74639b7f0512cadce95f301637387fb5c",
     ".githooks/pre-commit": "c64e18049003ddd126e8ac2c61c1ce759923977748f5f044ee34fc1c3212eaea",
     ".github/workflows/ci.yml": "3e9d280819ab02cd79c506f687c339b64f9707f62a8232326d17168dc04ff04d",
@@ -48,6 +48,7 @@
     "improve-PD-10 (Refs: PD-10): check-trajectory Slice: trailer counts only if the commit carries a REAL trailer AND touched src/app/lib/db/components/tests. A docs-only commit (5bcbfe9 claimed 10 slices, 0 src files) no longer counts. Executed red->green: tests/check-slice-trailer.test.mjs (real git-repo fixtures) 1/2 -> 2/2.",
     "improve-PD-8 (Refs: PD-8): check-trajectory trusts clean:true review evidence only from a real review-gate output (generatedBy: review-gate + populated dimensions). A bare {clean:true} or generatedBy:retrofit is an unverified-stamp, fails under --release. Executed red->green: tests/check-review-evidence.test.mjs 3/6 -> 6/6.",
     "improve-PD-14-15 (Refs: PD-14, PD-15): review-gate.js agent types now project-factory:-prefixed (bare names did not resolve, lost 2 dimensions in S5 round 1); slice dependency audit scoped to slice-changed deps so a pre-existing transitive next/postcss advisory no longer blocks clean:true on every slice; verifier lenses configurable (default 1 for slice reviews, both via args.thorough or global). node --check passes.",
-    "Correction to improve-PD-14-15: reverted the single-lens 'lighter review' change. The exploitability lens is load-bearing — it contests real-but-unreachable footguns; dropping it made round-3 confirm 16 minor footguns that 2 lenses would have contested. PD-14 (agentType prefixes) and PD-15 (scoped dependency audit) are KEPT."
+    "Correction to improve-PD-14-15: reverted the single-lens 'lighter review' change. The exploitability lens is load-bearing — it contests real-but-unreachable footguns; dropping it made round-3 confirm 16 minor footguns that 2 lenses would have contested. PD-14 (agentType prefixes) and PD-15 (scoped dependency audit) are KEPT.",
+    "improve-PD-14 (extended): prefixed bare agent-only names in the remaining 5 workflows (spec-pipeline spec-writer, eval-suite + trajectory-eval eval-judge, vision-verify vision-judge, uat-triage bug-triage-analyst) with project-factory:. All 6 workflows now resolve their specialist agents."
   ]
 }
