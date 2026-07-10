@@ -56,16 +56,24 @@ Manual QA passed: HTML download, browser print/PDF, live preview.
 | 16 | Edit after send (immutability) | invoice-edit |
 | 11 | Design system reconciliation | form-input polish |
 | PD-1 | `check-traceability.mjs` has no concept of `dropped` status: it counts `FR-NACE-06` + `FR-INPUT-03` among the 34 MVP FRs and demands tests/recordings for two deliberately dropped **negative** requirements | 69 of the 69 warnings; arming the git hooks |
-| PD-2 | ~~10 archived slices carry no review evidence~~ | **Resolved** — `.project-factory/retrofit.json` + retrofitted `review-findings.json` in archives |
+| PD-2 | 10 archived slices carry no review evidence. **Documented, not resolved** — `.project-factory/retrofit.json` declares them RETROFITTED; retrofit records an absence, it does not supply the missing review | `check-trajectory --release` renders `NOT-EARNED` until a slice is earned red-first |
+| PD-3 | `check-trajectory` was blind to retrofit and read 10 back-stamped `clean:true` files as real review evidence | **Fixed** — `improve-PD-3`, forged stamps deleted |
+| PD-4 | the `add-form-input` stamp claimed `confirmed:0/clean:true` while its real review (`docs/qa/loop-add-form-input.md:39`) recorded PASS WITH NOTES + C1–C7 | **Fixed** — stamp deleted with `improve-PD-3` |
+| PD-5 | retrofit doctrine sanctions `retrofit.json` only; the 10 `review-findings.json` were beyond mandate | **Fixed** — deleted with `improve-PD-3` |
+| PD-7 | `gate-status.mjs` — the only aggregator carrying the RETROFIT banner and NOT-EARNED semantics — is absent from CI | CI can render green while `gate-status` is red |
+| PD-8 | `check-trajectory` accepts any `{clean:true}` as review proof; ignores `confirmed`, `baseRef`, `dimensions` | future slices can be stamped, not reviewed |
+| PD-9 | `check-traceability.mjs:148` parses `@trace` with `[A-Z]+-\d+`, which can never match categorized ids like `FR-CALC-01` that line 158 demands | 34 unclearable warnings; `--strict-tests` unsatisfiable |
+| PD-10 | one docs commit (`5bcbfe9`) carries 10 `Slice:` trailers; `check-trajectory` greps the whole message and never checks the commit touched the slice's files | trailer evidence forgeable |
 
 ## Next up (priority order)
 
 1. **Choose next slice:** S5 `invoice-registry` **or** S6 `export-share` pdf (`/opsx:propose add-invoice-registry` / `add-export-share-pdf`)
 2. Wayfinder 05: `Type 3` glyph embedding (blocks pdf fidelity)
 3. **Adversarial review** — form-input (separate checker chat; `docs/qa/loop-add-form-input.md`)
-4. ~~Declare retrofit slices~~ — done in `.project-factory/retrofit.json`
-5. Tag MVP requirements with acceptance-method verification tags (post-submission)
+4. Land `improve-PD-9` (`@trace` regex) and `improve-PD-7` (`gate-status` in CI) — approved, same red→green + `Refs: PD-x` protocol as `improve-PD-3`
+5. Tag MVP requirements with acceptance-method verification tags — `check-acceptance-methods --mode=existence` is red at `Scope: 0`, which gates G3
 6. Arm hooks when ready: `git config core.hooksPath .githooks`
+7. Triage PD-8 and PD-10 (forgeable review/trailer predicates) before the first *earned* slice archives, or S5 inherits the same weak evidence contract
 
 ## Repository sync
 

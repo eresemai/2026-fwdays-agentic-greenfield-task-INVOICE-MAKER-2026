@@ -36,6 +36,7 @@ const PATHS = {
   archiveDir: "openspec/changes/archive",
   reportOut: "docs/qa/trajectory-report.md",
   jsonOut: "trace/trajectory.json",
+  retrofit: ".project-factory/retrofit.json",
 };
 // lib/<domain>/ dirs that are conventionally shared — never flagged as a
 // cross-slice overlap.
@@ -62,7 +63,24 @@ const slices = existsSync(archiveAbs)
   ? readdirSync(archiveAbs).filter((e) => statSync(join(archiveAbs, e)).isDirectory())
   : [];
 
-// slice -> { reviewEvidence, trailerCommits, libDomains[], processComplete }
+// Retrofit honesty: slices onboarded from pre-Factory code have no
+// reconstructible red-first history. They are declared once in
+// `.project-factory/retrofit.json` and from then on render RETROFITTED — never
+// `clean`, never PASS. Without this, a back-stamped `{"clean": true}` file in
+// an archive folder is indistinguishable from a review that actually ran.
+const retrofitSlices = new Set();
+{
+  const raw = read(PATHS.retrofit);
+  if (raw) {
+    try {
+      for (const s of JSON.parse(raw).slices ?? []) retrofitSlices.add(s);
+    } catch {
+      warn("retrofit", `${PATHS.retrofit} is not valid JSON — treating every slice as earned-or-missing`);
+    }
+  }
+}
+
+// slice -> { reviewEvidence, trailerCommits, libDomains[], processComplete, retrofitted }
 const rows = [];
 const domainToSlices = new Map(); // lib domain -> [slices]
 
@@ -71,6 +89,7 @@ for (const slice of slices) {
   // OpenSpec archives as `YYYY-MM-DD-add-<cap>`, but the commit trailer is the
   // bare `Slice: add-<cap>` — strip the date prefix so trailer matching works.
   const trailerName = slice.replace(/^\d{4}-\d{2}-\d{2}-/, "");
+  const retrofitted = retrofitSlices.has(trailerName);
 
   // 1. review evidence
   let reviewEvidence = "missing";
@@ -82,7 +101,13 @@ for (const slice of slices) {
       reviewEvidence = "unparseable";
     }
   }
-  if (reviewEvidence !== "clean") {
+  if (retrofitted) {
+    // A `clean:true` stamp on a retrofit slice proves nothing: the review it
+    // claims predates the Factory. Downgrade it and say so out loud.
+    const stamped = reviewEvidence === "clean" ? ` (a "clean" stamp is present but predates the loop — ignored)` : "";
+    reviewEvidence = "retrofitted";
+    warn("retrofit", `${slice}: RETROFITTED — red-first history unreconstructible, review evidence not earned${stamped}`);
+  } else if (reviewEvidence !== "clean") {
     gated(flags.has("--release"), "review-evidence", `${slice}: review-findings.json is ${reviewEvidence} (review must have run clean before archive)`);
   }
 
@@ -113,10 +138,13 @@ for (const slice of slices) {
         domainToSlices.get(d).push(slice);
       }
     }
-    if (trailerCommits === 0) gated(flags.has("--release"), "trailer", `${slice}: no commit carries a "Slice: ${trailerName}" trailer`);
+    // A retrofit slice predates the commit-msg hook, so a missing trailer is
+    // expected, not a defect. It stays a warning even under --release; the
+    // NOT-EARNED verdict below is what keeps the gate honest.
+    if (trailerCommits === 0) gated(flags.has("--release") && !retrofitted, "trailer", `${slice}: no commit carries a "Slice: ${trailerName}" trailer`);
   }
 
-  rows.push({ slice, reviewEvidence, trailerCommits, libDomains, processComplete });
+  rows.push({ slice, reviewEvidence, trailerCommits, libDomains, processComplete, retrofitted });
 }
 
 // cross-slice module overlap (after all slices seen)
@@ -131,6 +159,31 @@ for (const [domain, owners] of domainToSlices) {
 
 if (slices.length === 0) warn("slices", "no archived slices found under openspec/changes/archive/ (nothing to audit yet)");
 
+// ---------- three-valued verdict (vacuous-pass-not-earned) ----------
+// A retrofit slice is never evidence. When every archived slice is retrofitted,
+// the trajectory gate has been earned by nothing and must not print PASS.
+const retrofitCount = rows.filter((r) => r.retrofitted).length;
+const earnedCount = rows.filter((r) => !r.retrofitted && r.reviewEvidence === "clean").length;
+const notEarned = retrofitCount > 0 && earnedCount === 0;
+
+let verdict;
+let exitCode;
+if (failures.length) {
+  verdict = "FAIL";
+  exitCode = 1;
+} else if (notEarned) {
+  verdict = "NOT-EARNED";
+  // Hard only where the gate actually is (G7 / CI release). The unflagged run
+  // is informational — it backs the pre-commit hook, where a non-zero exit
+  // would block every commit in a repo whose history predates the loop. The
+  // verdict string still reads NOT-EARNED, so gate-status and qa-verify (which
+  // classify on `Result:`, not exit code) correctly refuse to fold it into PASS.
+  exitCode = flags.has("--release") ? 1 : 0;
+} else {
+  verdict = "PASS";
+  exitCode = 0;
+}
+
 // ---------- outputs ----------
 const ok = (b) => (b ? "yes" : "**no**");
 const report = `# Trajectory Report (generated - do not hand-edit)
@@ -140,13 +193,13 @@ archived slice took: review evidence, \`Slice:\` trailers, and module scope.
 It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
-Scope: ${slices.length} archived slice(s).
-Result: ${failures.length === 0 ? "PASS" : `FAIL (${failures.length} failure${failures.length === 1 ? "" : "s"})`}${warnings.length ? `, ${warnings.length} warning(s)` : ""}
+Scope: ${slices.length} archived slice(s)${retrofitCount ? ` (${retrofitCount} RETROFITTED, ${earnedCount} earned)` : ""}.
+Result: ${verdict}${failures.length ? ` (${failures.length} failure${failures.length === 1 ? "" : "s"})` : ""}${warnings.length ? `, ${warnings.length} warning(s)` : ""}
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
 ${rows
-  .map((r) => `| ${r.slice} | ${r.reviewEvidence === "clean" ? "clean" : `**${r.reviewEvidence}**`} | ${r.trailerCommits || "**0**"} | ${ok(r.processComplete)} | ${r.libDomains.join(", ") || "-"} |`)
+  .map((r) => `| ${r.slice} | ${r.reviewEvidence === "clean" ? "clean" : `**${r.reviewEvidence}**`} | ${r.retrofitted ? "n/a (retrofit)" : r.trailerCommits || "**0**"} | ${ok(r.processComplete)} | ${r.libDomains.join(", ") || "-"} |`)
   .join("\n")}
 
 ## Cross-slice module overlap
@@ -164,6 +217,9 @@ ${warnings.length ? warnings.map((w) => `- **${w.check}**: ${w.msg}`).join("\n")
 
 const trajectory = {
   generatedBy: "scripts/check-trajectory.mjs",
+  verdict,
+  retrofitCount,
+  earnedCount,
   slices: rows,
   overlaps,
   failures,
@@ -183,7 +239,11 @@ if (flags.has("--check-fresh")) {
 
 for (const w of warnings) console.warn(`WARN  [${w.check}] ${w.msg}`);
 for (const f of failures) console.error(`FAIL  [${f.check}] ${f.msg}`);
-console.log(`\nScope: ${slices.length} archived slice(s)`);
+if (notEarned)
+  console.error(
+    `NOT-EARNED  [trajectory] ${retrofitCount} of ${slices.length} archived slice(s) are RETROFITTED and ${earnedCount} were earned red-first — the trajectory gate has been earned by nothing. A back-stamped "clean" review file is not a review.`,
+  );
+console.log(`\nScope: ${slices.length} archived slice(s)${retrofitCount ? ` (${retrofitCount} RETROFITTED, ${earnedCount} earned)` : ""}`);
 if (!flags.has("--check-fresh")) console.log(`wrote ${PATHS.reportOut} and ${PATHS.jsonOut}`);
-console.log(`Result: ${failures.length ? "FAIL" : "PASS"}${warnings.length ? `, ${warnings.length} warning(s)` : ""}`);
-process.exit(failures.length ? 1 : 0);
+console.log(`Result: ${verdict}${warnings.length ? `, ${warnings.length} warning(s)` : ""}`);
+process.exit(exitCode);

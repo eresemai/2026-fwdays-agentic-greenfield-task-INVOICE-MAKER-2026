@@ -5,21 +5,21 @@ archived slice took: review evidence, `Slice:` trailers, and module scope.
 It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
-Scope: 10 archived slice(s).
-Result: PASS
+Scope: 10 archived slice(s) (10 RETROFITTED, 0 earned).
+Result: NOT-EARNED, 10 warning(s)
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
-| 2026-07-10-add-banking | clean | 1 | yes | - |
-| 2026-07-10-add-client-directory | clean | 1 | yes | - |
-| 2026-07-10-add-document-render | clean | 1 | yes | - |
-| 2026-07-10-add-embedded-fonts | clean | 1 | yes | - |
-| 2026-07-10-add-export-share-preview | clean | 1 | yes | - |
-| 2026-07-10-add-form-input | clean | 1 | yes | - |
-| 2026-07-10-add-invoice-calc | clean | 1 | yes | - |
-| 2026-07-10-add-nace-catalog | clean | 1 | yes | - |
-| 2026-07-10-add-shell | clean | 1 | yes | - |
-| 2026-07-10-add-supplier-profile | clean | 1 | yes | - |
+| 2026-07-10-add-banking | **retrofitted** | n/a (retrofit) | yes | - |
+| 2026-07-10-add-client-directory | **retrofitted** | n/a (retrofit) | yes | - |
+| 2026-07-10-add-document-render | **retrofitted** | n/a (retrofit) | yes | - |
+| 2026-07-10-add-embedded-fonts | **retrofitted** | n/a (retrofit) | yes | - |
+| 2026-07-10-add-export-share-preview | **retrofitted** | n/a (retrofit) | yes | - |
+| 2026-07-10-add-form-input | **retrofitted** | n/a (retrofit) | yes | - |
+| 2026-07-10-add-invoice-calc | **retrofitted** | n/a (retrofit) | yes | - |
+| 2026-07-10-add-nace-catalog | **retrofitted** | n/a (retrofit) | yes | - |
+| 2026-07-10-add-shell | **retrofitted** | n/a (retrofit) | yes | - |
+| 2026-07-10-add-supplier-profile | **retrofitted** | n/a (retrofit) | yes | - |
 
 ## Cross-slice module overlap
 
@@ -31,4 +31,13 @@ None.
 
 ## Warnings
 
-None.
+- **retrofit**: 2026-07-10-add-banking: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **retrofit**: 2026-07-10-add-client-directory: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **retrofit**: 2026-07-10-add-document-render: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **retrofit**: 2026-07-10-add-embedded-fonts: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **retrofit**: 2026-07-10-add-export-share-preview: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **retrofit**: 2026-07-10-add-form-input: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **retrofit**: 2026-07-10-add-invoice-calc: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **retrofit**: 2026-07-10-add-nace-catalog: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **retrofit**: 2026-07-10-add-shell: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **retrofit**: 2026-07-10-add-supplier-profile: RETROFITTED — red-first history unreconstructible, review evidence not earned

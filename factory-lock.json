@@ -1,6 +1,6 @@
 {
-  "createdAt": "2026-07-10T11:53:22.533Z",
-  "gitHead": "f6069f35e8cbba839445a2172791a49df21e1172",
+  "createdAt": "2026-07-10T12:23:08.808Z",
+  "gitHead": "ef1ccc0453cf9213b92cdc38d245db8ec2cbced6",
   "files": {
     ".claude/workflows/eval-suite.js": "f93c99d868b812cfa7412927f52b62d1042525396a9d0265f16cfe435b9c6098",
     ".claude/workflows/review-gate.js": "7295d8e94ba347213120b9d190b9ebbb88dee373173cfc7daba2114b726ca76b",
@@ -23,12 +23,22 @@
     "scripts/check-process-ratchet.mjs": "a824c3bf4a36e4c1979c09d899242dbe4ac1cdf6e08bf227fca5b4772f331a03",
     "scripts/check-recordings.mjs": "447628eccba1a88860d5b2cfb8f4fff9b09050edd0141476a31bcddc66fe3a54",
     "scripts/check-traceability.mjs": "10dfdb95743c685e31f0a1cdb2d4cbef0d728315097efd93544346330250fadf",
-    "scripts/check-trajectory.mjs": "425e584d4f3618871110440b65e05b3890aaff395fefc4697aa0b0ea1c166cfb",
+    "scripts/check-trajectory.mjs": "2d94c755ac0d19f2b90dbdf505b0e3e4ecc5df2bfbdc65f872a6215515927ab4",
     "scripts/check-visual-fidelity.mjs": "f6fd0816f6293c0394c3cdb57232bb72b85cebe3b40ac6b88bf0628847722504",
     "scripts/gate-status.mjs": "07617acbbd6ae513bcc7675478e920bd86ff2c765ae1b2ebc2ab27dad50e5fae",
     "scripts/qa-verify.mjs": "fdcd0b3d4db03837702fc81e94ab27a1ce16aa235e4fb32413b563478243c2c0"
   },
   "adaptations": [
-    "ci.yml: fetch-depth 0 so check-trajectory Slice trailer grep sees full history on GitHub Actions"
+    "tools=claude only: .claude/agents + .claude/workflows installed; cursor/codex/copilot adapters and the .project-factory/ vendored docs intentionally omitted",
+    "git hooks copied to .githooks/ + scripts/hooks-*.mjs but core.hooksPath deliberately NOT set: the repo's 151 commits carry no Refs:/Slice: trailers, so commit-msg would reject every commit touching src/. Arm with 'git config core.hooksPath .githooks' once the trailer convention is adopted",
+    "no verify-commit made at G0: repo had uncommitted export-share work on main; init step 4's 'git commit --allow-empty' skipped",
+    "CI trimmed from templates/ci/github-actions.yml: test:integration, test:e2e, playwright install, test:coverage, DATABASE_URL/BETTER_AUTH_* env and 'npm audit --audit-level=high' removed - no mechanism exists (no DB, no Playwright, no coverage provider). Added capability:check + factory-integrity instead. Re-add each step in the commit that lands its mechanism",
+    "package.json: test:coverage / test:integration / test:e2e intentionally NOT wired - an echo stub exiting 0 is laundering (lesson declared-method-needs-mechanism). qa-verify battery kept verbatim so it reports them MISSING rather than hiding the gap",
+    "quality/visual-parity.config.json omitted and scripts/check-parity-suite + parity-block-loop + lib/parity-capture not installed: no pixel-fidelity requirement in this project; check-visual-fidelity correctly renders NOT-EARNED",
+    "Claude Code PostToolUse ESLint hook installed in .claude/settings.json (user-approved after security-classifier block)",
+    "openspec init skipped: repo already carries 10 capability specs + capability-map.yaml + config.yaml (no openspec/project.md by design)",
+    "ci.yml: fetch-depth 0 so check-trajectory Slice trailer grep sees full history on GitHub Actions",
+    "improve-PD-3 (Refs: PD-3): check-trajectory.mjs now reads .project-factory/retrofit.json and renders RETROFITTED/NOT-EARNED instead of PASS; the 10 back-stamped review-findings.json were deleted as forged evidence (one, add-form-input, contradicted its own review doc). Executed red->green proof: tests/check-trajectory-retrofit.test.mjs (3/7 -> 7/7). Narrowing: non-zero exit only under --release so the pre-commit hook stays passable; the Result: string reads NOT-EARNED in both modes, which is what gate-status and qa-verify classify on.",
+    "NOTE for future reseals: --init-lock REPLACES the adaptations array, it does not merge. A prior session's reseal silently dropped 8 notes. Always read factory-lock.json first and re-pass every note."
   ]
 }
