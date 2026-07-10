@@ -51,7 +51,7 @@
 
 ## 7. Close the loop
 
-- [ ] 7.1 `openspec validate add-invoice-calc --strict` passes; update
+- [x] 7.1 `openspec validate add-invoice-calc --strict` passes; update
       `docs/current-state.md` (active change → done, session log) and
       `openspec/capability-map.yaml` (`invoice-calc: shipped` once synced).
       **Verify:** `npm run capability:check -- --capability invoice-calc`

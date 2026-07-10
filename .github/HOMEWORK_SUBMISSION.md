@@ -22,22 +22,24 @@
 
 Video: _to be added after recording_
 
-## Current progress (2026-07-10)
+## Current progress (2026-07-10, `main` @ `851b97a`)
 
 | Area | Status |
 | --- | --- |
 | **App scaffold** | ✅ Next.js shell, dashboard routes, WEG3D Fin design system |
+| **Responsive shell (S0)** | ✅ `shell` shipped — PR #3, `add-shell` archived (`FR-SHELL-01..03`) |
 | **Health API** | ✅ `GET /api/health` (`FR-SHELL-03`) |
-| **OpenSpec specs** | ✅ 11 capabilities in `openspec/specs/` |
+| **Domain core (S1)** | ✅ `nace-catalog` + `invoice-calc` shipped — `src/lib/nace/`, `src/lib/invoice-calc/` |
+| **Vitest (TC-STACK-06)** | ✅ 104 tests green (`npm run test`) |
+| **OpenSpec specs** | ✅ 11 capabilities; S0/S1 deltas synced to `openspec/specs/` |
 | **Capability roadmap** | ✅ `openspec/capability-map.yaml`, `docs/capability.md`, `docs/capabilities/` |
 | **Gate tooling** | ✅ `npm run capability:check` / `capability:list` |
 | **Agent handoff** | ✅ `docs/current-state.md` (session resume between agents) |
-| **Wayfinder planning** | ✅ Tickets 01–04 resolved; migration audit (ticket 15 open) |
-| **Active slice** | 🔄 **S0 `shell`** — in_progress |
-| **Domain implementation** | ⏳ S1 (`nace-catalog`, `invoice-calc`) not started |
+| **Wayfinder planning** | ✅ Tickets 01–04, 06, 07, 15 resolved; 05, 11, 16 open |
+| **Active slice** | 🔄 **S2** — `supplier-profile` + `client-directory` (parallel) |
 | **End-to-end invoice flow** | ⏳ Demo milestone M4 (S4: form → live HTML preview) |
 
-**Recent commits (high level):** capability map + ordered requirements split, per-capability docs, WEG3D Fin agent skill, wayfinder spec-coherence resolution, CI auto-sync to this PR.
+**Recent commits:** S1 domain libs (`nace-catalog`, `invoice-calc`), Vitest harness, S0 responsive shell (PR #3), capability map + docs, wayfinder spec-coherence, CI auto-sync to this PR.
 
 ## Agentic Engineering practices applied
 
@@ -74,19 +76,22 @@ Honest status for each course practice. Open **TODO** items will be completed be
 
 ---
 
-### 2. Specs first (SDD) — ✅ applied (planning phase)
+### 2. Specs first (SDD) — ✅ applied (S0 + S1 shipped)
 
 - **OpenSpec** living specs for all 11 MVP capabilities.
 - **Capability map** with slice order S0→S6 and dependency gates (`npm run capability:check`).
 - Workflow: `/opsx:propose` → design + tasks + delta specs → `/opsx:apply` → `/opsx:sync` → `/opsx:archive`.
-- Traceability: `FR-*` → OpenSpec scenario → `src/lib/` (implementation starting at S1).
-- `openspec validate --strict` passes structurally; wayfinder ticket **15** tracks content audit of migrated specs.
+- **Shipped through OpenSpec:** S0 `shell` (PR #3), S1 `nace-catalog` + `invoice-calc` (`src/lib/`).
+- Traceability: `FR-*` → OpenSpec scenario → `src/lib/` implementation + Vitest.
+- `openspec validate --strict` passes; wayfinder ticket **15** resolved (migration audit).
 
 **TODO before final submission:**
 
-- [ ] Ship **S0 `shell`**, then **S1** domain core through full OpenSpec changes.
+- [x] Ship **S0 `shell`** through full OpenSpec change (`add-shell` archived).
+- [x] Ship **S1** domain core (`nace-catalog`, `invoice-calc`) with Vitest.
+- [x] Close wayfinder tickets **06** (money model) and **07** (invoice number).
 - [ ] Reach demo milestone **M4** (form → live HTML preview).
-- [ ] Close wayfinder tickets **06** (money model) and **07** (invoice number) before `invoice-calc`.
+- [ ] Ship S2–S4 capabilities through OpenSpec changes.
 
 ---
 
@@ -95,17 +100,18 @@ Honest status for each course practice. Open **TODO** items will be completed be
 **Done:**
 
 - Gates: `npm run typecheck`, `npm run lint`, `npm run build`.
+- **Vitest:** `npm run test` — 104 tests (`TC-STACK-06`) for `src/lib/nace/` and `src/lib/invoice-calc/`.
 - **Capability gates:** `npm run capability:check -- --capability <id>`.
 - `GET /api/health` contract in `openspec/specs/shell/spec.md`.
+- **Responsive shell:** headless Chrome verified 375 px / 768 px — no overflow (S0).
 - **CodeRabbit** enabled on the fork; reviews this PR (verified).
 - Wayfinder tickets document acceptance criteria and spec conflicts.
 - **CI:** `.github/workflows/sync-homework-pr.yml` keeps this draft PR in sync with `main`.
 
 **Not done yet:**
 
-- [ ] **Vitest** + test-first for `src/lib/` (`TC-STACK-06`).
 - [ ] `openspec validate --strict` in CI or pre-push hook.
-- [ ] Smoke / eval: form → preview → PDF.
+- [ ] Smoke / eval: form → preview → PDF (M4 demo).
 
 ---
 
@@ -123,7 +129,7 @@ Honest status for each course practice. Open **TODO** items will be completed be
 
 - [x] Systematic checker pass after each shipped slice (separate agent / chat) — **PR #2 done**
 - [x] Document checker findings in PR or change log — **see Review log below**
-- [ ] Checker pass for next shipped slice (S0 `shell` completion).
+- [ ] Checker pass for **S0 `shell`** (PR #3) and **S1** domain slice.
 - [ ] Address CodeRabbit feedback before **Ready for review**.
 
 ---
@@ -219,5 +225,7 @@ https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-20
 - [x] Agentic Engineering practices described (with honest TODOs)
 - [ ] Working end-to-end result (target: M4 demo milestone)
 - [ ] Loop engineering — at least one slice through an autonomous loop
-- [ ] Vitest + test-first for `src/lib/`
-- [x] Maker ≠ checker — documented separate review pass per shipped slice (fork PR #2)
+- [x] Vitest + test-first for `src/lib/` (S1: 104 tests)
+- [x] Maker ≠ checker — documented separate review pass (fork PR #2)
+- [x] S0 `shell` shipped (responsive UI, health API, OpenSpec archived)
+- [x] S1 domain core shipped (`nace-catalog`, `invoice-calc`)

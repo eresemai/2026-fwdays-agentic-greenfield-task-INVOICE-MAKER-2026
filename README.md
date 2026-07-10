@@ -176,12 +176,13 @@ flowchart LR
 | --- | --- | --- |
 | **Foundation** | ✅ Готово | Next.js 16, React 19, TypeScript, Tailwind v4, shadcn/ui |
 | **Design system** | ✅ Готово | WEG3D Fin (`Design.md`, `src/styles/design-tokens.css`) |
-| **App shell** | ✅ Готово | Landing, dashboard, навігація (invoices, clients, settings) |
+| **App shell (S0)** | ✅ Shipped | Landing, dashboard, responsive nav 375/768 px, MobileNav (PR #3) |
 | **Health API** | ✅ Shipped | `GET /api/health` → `{ status: "ok", service: "invoice-maker" }` (`FR-SHELL-03`) |
-| **Специфікації** | ✅ Готово | `docs/requirements.md`, `docs/product-brief.md`, `CONTEXT.md` |
-| **OpenSpec** | 🔄 В процесі | `openspec/config.yaml`, slash-команди `/opsx:*` |
-| **NACE каталог** | 📋 Заплановано | Slice 1 — `nace-catalog` + `invoice-calc` + `template-render` |
-| **Генерація інвойсу** | 📋 Заплановано | Перший вертикальний слайс (G4) |
+| **Domain core (S1)** | ✅ Shipped | `src/lib/nace/` + `src/lib/invoice-calc/` — 104 Vitest tests |
+| **Специфікації** | ✅ Готово | `docs/requirements.md`, `docs/product-brief.md`, `CONTEXT.md`, OpenSpec |
+| **OpenSpec** | 🔄 В процесі | S0+S1 shipped; S2 directories наступні |
+| **Довідники (S2)** | 📋 Наступний крок | `supplier-profile` + `client-directory` |
+| **Генерація інвойсу** | 📋 Заплановано | M4: form → live HTML preview (S4) |
 | **Chat / LLM ввід** | ⏳ Post-MVP | `FR-CHAT-*` перенесено в Future |
 | **Supabase / Auth** | ⏳ Post-MVP | Enterprise-архітектура в `docs/ARCHITECTURE.md` — фаза 2+ |
 
@@ -465,7 +466,7 @@ sequenceDiagram
   Form->>NACE: Ключові слова послуги
   NACE-->>Form: NACE 74.12 + bilingual text
   Form->>Calc: qty, amount, prepay%, dates
-  Calc-->>Form: номер DDMM/0YY, unit price, deadlines
+  Calc-->>Form: номер YYYY-NNN, unit×qty, deadlines
   Form->>Tpl: Змінні {{VARIABLE}}
   Tpl-->>Preview: Self-contained HTML (A4)
   User->>Preview: Перегляд / завантаження
@@ -475,11 +476,11 @@ sequenceDiagram
 
 | Capability | Requirement IDs | Gate |
 | --- | --- | --- |
-| `shell` | FR-SHELL-01..03 | G4 (частково ✅) |
-| `nace-catalog` | FR-NACE-01..06, BC-NACE-01 | G4 |
-| `invoice-calc` | FR-CALC-01..06 | G4 |
-| `template-render` | FR-TPL-01..05, BC-LEGAL-01 | G4 |
-| `export` | FR-EXPORT-01..03 | G4+ |
+| `shell` | FR-SHELL-01..03 | ✅ shipped (S0) |
+| `nace-catalog` | FR-NACE-01..05, BC-NACE-01 | ✅ shipped (S1) |
+| `invoice-calc` | FR-CALC-01..06 | ✅ shipped (S1) |
+| `document-render` | FR-TPL-01..05, BC-LEGAL-01 | S3 |
+| `export-share` | FR-EXPORT-01..05 | S4/S6 |
 | `invoice-chat` | FR-CHAT-*, FR-INPUT-* | Future |
 
 ---

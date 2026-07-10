@@ -18,4 +18,4 @@
 ## 4. Verification and handoff
 
 - [x] 4.1 Full gate: `npm run test && npm run typecheck && npm run lint && npm run build` all green (NFR-DX-01); confirm no React/storage imports in `src/lib/nace/` (TC-STACK-04) and no barrel `index.ts` (design D4).
-- [ ] 4.2 Update `docs/current-state.md`: session log entry, active change status, next up (`/opsx:sync add-nace-catalog` then archive; capability-map `nace-catalog` → `shipped` after sync). Verify: statuses consistent with `openspec status --change add-nace-catalog`.
+- [x] 4.2 Update `docs/current-state.md`: session log entry, active change status, next up (`/opsx:sync add-nace-catalog` then archive; capability-map `nace-catalog` → `shipped` after sync). Verify: statuses consistent with `openspec status --change add-nace-catalog`.

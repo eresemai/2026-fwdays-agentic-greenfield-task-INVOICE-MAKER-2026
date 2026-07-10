@@ -7,9 +7,9 @@
 | Slice | S1 — Domain core |
 | Order | #2a (parallel with invoice-calc) |
 | Owner | domain |
-| Gate status | not_started |
+| Gate status | **shipped** |
 | OpenSpec spec | [nace-catalog/spec.md](../../openspec/specs/nace-catalog/spec.md) |
-| OpenSpec change | `add-nace-catalog` |
+| OpenSpec change | `add-nace-catalog` (synced; archive pending) |
 
 ## Purpose
 
@@ -20,12 +20,12 @@ Pure `src/lib/` module — no React, no storage. Replaces legacy KVED.
 
 | ID | Description | Status |
 | --- | --- | --- |
-| FR-NACE-01 | Entries keyed by NACE 2.1-UA class code (`XX.XX`) | proposed |
-| FR-NACE-02 | 74.12 graphic design bilingual lines | proposed |
-| FR-NACE-03 | 74.12 / 74.14 3D visualization lines | proposed |
-| FR-NACE-04 | 59.12 post-production lines | proposed |
-| FR-NACE-05 | Keyword matcher + clarifying question on ambiguity | proposed |
-| BC-NACE-01 | No KVED DK 009:2010 in new docs/UI | accepted |
+| FR-NACE-01 | Entries keyed by stable id; NACE class `XX.XX` (non-unique) | shipped |
+| FR-NACE-02 | 74.12 graphic design bilingual lines | shipped |
+| FR-NACE-03 | 74.12 / 74.14 3D visualization lines | shipped |
+| FR-NACE-04 | 59.12 post-production lines | shipped |
+| FR-NACE-05 | Keyword matcher + `matched` / `ambiguous` / `none` | shipped |
+| BC-NACE-01 | No KVED DK 009:2010 in new docs/UI | shipped |
 
 > **Dropped:** `FR-NACE-06` (NACE code on printed invoice) — no legal requisite;
 > frozen template has no placeholder (Wayfinder ticket 03, 2026-07-09).
@@ -34,7 +34,7 @@ Seed data reference: `docs/191_2025.pdf`, table in [requirements.md](../requirem
 
 ## Implementation scope
 
-| Area | Planned path |
+| Area | Path |
 | --- | --- |
 | Catalog data | `src/lib/nace/catalog.ts` |
 | Matcher | `src/lib/nace/match.ts` |
@@ -43,10 +43,10 @@ Seed data reference: `docs/191_2025.pdf`, table in [requirements.md](../requirem
 
 ## Verification
 
-- [ ] Matcher returns best entry for known keywords
-- [ ] Ambiguous input triggers clarifying path (not silent wrong pick)
-- [ ] Vitest passes for all seed entries
-- [ ] No KVED strings in catalog or UI copy
+- [x] Matcher returns best entry for known keywords
+- [x] Ambiguous input returns `ambiguous` (not silent wrong pick)
+- [x] Vitest passes for all seed entries (104 tests total in suite)
+- [x] No KVED strings in catalog line texts
 
 ## Done when
 
