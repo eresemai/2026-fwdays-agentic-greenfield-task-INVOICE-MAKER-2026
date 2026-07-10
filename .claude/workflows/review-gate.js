@@ -105,15 +105,14 @@ for (const f of found.filter(Boolean).flat()) {
 log(`${deduped.length} unique findings across ${DIMENSIONS.length} dimensions`)
 
 phase('Verify')
-// Verifier lenses. `args.thorough` (or a global/whole-tree review) uses BOTH the
-// correctness and exploitability lenses; the default is the single correctness
-// lens — enough to refute a wrong finding, at roughly half the cost, which fits
-// small logic slices. A finding survives only if NO lens refutes it.
-const ALL_LENSES = [
+// Two lenses, always. The correctness lens asks "is the mechanism real?"; the
+// exploitability lens asks "can it actually happen?". Dropping the second to
+// save cost was tried and reverted: it is what separates a real-but-unreachable
+// footgun (contested) from a live defect (confirmed) — load-bearing, not fat.
+const lenses = [
   'correctness — is the claimed mechanism actually wrong in this code?',
   'exploitability/reproducibility — can the claimed problem actually occur for a real user or attacker?',
 ]
-const lenses = args?.thorough || !baseRef ? ALL_LENSES : ALL_LENSES.slice(0, 1)
 const verified = await parallel(
   deduped.map((f) => () =>
     parallel(
@@ -127,9 +126,7 @@ const verified = await parallel(
     ).then((votes) => {
       const valid = votes.filter(Boolean)
       const refutes = valid.filter((v) => v.refuted).length
-      // Any refutation drops a finding below "confirmed": with one lens a refute
-      // rejects it; with two, one refute contests and two reject.
-      const verdict = refutes >= lenses.length ? 'rejected' : refutes > 0 ? 'contested' : 'confirmed'
+      const verdict = refutes >= 2 ? 'rejected' : refutes === 1 ? 'contested' : 'confirmed'
       return { ...f, verdict, verifierNotes: valid.map((v) => v.reasoning) }
     }),
   ),
