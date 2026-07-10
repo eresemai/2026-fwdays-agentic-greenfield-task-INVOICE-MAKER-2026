@@ -2,7 +2,7 @@
 
 ## 1. Setup
 
-- [ ] 1.1 Run `npm run capability:check -- --capability nace-catalog`; confirm unblocked. Re-read `package.json`: if `vitest` + `test` script already landed (e.g. via `add-invoice-calc`), reuse; otherwise add `vitest` (devDependency) and `"test": "vitest run"` (design D5). Verify: `npm run test` executes (0 tests is fine).
+- [x] 1.1 Run `npm run capability:check -- --capability nace-catalog`; confirm unblocked. Re-read `package.json`: if `vitest` + `test` script already landed (e.g. via `add-invoice-calc`), reuse; otherwise add `vitest` (devDependency) and `"test": "vitest run"` (design D5). Verify: `npm run test` executes (0 tests is fine).
 
 ## 2. Types and seed catalog
 
