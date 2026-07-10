@@ -27,7 +27,7 @@
 
 ## 4. Dates & deadlines (FR-CALC-02, FR-CALC-05)
 
-- [ ] 4.1 `src/lib/invoice-calc/dates.ts`: `renderDateEn`, `renderDateUa`,
+- [x] 4.1 `src/lib/invoice-calc/dates.ts`: `renderDateEn`, `renderDateUa`,
       `computeDeadline(issueIso, term)` for days/weeks/explicit-date terms.
       **Verify:** tests — `2026-05-03` → `May 03, 2026` / `03.05.2026`;
       3 days → `2026-05-06`; 5 weeks → `2026-06-07`; explicit date before
