@@ -128,7 +128,7 @@ capabilities:
 
   document-render:
     owner: domain
-    status: not_started
+    status: shipped
     spec: openspec/specs/document-render/spec.md
     owns:
       - FR-TPL-01
