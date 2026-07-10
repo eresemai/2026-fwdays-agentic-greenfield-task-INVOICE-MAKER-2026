@@ -35,7 +35,7 @@
 
 ## 5. Purpose string (FR-CALC-06)
 
-- [ ] 5.1 `src/lib/invoice-calc/purpose.ts`: `paymentPurpose(number, dateEn)`.
+- [x] 5.1 `src/lib/invoice-calc/purpose.ts`: `paymentPurpose(number, dateEn)`.
       **Verify:** test —
       `Payment by the invoice №2026-001 from May 03, 2026` exact match
       (U+2116 preserved).
