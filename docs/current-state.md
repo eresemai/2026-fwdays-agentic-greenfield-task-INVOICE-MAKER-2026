@@ -3,93 +3,78 @@
 > **Read this file at the start of every agent session.**  
 > **Update it at the end of a session or when stopping mid-task.**
 
-Last updated: 2026-07-10 (UTC)
+Last updated: 2026-07-10T04:00:00Z (S2 branch split — lane D)
 
 ## Snapshot
 
 | Field | Value |
 | --- | --- |
-| **Branch** | `main` @ `a63c4a4` |
-| **Active capability** | S2 — `supplier-profile` / `client-directory` (parallel) |
-| **Active OpenSpec change** | — (S1 changes archived 2026-07-10) |
-| **Slice / gate** | S0 + S1 **shipped**; S2 directories unblocked |
-| **Gate check** | Unblocked: `supplier-profile`, `client-directory` |
+| **Branch** | `feat/client-directory` — lane D only (committed) |
+| **Active capability** | S2 — `client-directory` **shipped** on this branch |
+| **Active OpenSpec change** | `add-client-directory` (apply complete; archive after PR merge) |
+| **Sibling branch** | `feat/supplier-profile` — lane C (`supplier-profile`); open separate PR |
+| **Slice / gate** | S0 + S1 **shipped**; this branch ships `client-directory`; `banking` unblocks after **both** S2 PRs merge |
+| **Gate check** | `npm run capability:check -- --capability client-directory` |
+
+## Branch situation (clean split)
+
+| Branch | Lane | Contents |
+| --- | --- | --- |
+| `feat/client-directory` | D | Client types, `clients` storage + tests, `/clients` UI, client spec + OpenSpec change |
+| `feat/supplier-profile` | C | Supplier types, `supplier-profiles` storage + tests, settings UI, supplier spec + OpenSpec change |
+
+No mixed working tree. Shared `openspec/capability-map.yaml` updates are **per-branch** (each PR marks its own capability `shipped`).
 
 ## Capability backlog
 
 Source: `openspec/capability-map.yaml` · order: [capability.md](capability.md)
 
-| Slice | Capability | Owner | Status | Blocked by | Unblocks |
-| --- | --- | --- | --- | --- | --- |
-| S0 | `shell` | ui | **shipped** | — | supplier-profile, client-directory |
-| S1 | `nace-catalog` | domain | **shipped** | — | document-render, form-input |
-| S1 | `invoice-calc` | domain | **shipped** | — | document-render, invoice-registry, invoice-edit |
-| S2 | `supplier-profile` | ui | not_started | — | banking |
-| S2 | `client-directory` | ui | not_started | — | form-input |
-| S2 | `banking` | domain | not_started | supplier-profile | document-render |
-| S3 | `document-render` | domain | not_started | invoice-calc, banking, nace-catalog | form-input, export-share, invoice-registry |
-| S4 | `form-input` | ui | not_started | 6 capabilities | export-share, invoice-registry |
-| S4 | `export-share` preview | ui | not_started | document-render, form-input | pdf gate |
-| S5 | `invoice-registry` | ui | not_started | form-input, document-render, invoice-calc | invoice-edit |
-| S6 | `export-share` pdf | ui | not_started | document-render, form-input, preview gate | — |
-| S6 | `invoice-edit` | ui | not_started | invoice-registry, form-input, invoice-calc | MVP complete |
-
-**Demo milestone (M4):** S4 — form → live HTML preview.
+| Slice | Capability | Owner | Status (this branch) | Notes |
+| --- | --- | --- | --- | --- |
+| S0 | `shell` | ui | **shipped** | on `main` |
+| S1 | `nace-catalog`, `invoice-calc` | domain | **shipped** | on `main` |
+| S2 | `client-directory` | ui | **shipped** | **this PR** |
+| S2 | `supplier-profile` | ui | not_started on branch | see `feat/supplier-profile` PR |
+| S2 | `banking` | domain | not_started | after both S2 PRs merge |
 
 ## Completed recently
 
 | Date | Commit / work | Outcome |
 | --- | --- | --- |
-| 2026-07-10 | `a63c4a4` | S1 hardening — adversarial review fixes (matcher anchoring + NFC, calc guards); 115 tests |
-| 2026-07-10 | `851b97a` | S1 `nace-catalog` shipped — seed catalog + keyword matcher |
-| 2026-07-10 | `3366a4a` | S1 `invoice-calc` shipped — money, numbering, dates, purpose |
-| 2026-07-10 | `a1effff` | Vitest harness (TC-STACK-06); 104 tests green |
-| 2026-07-10 | PR #3 | S0 `shell` shipped — responsive layout, MobileNav, health API |
-| 2026-07-10 | `37640ae` | Capability map + gate script + requirements split |
-| 2026-07-09 | `8d45456` | 11 OpenSpec specs, browser-first ADR, scaffold |
+| 2026-07-10 | Branch split | Lane D isolated on `feat/client-directory`; lane C on `feat/supplier-profile` |
+| 2026-07-10 | `feat/client-directory` | `client-directory` — localStorage CRUD, `/clients` UI, Vitest storage tests |
 
 ## Stopped at
 
-S1 domain core **shipped**, hardened (`a63c4a4`), synced, and archived
-(`openspec/changes/archive/2026-07-10-add-{invoice-calc,nace-catalog}`).
-Next: S2 directories (`supplier-profile` + `client-directory` in parallel).
+`add-client-directory` ready for PR. Archive with `/opsx:archive add-client-directory` after merge.
 
 ## Blockers & open decisions
 
 | Ticket | Topic | Blocks capability |
 | --- | --- | --- |
-| ~~06~~ | **resolved**: unit×qty, integer cents | — |
-| ~~07~~ | **resolved**: sequential `YYYY-NNN` on issue | — |
-| ~~15~~ | **resolved**: vanished FRs were accidents | — |
+| — | Merge sibling `feat/supplier-profile` for full S2 | `banking` gate on `main` |
 | 05 | PDF output fidelity | export-share pdf |
 | 16 | Edit after send (immutability) | invoice-edit |
 | 11 | Design system reconciliation | form-input polish |
 
 ## Next up (priority order)
 
-1. **`/opsx:propose add-supplier-profile`** + **`add-client-directory`** — S2 parallel UI
-2. **`banking`** after supplier-profile ships
-3. **`/opsx:propose add-document-render`** — unlocks render pipeline (S3)
+1. **Open PR** from `feat/client-directory` → `main`
+2. **Open PR** from `feat/supplier-profile` → `main` (parallel)
+3. **`/opsx:archive`** each change after its PR merges
+4. **`/opsx:propose add-banking`** once both S2 capabilities are on `main`
 
 ## Repository sync
 
 | Remote | Branch | Role |
 | --- | --- | --- |
-| `origin` | `main` | Primary; pushes trigger homework sync |
-| `origin` | `fwdays-submission` | Mentor PR #50 (auto-synced from main) |
-| `upstream` | `main` | Course template (read-only reference) |
+| `origin` | `main` | Primary |
+| `origin` | `fwdays-submission` | Mentor PR #50 |
+| `upstream` | `main` | Course template |
 
 ## Session log
 
-Append-only (newest last).
-
 | Date (UTC) | Session | Action | Outcome |
 | --- | --- | --- | --- |
-| 2026-07-10 | Agent | Docs refresh + spec sync | S0/S1 marked shipped; PR #50 body updated |
-| 2026-07-10 | Agent | Branch/worktree cleanup | Deleted merged locals `test/coderabbit-integration`, `wayfinder/mvp-spec-coherence` (+ its remote), stale local `fwdays-submission` (origin copy is CI-managed, untouched); agent worktrees already removed post-merge; only `main` remains locally |
-| 2026-07-10 | OpenSpec | S1 changes archived | `add-invoice-calc` + `add-nace-catalog` → `openspec/changes/archive/2026-07-10-*`; deltas verified in-sync with main specs before move; no active changes remain |
-| 2026-07-10 | OpenSpec | S1 adversarial review + hardening (`a63c4a4`) | Workflow: 5 lenses × 2 refuters, 13 raw → 10 confirmed (2 major in matcher). Fixed: NFC + prefix-anchored token matching (Демонтаж/аналогових/3600 → none; NFD й/ї works), prepaymentSplit overflow guard + DEFAULT_PREPAYMENT_PERCENT=50, computeDeadline ≤ 9999 bound + toIso year pad, duplicate-number message names real next free number. 115 tests green |
-| 2026-07-10 | OpenSpec | S1 `add-nace-catalog` + `add-invoice-calc` applied | `src/lib/nace/`, `src/lib/invoice-calc/`; 104 Vitest tests |
-| 2026-07-10 | OpenSpec | S0 `add-shell` archived; PR #3 merged | Responsive shell shipped |
-| 2026-07-10 | Wayfinder | Tickets 06, 07, 15 resolved | Money model + numbering + spec audit |
-| 2026-07-10 | Agent | Deleted `wayfinder/resolve-01-04` | Branch merged; remote removed |
+| 2026-07-10 | Split | Isolate lane D on `feat/client-directory` | Clean commit; docs updated; tests run on branch |
+| 2026-07-10 | Lane D | `/opsx:apply add-client-directory` | CRUD + UI + spec synced |

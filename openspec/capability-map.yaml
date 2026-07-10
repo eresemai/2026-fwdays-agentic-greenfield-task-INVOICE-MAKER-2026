@@ -104,7 +104,7 @@ capabilities:
 
   client-directory:
     owner: ui
-    status: not_started
+    status: shipped
     spec: openspec/specs/client-directory/spec.md
     owns: []
     depends_on: [shell]
