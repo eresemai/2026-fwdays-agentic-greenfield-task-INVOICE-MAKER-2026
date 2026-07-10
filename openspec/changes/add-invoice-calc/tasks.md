@@ -2,7 +2,7 @@
 
 ## 1. Test harness
 
-- [ ] 1.1 Add `vitest` (dev dep) + `"test": "vitest run"` script; create
+- [x] 1.1 Add `vitest` (dev dep) + `"test": "vitest run"` script; create
       `src/lib/invoice-calc/__tests__/smoke.test.ts` asserting `1 + 1 === 2`.
       **Verify:** `npm run test` green; `npm run lint && npm run typecheck`
       unaffected.
