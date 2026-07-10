@@ -1,5 +1,8 @@
 import type { Cents } from "@/lib/invoice-calc/money";
 
+/** Invoice settlement currency (FR-BANK-01); also drives IBAN selection. */
+export type Currency = "USD" | "EUR";
+
 /** Stored in browser; user-set manually */
 export type StoredInvoiceStatus = "draft" | "sent" | "paid" | "cancelled";
 
@@ -26,7 +29,7 @@ export interface Invoice {
   status: StoredInvoiceStatus;
   issueDate: string;
   dueDate: string;
-  currency: "USD" | "EUR";
+  currency: Currency;
   lineItems: LineItem[];
   notes?: string;
   createdAt: string;

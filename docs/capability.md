@@ -25,18 +25,18 @@ npm run capability:check -- --capability <id>
 
 | Field | Value |
 | --- | --- |
-| **Last shipped** | S2 `supplier-profile` + `client-directory` (PR #4, #5) |
+| **Last shipped** | S2 `banking` (`feat/banking`); before it `supplier-profile` + `client-directory` (PR #4, #5) |
 | **Previously shipped** | S1 domain core; S0 `shell` (PR #3) |
-| **Active slice** | S2 `banking` → S3 `document-render` |
-| **OpenSpec ready to propose** | `/opsx:propose add-banking` |
+| **Active slice** | S3 `document-render` |
+| **OpenSpec ready to propose** | `/opsx:propose add-document-render` |
 | **Archived changes** | 5 in `openspec/changes/archive/` (shell, S1×2, S2×2) |
 | **Demo target** | M4 — form → live HTML preview (S4) |
 
-**Unblocked now:** `banking` (S2)
+**Unblocked now:** `document-render` (S3)
 
 ```bash
-npm run capability:check -- --capability banking
-npm run test   # 129 tests, Vitest
+npm run capability:check -- --capability document-render
+npm run test   # Vitest
 ```
 
 ### S2 complete ✅
@@ -46,7 +46,7 @@ npm run test   # 129 tests, Vitest
 | `supplier-profile` | #5 merged | `2026-07-10-add-supplier-profile` |
 | `client-directory` | #4 merged | `2026-07-10-add-client-directory` |
 
-Next: `/opsx:propose add-banking` → `document-render`.
+Next: `/opsx:propose add-document-render` (S3).
 
 ### Resolved decisions (no longer gate calc)
 
@@ -83,23 +83,21 @@ Work top → bottom. Within a slice, rows without mutual dependency can run **in
 | 2a | `nace-catalog` | domain | **shipped** | `add-nace-catalog` synced | [detail](capabilities/nace-catalog.md) |
 | 2b | `invoice-calc` | domain | **shipped** | `add-invoice-calc` synced | [detail](capabilities/invoice-calc.md) |
 
-### S2 — Directories ✅ · **banking next**
+### S2 — Directories ✅
 
 | Step | Capability | Owner | Status | Depends on | Doc |
 | --- | --- | --- | --- | --- | --- |
 | 3a | `supplier-profile` | ui | **shipped** | shell ✅ | [detail](capabilities/supplier-profile.md) |
 | 3b | `client-directory` | ui | **shipped** | shell ✅ | [detail](capabilities/client-directory.md) |
-| 3c | `banking` | domain | not_started | supplier-profile ✅ | [detail](capabilities/banking.md) |
+| 3c | `banking` | domain | **shipped** | supplier-profile ✅ | [detail](capabilities/banking.md) |
 
-3c is next.
-
-### S3 — Render
+### S3 — Render ← **next**
 
 | Step | Capability | Owner | Status | Doc |
 | --- | --- | --- | --- | --- |
 | 4 | `document-render` | domain | not_started | [detail](capabilities/document-render.md) |
 
-Blocked until S1 + `banking` shipped.
+All dependencies shipped (S1 ✅ + `banking` ✅) — unblocked.
 
 ### S4 — Create flow (demo milestone)
 
@@ -166,11 +164,11 @@ S0  shell ── shipped ✅ ─────────────────
 S1  nace-catalog ✅   invoice-calc ✅
          │                  │
          ▼                  │
-S2  supplier-profile ✅ ──► banking  ← active   client-directory ✅
+S2  supplier-profile ✅ ──► banking ✅          client-directory ✅
          │                  │                          │
          └────────┬─────────┴─────────────┬────────────┘
                   ▼                       │
-S3           document-render ◄────────────┘
+S3           document-render ◄────────────┘  ← next
                   │
                   ▼
 S4           form-input ──► export-share (preview)
@@ -204,8 +202,8 @@ S6           export-share (pdf) + invoice-edit
 | --- | --- | --- | --- |
 | M0 | S0 | Shell + health | **done** |
 | M1 | S1 | `src/lib/` + Vitest | **done** |
-| M2 | S2 | Directories | **done** (banking remains in S2) |
-| M3 | S3 | Rendered HTML | blocked |
+| M2 | S2 | Directories | **done** |
+| M3 | S3 | Rendered HTML | **unblocked** |
 | **M4** | **S4** | **Form → preview** | blocked |
 | M5 | S5 | Invoice register | blocked |
 | M6 | S6 | PDF + edit | blocked |
@@ -227,8 +225,6 @@ S6           export-share (pdf) + invoice-edit
 
 | Priority | Action | Why |
 | --- | --- | --- |
-| 1 | Merge [PR #4](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/4) → `/opsx:archive add-client-directory` | Completes S2 directories on `main` |
-| 2 | `/opsx:archive add-supplier-profile` on `main` if not done | Close lane C OpenSpec change |
-| 3 | `/opsx:propose add-banking` | S2 next; unblocks `document-render` |
-| 4 | `/opsx:propose add-document-render` after `banking` | Template fill → HTML output |
-| 5 | Wayfinder 05 (human) | Prototype PDF before S6 pdf gate |
+| 1 | Merge hardening PR #6 + banking PR → `/opsx:archive add-banking` | Lands S2 review fixes and banking on `main` |
+| 2 | `/opsx:propose add-document-render` | S3 unblocked once banking merges | 
+| 3 | Wayfinder 05 (human) | Prototype PDF before S6 pdf gate |
