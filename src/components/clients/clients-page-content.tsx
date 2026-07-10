@@ -1,6 +1,12 @@
 "use client";
 
-import { useMemo, useState, useSyncExternalStore } from "react";
+import {
+  useId,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import { PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 
 import {
@@ -38,8 +44,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  ClientNotFoundError,
   ClientValidationError,
   deleteClient,
+  getClientsServerSnapshot,
   listClients,
   saveClient,
   subscribeClients,
@@ -52,8 +60,9 @@ export function ClientsPageContent() {
   const clients = useSyncExternalStore(
     subscribeClients,
     listClients,
-    () => []
+    getClientsServerSnapshot
   );
+  const formId = useId();
   const [searchQuery, setSearchQuery] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<DialogMode>("create");
@@ -61,6 +70,7 @@ export function ClientsPageContent() {
     emptyClientFormValues()
   );
   const [formError, setFormError] = useState<string | null>(null);
+  const [pageError, setPageError] = useState<string | null>(null);
   const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
 
   const filteredClients = useMemo(() => {
@@ -101,9 +111,17 @@ export function ClientsPageContent() {
       saveClient(formValues);
       setDialogOpen(false);
       setFormError(null);
+      setPageError(null);
     } catch (error) {
       if (error instanceof ClientValidationError) {
         setFormError(error.message);
+        return;
+      }
+
+      if (error instanceof ClientNotFoundError) {
+        setFormError(
+          "Цього клієнта вже видалено. Закрийте вікно та оновіть список."
+        );
         return;
       }
 
@@ -116,8 +134,84 @@ export function ClientsPageContent() {
       return;
     }
 
-    deleteClient(clientToDelete.id);
-    setClientToDelete(null);
+    try {
+      deleteClient(clientToDelete.id);
+      setPageError(null);
+    } catch {
+      setPageError(
+        "Не вдалося видалити клієнта. Перевірте налаштування браузера."
+      );
+    } finally {
+      setClientToDelete(null);
+    }
+  }
+
+  let directoryContent: ReactNode;
+  if (clients.length === 0) {
+    directoryContent = (
+      <div className="rounded-xl border border-dashed border-wf-border bg-wf-surface-2 px-6 py-10 text-center">
+        <p className="text-sm text-wf-text-2">
+          Поки немає жодного клієнта. Додайте першого, щоб швидко
+          підставляти дані в інвойс.
+        </p>
+        <Button className="mt-4" onClick={openCreateDialog}>
+          <PlusIcon data-icon="inline-start" />
+          Додати клієнта
+        </Button>
+      </div>
+    );
+  } else if (filteredClients.length === 0) {
+    directoryContent = (
+      <p className="text-sm text-wf-text-2">
+        Нічого не знайдено за запитом «{searchQuery.trim()}».
+      </p>
+    );
+  } else {
+    directoryContent = (
+      <div className="rounded-xl border border-wf-border bg-wf-surface">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Клієнт</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Компанія</TableHead>
+              <TableHead className="w-[120px] text-right">Дії</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredClients.map((client) => (
+              <TableRow key={client.id}>
+                <TableCell className="font-medium">{client.name}</TableCell>
+                <TableCell>{client.email}</TableCell>
+                <TableCell className="text-wf-text-2">
+                  {client.company ?? "—"}
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => openEditDialog(client)}
+                      aria-label={`Редагувати ${client.name}`}
+                    >
+                      <PencilIcon />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => setClientToDelete(client)}
+                      aria-label={`Видалити ${client.name}`}
+                    >
+                      <Trash2Icon />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
   }
 
   return (
@@ -136,66 +230,13 @@ export function ClientsPageContent() {
         </Button>
       </div>
 
-      {clients.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-wf-border bg-wf-surface-2 px-6 py-10 text-center">
-          <p className="text-sm text-wf-text-2">
-            Поки немає жодного клієнта. Додайте першого, щоб швидко
-            підставляти дані в інвойс.
-          </p>
-          <Button className="mt-4" onClick={openCreateDialog}>
-            <PlusIcon data-icon="inline-start" />
-            Додати клієнта
-          </Button>
-        </div>
-      ) : filteredClients.length === 0 ? (
-        <p className="text-sm text-wf-text-2">
-          Нічого не знайдено за запитом «{searchQuery.trim()}».
+      {pageError ? (
+        <p className="text-sm text-destructive" role="alert">
+          {pageError}
         </p>
-      ) : (
-        <div className="rounded-xl border border-wf-border bg-wf-surface">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Клієнт</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Компанія</TableHead>
-                <TableHead className="w-[120px] text-right">Дії</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredClients.map((client) => (
-                <TableRow key={client.id}>
-                  <TableCell className="font-medium">{client.name}</TableCell>
-                  <TableCell>{client.email}</TableCell>
-                  <TableCell className="text-wf-text-2">
-                    {client.company ?? "—"}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1">
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => openEditDialog(client)}
-                        aria-label={`Редагувати ${client.name}`}
-                      >
-                        <PencilIcon />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => setClientToDelete(client)}
-                        aria-label={`Видалити ${client.name}`}
-                      >
-                        <Trash2Icon />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+      ) : null}
+
+      {directoryContent}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
@@ -208,7 +249,12 @@ export function ClientsPageContent() {
             </DialogDescription>
           </DialogHeader>
 
-          <ClientForm values={formValues} onChange={setFormValues} />
+          <ClientForm
+            values={formValues}
+            onChange={setFormValues}
+            onSubmit={handleSaveClient}
+            formId={formId}
+          />
 
           {formError ? (
             <p className="text-sm text-destructive" role="alert">
@@ -220,7 +266,9 @@ export function ClientsPageContent() {
             <Button variant="outline" onClick={() => setDialogOpen(false)}>
               Скасувати
             </Button>
-            <Button onClick={handleSaveClient}>Зберегти</Button>
+            <Button type="submit" form={formId}>
+              Зберегти
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

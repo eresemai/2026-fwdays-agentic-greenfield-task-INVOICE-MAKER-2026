@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, type FormEvent } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,10 +34,18 @@ export function clientToFormValues(client: Client): ClientFormValues {
 type ClientFormProps = {
   values: ClientFormValues;
   onChange: (values: ClientFormValues) => void;
+  onSubmit: () => void;
+  formId?: string;
   idPrefix?: string;
 };
 
-export function ClientForm({ values, onChange, idPrefix }: ClientFormProps) {
+export function ClientForm({
+  values,
+  onChange,
+  onSubmit,
+  formId,
+  idPrefix,
+}: ClientFormProps) {
   const generatedPrefix = useId();
   const prefix = idPrefix ?? generatedPrefix;
 
@@ -48,8 +56,13 @@ export function ClientForm({ values, onChange, idPrefix }: ClientFormProps) {
     onChange({ ...values, [field]: value });
   }
 
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    onSubmit();
+  }
+
   return (
-    <div className="grid gap-4">
+    <form className="grid gap-4" id={formId} onSubmit={handleSubmit}>
       <div className="grid gap-2">
         <Label htmlFor={`${prefix}-name`} className="wf-label">
           Ім&apos;я / назва
@@ -134,6 +147,6 @@ export function ClientForm({ values, onChange, idPrefix }: ClientFormProps) {
           placeholder="https://"
         />
       </div>
-    </div>
+    </form>
   );
 }

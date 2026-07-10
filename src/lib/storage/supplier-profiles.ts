@@ -15,6 +15,30 @@ const EMPTY_STORE: SupplierProfilesStore = {
   profiles: [],
 };
 
+/** Reference-stable empty list shared by the server snapshot and empty stores. */
+const EMPTY_PROFILES: SupplierProfile[] = [];
+Object.freeze(EMPTY_PROFILES);
+
+const PROFILE_STRING_FIELDS = [
+  "id",
+  "label",
+  "nameEn",
+  "nameUa",
+  "addressEn",
+  "addressUa",
+  "taxId",
+  "bankName",
+  "swift",
+  "ibanUsd",
+  "ibanEur",
+  "createdAt",
+  "updatedAt",
+] as const;
+
+const IBAN_WHITESPACE_PATTERN = /\s+/g;
+const MIN_IBAN_LENGTH = 15;
+const MAX_IBAN_LENGTH = 34;
+
 export class SupplierProfileStorageError extends Error {
   constructor(message: string) {
     super(message);
@@ -22,8 +46,63 @@ export class SupplierProfileStorageError extends Error {
   }
 }
 
+type SupplierProfilesListener = () => void;
+
+const listeners = new Set<SupplierProfilesListener>();
+
+/** Memoized snapshot for useSyncExternalStore; invalidated on every write. */
+let cachedProfiles: SupplierProfile[] | null = null;
+
 function isBrowser(): boolean {
   return typeof window !== "undefined";
+}
+
+function notifyListeners(): void {
+  for (const listener of listeners) {
+    listener();
+  }
+}
+
+function handleStorageEvent(event: StorageEvent): void {
+  // key === null means the whole storage was cleared.
+  if (event.key !== null && event.key !== SUPPLIER_PROFILES_STORAGE_KEY) {
+    return;
+  }
+  cachedProfiles = null;
+  notifyListeners();
+}
+
+/**
+ * Subscribe to supplier-profile store changes (same-tab writes and
+ * cross-tab storage events). Returns an unsubscribe function.
+ */
+export function subscribeSupplierProfiles(
+  listener: SupplierProfilesListener
+): () => void {
+  if (isBrowser() && listeners.size === 0) {
+    // Cross-tab writes made while nothing was subscribed went unobserved;
+    // drop the cache so the first snapshot after (re)subscribing is fresh.
+    cachedProfiles = null;
+    window.addEventListener("storage", handleStorageEvent);
+  }
+  listeners.add(listener);
+
+  return () => {
+    listeners.delete(listener);
+    if (isBrowser() && listeners.size === 0) {
+      window.removeEventListener("storage", handleStorageEvent);
+    }
+  };
+}
+
+function isSupplierProfileRecord(value: unknown): value is SupplierProfile {
+  if (typeof value !== "object" || value === null) {
+    return false;
+  }
+  const record = value as Record<string, unknown>;
+  return PROFILE_STRING_FIELDS.every(
+    (field) => typeof record[field] === "string"
+  );
 }
 
 function readStore(): SupplierProfilesStore {
@@ -37,16 +116,26 @@ function readStore(): SupplierProfilesStore {
       return { ...EMPTY_STORE, profiles: [] };
     }
 
-    const parsed = JSON.parse(raw) as SupplierProfilesStore;
-    if (parsed.version !== 1 || !Array.isArray(parsed.profiles)) {
+    const parsed = JSON.parse(raw) as Record<string, unknown> | null;
+    if (
+      typeof parsed !== "object" ||
+      parsed === null ||
+      parsed.version !== 1 ||
+      !Array.isArray(parsed.profiles)
+    ) {
       return { ...EMPTY_STORE, profiles: [] };
     }
 
-    return {
-      version: 1,
-      activeProfileId: parsed.activeProfileId ?? null,
-      profiles: parsed.profiles,
-    };
+    // Drop corrupt records instead of letting them reach render.
+    const profiles = parsed.profiles.filter(isSupplierProfileRecord);
+    const rawActiveId = parsed.activeProfileId;
+    const activeProfileId =
+      typeof rawActiveId === "string" &&
+      profiles.some((profile) => profile.id === rawActiveId)
+        ? rawActiveId
+        : null;
+
+    return { version: 1, activeProfileId, profiles };
   } catch {
     return { ...EMPTY_STORE, profiles: [] };
   }
@@ -69,9 +158,18 @@ function writeStore(store: SupplierProfilesStore): void {
   }
 }
 
-function trimFields(
-  input: SupplierProfileInput
-): SupplierProfileInput {
+/** Persist the store, then invalidate the snapshot and notify subscribers. */
+function commitStore(store: SupplierProfilesStore): void {
+  writeStore(store);
+  cachedProfiles = null;
+  notifyListeners();
+}
+
+function normalizeIban(value: string): string {
+  return value.replace(IBAN_WHITESPACE_PATTERN, "").toUpperCase();
+}
+
+function trimFields(input: SupplierProfileInput): SupplierProfileInput {
   return {
     label: input.label.trim(),
     nameEn: input.nameEn.trim(),
@@ -80,9 +178,9 @@ function trimFields(
     addressUa: input.addressUa.trim(),
     taxId: input.taxId.trim(),
     bankName: input.bankName.trim(),
-    swift: input.swift.trim(),
-    ibanUsd: input.ibanUsd.trim().toUpperCase(),
-    ibanEur: input.ibanEur.trim().toUpperCase(),
+    swift: input.swift.trim().toUpperCase(),
+    ibanUsd: normalizeIban(input.ibanUsd),
+    ibanEur: normalizeIban(input.ibanEur),
   };
 }
 
@@ -90,9 +188,34 @@ function isNonEmpty(value: string): boolean {
   return value.length > 0;
 }
 
+const IBAN_SHAPE = /^[A-Z]{2}\d{2}[A-Z0-9]+$/;
+
+function isValidIbanChecksum(normalized: string): boolean {
+  const rearranged = normalized.slice(4) + normalized.slice(0, 4);
+  let remainder = 0;
+
+  for (const character of rearranged) {
+    const expanded =
+      character >= "A" && character <= "Z"
+        ? String(character.charCodeAt(0) - 55)
+        : character;
+
+    for (const digit of expanded) {
+      remainder = (remainder * 10 + Number(digit)) % 97;
+    }
+  }
+
+  return remainder === 1;
+}
+
 function isPlausibleIban(value: string): boolean {
-  const normalized = value.replace(/\s/g, "").toUpperCase();
-  return normalized.length >= 15 && normalized.length <= 34;
+  const normalized = normalizeIban(value);
+  return (
+    IBAN_SHAPE.test(normalized) &&
+    normalized.length >= MIN_IBAN_LENGTH &&
+    normalized.length <= MAX_IBAN_LENGTH &&
+    isValidIbanChecksum(normalized)
+  );
 }
 
 export function validateSupplierProfileInput(
@@ -117,8 +240,32 @@ function resolveLabel(input: SupplierProfileInput): string {
   return input.label.trim() || input.nameEn.trim();
 }
 
+/**
+ * Reference-stable snapshot of stored profiles. Safe to pass to
+ * useSyncExternalStore as getSnapshot; the reference only changes
+ * after a write (or a cross-tab storage event).
+ */
 export function listProfiles(): SupplierProfile[] {
-  return readStore().profiles;
+  if (!isBrowser()) {
+    return EMPTY_PROFILES;
+  }
+
+  if (cachedProfiles === null) {
+    const { profiles } = readStore();
+    cachedProfiles = profiles.length === 0 ? EMPTY_PROFILES : profiles;
+  }
+
+  return cachedProfiles;
+}
+
+/** Server snapshot for useSyncExternalStore: always the frozen empty list. */
+export function getServerProfilesSnapshot(): SupplierProfile[] {
+  return EMPTY_PROFILES;
+}
+
+/** Server snapshot for useSyncExternalStore: no active profile on the server. */
+export function getServerActiveProfileId(): string | null {
+  return null;
 }
 
 export function getProfile(id: string): SupplierProfile | null {
@@ -143,7 +290,7 @@ export function setActiveProfile(id: string): void {
     throw new SupplierProfileStorageError("Профіль не знайдено.");
   }
 
-  writeStore({ ...store, activeProfileId: id });
+  commitStore({ ...store, activeProfileId: id });
 }
 
 export function saveProfile(
@@ -174,7 +321,7 @@ export function saveProfile(
     };
     const profiles = [...store.profiles];
     profiles[index] = updated;
-    writeStore({ ...store, profiles });
+    commitStore({ ...store, profiles });
     return updated;
   }
 
@@ -187,10 +334,12 @@ export function saveProfile(
   };
 
   const profiles = [...store.profiles, created];
+  // Only the first-ever profile is auto-activated; activation is
+  // otherwise an explicit user action (setActiveProfile).
   const activeProfileId =
     store.activeProfileId ?? (profiles.length === 1 ? created.id : null);
 
-  writeStore({ ...store, profiles, activeProfileId });
+  commitStore({ ...store, profiles, activeProfileId });
   return created;
 }
 
@@ -207,16 +356,21 @@ export function removeProfile(id: string): void {
     activeProfileId = profiles[0]?.id ?? null;
   }
 
-  writeStore({ ...store, profiles, activeProfileId });
+  commitStore({ ...store, profiles, activeProfileId });
 }
 
-/** Test helper: replace entire store contents. */
-export function __replaceStoreForTests(store: SupplierProfilesStore): void {
-  writeStore(store);
+/** Test helper: seed the raw storage value and reset the cached snapshot. */
+export function __seedRawStoreForTests(raw: string): void {
+  if (!isBrowser()) {
+    return;
+  }
+  window.localStorage.setItem(SUPPLIER_PROFILES_STORAGE_KEY, raw);
+  cachedProfiles = null;
 }
 
-/** Test helper: clear storage key. */
+/** Test helper: clear storage key and reset the cached snapshot. */
 export function __clearStoreForTests(): void {
+  cachedProfiles = null;
   if (!isBrowser()) {
     return;
   }
