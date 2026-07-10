@@ -115,7 +115,7 @@ capabilities:
 
   banking:
     owner: domain
-    status: not_started
+    status: shipped
     spec: openspec/specs/banking/spec.md
     owns:
       - FR-BANK-01
