@@ -36,22 +36,33 @@ with an EXECUTED red→green proof and a `Refs: PD-x` trailer:
 **Traceability:** 23/38 MVP FRs honestly traced. `docs/qa/trace-gaps.md` lists
 the 14 gaps (4 not-implemented, 2 dropped, 8 needing recording/e2e).
 
-### Two decisions waiting on the human
-1. **Disposition correction COR-1** (`retro/corrections/001-*.json`) — the
-   deploy-gated PERF waiver. OPEN until a human marks it `resolved|waived|invalid`.
-   Keeps `gate-status` showing an open-correction line. `npm run correct` to view.
-2. **CI on `main` is RED and that is correct** — `check-trajectory --release`
-   exits 1 because all 10 archived slices are RETROFITTED, none earned red-first.
-   It goes green when S5 is earned, or via a waiver. Do NOT drop `--release`.
+### Evidence contract hardened before S5 (2026-07-10, second session)
+Both forgeable trajectory-gate predicates are now closed, so the FIRST earned
+slice (S5) inherits an honest contract:
+- **PD-10 fixed** (`df5d135`) — a `Slice:` trailer counts only if the commit
+  carries a real trailer AND touched `src|app|lib|db|components|tests/`. The
+  docs-only forgery is dead. red→green 1/2→2/2.
+- **PD-8 fixed** (`1aad54e`) — a `clean:true` review stamp is trusted only from
+  a real review-gate output (`generatedBy:"review-gate"` + populated
+  `dimensions`). A hand-written stamp is `unverified-stamp`, fails `--release`.
+  red→green 3/6→6/6.
+- **COR-1 dispositioned** `waived` (`5cb2967`) — deploy-gated PERF, pending live
+  measurement. `correct.mjs --check` PASS.
+
+Six gate self-tests now run in CI (`check-{trajectory-retrofit, review-evidence,
+slice-trailer, traceability-trace-ids, traceability-anchor, dropped-status}`).
+
+### Still true for the human
+- **CI on `main` is RED and that is correct** — `check-trajectory --release`
+  exits 1 because all 10 archived slices are RETROFITTED, none earned red-first.
+  It goes green when S5 is earned, or via a waiver. Do NOT drop `--release`.
 
 ### Open, unfixed process defects (not approved to fix)
-- **PD-8, PD-10** — the review-findings and `Slice:` trailer predicates are both
-  still forgeable for FUTURE slices (auditor gave the fix: bind trailer to the
-  slice's files + `git interpret-trailers`). Fix before the first earned slice
-  archives or S5 inherits the weak contract.
-- **PD-11** — `factory-lock` over-captures non-gate workflows (`sync-homework-pr.yml`).
+- **PD-11** — `factory-lock` over-captures non-gate workflows (`sync-homework-pr.yml`);
+  a comment-only edit reads as tampering and pressures a reseal.
 - **PD-13** — the upstream factory template puts improvements in `openspec/changes/`,
-  which breaks `openspec validate --all --strict`.
+  which breaks `openspec validate --all --strict`. Worked around: improvements
+  live in `retro/improvements/`.
 
 ## Capability backlog
 
