@@ -6,7 +6,7 @@ It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
 Scope: 10 archived slice(s) (10 RETROFITTED, 0 earned).
-Result: NOT-EARNED, 10 warning(s)
+Result: NOT-EARNED, 20 warning(s)
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
@@ -32,12 +32,22 @@ None.
 ## Warnings
 
 - **retrofit**: 2026-07-10-add-banking: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **trailer**: 2026-07-10-add-banking: no commit carries a real "Slice: add-banking" trailer that also touched the slice's implementation
 - **retrofit**: 2026-07-10-add-client-directory: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **trailer**: 2026-07-10-add-client-directory: no commit carries a real "Slice: add-client-directory" trailer that also touched the slice's implementation
 - **retrofit**: 2026-07-10-add-document-render: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **trailer**: 2026-07-10-add-document-render: no commit carries a real "Slice: add-document-render" trailer that also touched the slice's implementation
 - **retrofit**: 2026-07-10-add-embedded-fonts: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **trailer**: 2026-07-10-add-embedded-fonts: no commit carries a real "Slice: add-embedded-fonts" trailer that also touched the slice's implementation
 - **retrofit**: 2026-07-10-add-export-share-preview: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **trailer**: 2026-07-10-add-export-share-preview: no commit carries a real "Slice: add-export-share-preview" trailer that also touched the slice's implementation
 - **retrofit**: 2026-07-10-add-form-input: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **trailer**: 2026-07-10-add-form-input: no commit carries a real "Slice: add-form-input" trailer that also touched the slice's implementation
 - **retrofit**: 2026-07-10-add-invoice-calc: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **trailer**: 2026-07-10-add-invoice-calc: no commit carries a real "Slice: add-invoice-calc" trailer that also touched the slice's implementation
 - **retrofit**: 2026-07-10-add-nace-catalog: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **trailer**: 2026-07-10-add-nace-catalog: no commit carries a real "Slice: add-nace-catalog" trailer that also touched the slice's implementation
 - **retrofit**: 2026-07-10-add-shell: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **trailer**: 2026-07-10-add-shell: no commit carries a real "Slice: add-shell" trailer that also touched the slice's implementation
 - **retrofit**: 2026-07-10-add-supplier-profile: RETROFITTED — red-first history unreconstructible, review evidence not earned
+- **trailer**: 2026-07-10-add-supplier-profile: no commit carries a real "Slice: add-supplier-profile" trailer that also touched the slice's implementation

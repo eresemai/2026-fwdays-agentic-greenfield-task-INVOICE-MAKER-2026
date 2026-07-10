@@ -42,6 +42,11 @@ const PATHS = {
 // cross-slice overlap.
 const SHARED_DOMAINS = new Set(["auth", "db", "shared", "ui", "utils", "common", "email"]);
 
+// PD-10: a `Slice:` trailer counts only if the commit touched the slice's own
+// implementation — source, components, or tests. A docs / openspec-only commit
+// touches none of these, so it can no longer claim a slice it never built.
+const isImplPath = (f) => /^(?:src|app|lib|db|components|tests)\//.test(f);
+
 const failures = [];
 const warnings = [];
 const fail = (check, msg) => failures.push({ check, msg });
@@ -119,29 +124,37 @@ for (const slice of slices) {
   let trailerCommits = 0;
   let libDomains = [];
   if (isRepo) {
-    const { ok, out } = git(["log", "--all", `--grep=Slice: ${trailerName}`, "--name-only", "--pretty=format:commit %H"]);
-    if (ok) {
-      const files = new Set();
-      for (const line of out.split("\n")) {
-        if (line.startsWith("commit ")) trailerCommits += 1;
-        else if (line.trim()) files.add(line.trim());
+    // Candidate commits whose message mentions the trailer. Each is then
+    // validated on its own so one commit cannot claim a slice it never built.
+    const cand = git(["log", "--all", `--grep=Slice: ${trailerName}`, "--format=%H"]);
+    const shas = cand.ok ? cand.out.split("\n").map((s) => s.trim()).filter(Boolean) : [];
+    for (const sha of shas) {
+      // PD-10a: `Slice: <name>` must be a REAL trailer, not a prose mention.
+      const tr = git(["show", "-s", "--format=%(trailers:key=Slice,valueonly)", sha]);
+      const trailered = tr.ok && tr.out.split("\n").map((s) => s.trim()).includes(trailerName);
+      if (!trailered) continue;
+      // PD-10b: the commit must have touched the slice's own IMPLEMENTATION,
+      // not just docs. A docs-only commit (5bcbfe9 claimed ten slices while
+      // touching zero source files) no longer counts as process evidence.
+      const nf = git(["show", "--name-only", "--format=", sha]);
+      const changed = nf.ok ? nf.out.split("\n").map((s) => s.trim()).filter(Boolean) : [];
+      if (!changed.some(isImplPath)) continue;
+      trailerCommits += 1;
+      for (const f of changed) {
+        const m = f.match(/^(?:src\/)?lib\/([^/]+)\//);
+        if (m) libDomains.push(m[1]);
       }
-      for (const f of files) {
-        const m = f.match(/^lib\/([^/]+)\//);
-        if (m) {
-          libDomains.push(m[1]);
-        }
-      }
-      libDomains = [...new Set(libDomains)];
-      for (const d of libDomains) {
-        if (!domainToSlices.has(d)) domainToSlices.set(d, []);
-        domainToSlices.get(d).push(slice);
-      }
+    }
+    libDomains = [...new Set(libDomains)];
+    for (const d of libDomains) {
+      if (!domainToSlices.has(d)) domainToSlices.set(d, []);
+      domainToSlices.get(d).push(slice);
     }
     // A retrofit slice predates the commit-msg hook, so a missing trailer is
     // expected, not a defect. It stays a warning even under --release; the
     // NOT-EARNED verdict below is what keeps the gate honest.
-    if (trailerCommits === 0) gated(flags.has("--release") && !retrofitted, "trailer", `${slice}: no commit carries a "Slice: ${trailerName}" trailer`);
+    if (trailerCommits === 0)
+      gated(flags.has("--release") && !retrofitted, "trailer", `${slice}: no commit carries a real "Slice: ${trailerName}" trailer that also touched the slice's implementation`);
   }
 
   rows.push({ slice, reviewEvidence, trailerCommits, libDomains, processComplete, retrofitted });

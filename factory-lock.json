@@ -1,6 +1,6 @@
 {
-  "createdAt": "2026-07-10T16:50:40.304Z",
-  "gitHead": "1ff3b284e03833c28e10ae8ce3cca03f9562392e",
+  "createdAt": "2026-07-10T17:06:41.536Z",
+  "gitHead": "2f9d2d8c1c735fc0fc503c1552a7cb56c00525f7",
   "files": {
     ".claude/workflows/eval-suite.js": "f93c99d868b812cfa7412927f52b62d1042525396a9d0265f16cfe435b9c6098",
     ".claude/workflows/review-gate.js": "7295d8e94ba347213120b9d190b9ebbb88dee373173cfc7daba2114b726ca76b",
@@ -10,7 +10,7 @@
     ".claude/workflows/vision-verify.js": "84c893a066088a158d308a3a21cf7cd3b44fdefb4f503ef9bd85507b7364fc69",
     ".githooks/commit-msg": "c6427b364dbc15da31235e4c0f9a8ac74639b7f0512cadce95f301637387fb5c",
     ".githooks/pre-commit": "c64e18049003ddd126e8ac2c61c1ce759923977748f5f044ee34fc1c3212eaea",
-    ".github/workflows/ci.yml": "93e49c3b976f1bf07176ad0dd6de9d019cbed803202cf49e2b1e5fe3f3bd514a",
+    ".github/workflows/ci.yml": "4d0220953bc5b7197cc2c27b1995ee5944da7b64ab0f9f890714f085822693a1",
     ".github/workflows/sync-homework-pr.yml": "ba00c9d34a36db9c4cf051121a1693f40908b89d1b571d11f41ff72af12d8e66",
     "quality/process-baseline.json": "c4138cf68d31420931034e59d580cc4db6fdd08550de95347c7396bd9b2923d5",
     "quality/telemetry.config.json": "98276dbbd18f9d694f3378aed7ecc042439d99c8e292bb3caeed7a833005835b",
@@ -23,7 +23,7 @@
     "scripts/check-process-ratchet.mjs": "a824c3bf4a36e4c1979c09d899242dbe4ac1cdf6e08bf227fca5b4772f331a03",
     "scripts/check-recordings.mjs": "447628eccba1a88860d5b2cfb8f4fff9b09050edd0141476a31bcddc66fe3a54",
     "scripts/check-traceability.mjs": "0794dbc85a921d1a0c6a75927734e40fa0b9442a0bafee55e312146fddce6e73",
-    "scripts/check-trajectory.mjs": "2d94c755ac0d19f2b90dbdf505b0e3e4ecc5df2bfbdc65f872a6215515927ab4",
+    "scripts/check-trajectory.mjs": "1dc4b609b91b7d12fad20658b2abe140ab3205da5aa0e0681fe074fff3f9dcbd",
     "scripts/check-visual-fidelity.mjs": "f6fd0816f6293c0394c3cdb57232bb72b85cebe3b40ac6b88bf0628847722504",
     "scripts/gate-status.mjs": "07617acbbd6ae513bcc7675478e920bd86ff2c765ae1b2ebc2ab27dad50e5fae",
     "scripts/qa-verify.mjs": "fdcd0b3d4db03837702fc81e94ab27a1ce16aa235e4fb32413b563478243c2c0"
@@ -44,6 +44,7 @@
     "improve-PD-7 (Refs: PD-7): ci.yml runs gate-status.mjs in its own job (set -o pipefail is load-bearing: bash -e without pipefail lets tee mask a non-zero exit, measured 0 vs 1) and executes the improve-PD-3/PD-9 red->green proofs on every run. The gate-status job is EXPECTED red until G6; keep it out of required checks rather than adding continue-on-error. Note: .github/workflows/*.yml ARE gate-bearing and in the lock.",
     "Reseal after merge: .github/workflows/sync-homework-pr.yml drifted in commit 1d495d2 (comment-only: mentor PR #50 -> #56). It is a homework-branch sync workflow, NOT a quality gate, but factory-lock captures every .github/workflows/*.yml. Resealed rather than reverted; the drift is comment-only and visible in git history. OPEN DEFECT (PD-11, unfiled): the lock's gate-bearing scope over-captures non-gate workflows, so routine edits to them look like tampering and pressure a reseal — which is exactly the tamper-evidence-erasing action the lock exists to prevent. Narrow the scope, or move non-gate workflows out of it.",
     "improve-PD-12 (Refs: PD-12): check-traceability's @trace parser is ANCHORED to the start of a comment. Unanchored it credited any mention: a `// No @trace FR-EXPORT-02: this test cannot prove it` disclaimer re-credited four refuted requirements, and a fixture under tests/ credited the real FR-CALC-01. Executed red->green: tests/check-traceability-anchor.test.mjs 2/4 -> 4/4; traced count held at 20/34; pd-3 7/7 and pd-9 6/6 unchanged. The anchor test is wired into CI Gate self-tests.",
-    "improve-PD-1 (Refs: PD-1): check-traceability.mjs and check-acceptance-methods.mjs both learn that a `| dropped |` status is non-MVP, like `| Future |`. FR-NACE-06 and FR-INPUT-03 (dropped negative requirements) leave the MVP set in both. Executed red->green: tests/check-dropped-status.test.mjs 2/5 -> 5/5; real repo MVP FRs 38 -> 36, warnings 53 -> 49. Two gate-bearing files drift together under one Refs: PD-1 commit."
+    "improve-PD-1 (Refs: PD-1): check-traceability.mjs and check-acceptance-methods.mjs both learn that a `| dropped |` status is non-MVP, like `| Future |`. FR-NACE-06 and FR-INPUT-03 (dropped negative requirements) leave the MVP set in both. Executed red->green: tests/check-dropped-status.test.mjs 2/5 -> 5/5; real repo MVP FRs 38 -> 36, warnings 53 -> 49. Two gate-bearing files drift together under one Refs: PD-1 commit.",
+    "improve-PD-10 (Refs: PD-10): check-trajectory Slice: trailer counts only if the commit carries a REAL trailer AND touched src/app/lib/db/components/tests. A docs-only commit (5bcbfe9 claimed 10 slices, 0 src files) no longer counts. Executed red->green: tests/check-slice-trailer.test.mjs (real git-repo fixtures) 1/2 -> 2/2."
   ]
 }
