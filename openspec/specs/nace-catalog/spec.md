@@ -22,13 +22,6 @@ The system SHALL map user service text to the best NACE entry and ask a clarifyi
 - **WHEN** the user enters service text matching multiple entries equally
 - **THEN** the system prompts the user to choose among the candidates
 
-### Requirement: FR-NACE-06 NACE code on document
-The generated invoice SHALL display the NACE code alongside the service description when ticket 09 resolves placement.
-
-#### Scenario: Code visible on invoice
-- **WHEN** an invoice is rendered with a selected NACE entry
-- **THEN** the NACE class code appears on the printed document per the resolved template rule
-
 ### Requirement: BC-NACE-01 Official taxonomy only
 The system SHALL use NACE 2.1-UA (State Statistics Service order No. 191, 2025) only and SHALL NOT reference obsolete KVED DK 009:2010 in new docs or UI.
 

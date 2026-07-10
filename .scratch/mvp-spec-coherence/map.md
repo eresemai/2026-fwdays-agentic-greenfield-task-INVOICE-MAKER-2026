@@ -134,12 +134,12 @@ this map.
   — all six were **accidents, not decisions** (they survive as `proposed` in
   `docs/requirements.md` and the capability docs; only `openspec/specs/` lost
   them, and the migration proved it *could* record deliberate drops by marking
-  FR-CHAT-* `dropped`). FR-NACE-06 still stands as a SHALL despite ticket 03
-  dropping it (repair → `09`). **No repo tool checks that an owned FR id
-  appears in its owning spec** — `validate --strict` lints format only,
-  `capability:check` never opens a spec — so this loss can recur behind two
-  green ticks. Repairs routed to `06` (done via `add-invoice-calc` delta),
-  `08`, `09`, `10`, `16`.
+  FR-CHAT-* `dropped`). **FR-NACE-06** dropped in `requirements.md`,
+  `capability-map.yaml`, and `nace-catalog/spec.md` (2026-07-10). **No repo tool
+  checks that an owned FR id appears in its owning spec** — `validate --strict`
+  lints format only, `capability:check` never opens a spec — so this loss can
+  recur behind two green ticks. Repairs routed to `06` (done via `add-invoice-calc`
+  delta), `08`, `09`, `10`, `16`.
 
 - [Stop `openspec/config.yaml` from lying](issues/04-wire-openspec-into-claude-code.md)
   — done by a concurrent session (`8d45456`) before it was claimed. Spec format

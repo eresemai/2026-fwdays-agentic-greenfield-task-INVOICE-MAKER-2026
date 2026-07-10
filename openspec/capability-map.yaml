@@ -63,7 +63,6 @@ capabilities:
       - FR-NACE-03
       - FR-NACE-04
       - FR-NACE-05
-      - FR-NACE-06
       - BC-NACE-01
     depends_on: []
     blocks: [form-input, document-render]
@@ -226,7 +225,6 @@ requirement_owners:
   FR-NACE-03: nace-catalog
   FR-NACE-04: nace-catalog
   FR-NACE-05: nace-catalog
-  FR-NACE-06: nace-catalog
   FR-CALC-01: invoice-calc
   FR-CALC-02: invoice-calc
   FR-CALC-03: invoice-calc

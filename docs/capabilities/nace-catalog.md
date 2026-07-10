@@ -25,8 +25,10 @@ Pure `src/lib/` module — no React, no storage. Replaces legacy KVED.
 | FR-NACE-03 | 74.12 / 74.14 3D visualization lines | proposed |
 | FR-NACE-04 | 59.12 post-production lines | proposed |
 | FR-NACE-05 | Keyword matcher + clarifying question on ambiguity | proposed |
-| FR-NACE-06 | NACE code on generated invoice (audit trail) | proposed |
 | BC-NACE-01 | No KVED DK 009:2010 in new docs/UI | accepted |
+
+> **Dropped:** `FR-NACE-06` (NACE code on printed invoice) — no legal requisite;
+> frozen template has no placeholder (Wayfinder ticket 03, 2026-07-09).
 
 Seed data reference: `docs/191_2025.pdf`, table in [requirements.md](../requirements.md).
 
