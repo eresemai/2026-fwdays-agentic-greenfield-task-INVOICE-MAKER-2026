@@ -1,11 +1,15 @@
 ## ADDED Requirements
 
 ### Requirement: FR-TPL-02 Fixed document sections
-The rendered document SHALL preserve the template's fixed sections verbatim: the invoice title, the subtitle, the TERMS AND CONDITIONS block, and the signature block. No placeholder substitution SHALL alter their markup or text.
+The rendered document SHALL preserve the template's fixed sections. The invoice title, the subtitle, and the TERMS AND CONDITIONS block contain no placeholders and SHALL appear byte-identical to `docs/invoice-template.html`. The signature block SHALL keep its markup and caption unchanged; only the `{{SIGNATORY_EN}}` and `{{SIGNATORY_UA}}` placeholders inside it are substituted (FR-TPL-01). No substitution SHALL alter any other markup or text of these sections.
 
-#### Scenario: Fixed sections survive rendering
+#### Scenario: Placeholder-free sections survive rendering
 - **WHEN** an invoice is rendered with any variable values
-- **THEN** the title, subtitle, TERMS block, and signature block in the output are byte-identical to `docs/invoice-template.html`
+- **THEN** the title, the subtitle, and the TERMS block in the output are byte-identical to `docs/invoice-template.html`
+
+#### Scenario: Signature block keeps its fixed markup
+- **WHEN** an invoice is rendered
+- **THEN** the signature block's markup and caption are unchanged and only the signatory names are substituted
 
 ### Requirement: FR-TPL-04 Optional project block
 The system SHALL render `{{PROJECT_BLOCK}}` as a labelled block when a project name is supplied, and as an empty string when it is absent.

@@ -24,7 +24,7 @@ bilingual HTML. Source of truth for both browser preview and PDF route.
 | FR-TPL-02 | Fixed title, subtitle, TERMS, signature unchanged | shipped |
 | FR-TPL-03 | `{{SERVICE_ROWS}}` bilingual table rows | shipped |
 | FR-TPL-04 | Optional `{{PROJECT_BLOCK}}` | shipped |
-| FR-TPL-05 | Self-contained HTML + A4 print CSS | shipped |
+| FR-TPL-05 | Self-contained HTML + A4 print CSS | **accepted** (CSS embedded; remote font `@import` unmet — see Known gap) |
 | BC-LEGAL-01 | TERMS block immutable | accepted |
 | NFR-PERF-02 | Single render < 200 ms | shipped |
 
@@ -48,6 +48,7 @@ Also: BC-I18N-01, BC-BRAND-01, TC-STACK-03, TC-STACK-06
 - [x] TERMS section byte-identical to template
 - [x] Render < 200 ms for single invoice (NFR-PERF-02)
 - [x] Output opens standalone in browser (embedded CSS, A4 `@page`)
+- [ ] **No external network dependency** — one remote font `@import` remains (Known gap)
 - [x] Hostile values escaped — no markup injection through invoice data
 
 ## Done when
@@ -56,12 +57,26 @@ Also: BC-I18N-01, BC-BRAND-01, TC-STACK-03, TC-STACK-06
 - Self-contained HTML with embedded CSS
 - SERVICE_ROWS and optional PROJECT_BLOCK expansion
 
-## Known gap
+## Known gap — FR-TPL-05 not fully met
 
 The template's `@import url('https://fonts.googleapis.com/…')` is the sole
-external reference. It resolves in the browser preview but will **not** load in
-offline headless Chromium — fold font embedding into wayfinder ticket 05 before
-the S6 pdf gate (cyrillic glyph coverage depends on it).
+external reference. FR-TPL-05 permits no network dependency "beyond bundled
+fonts", and Google Fonts is **remote, not bundled** — so the requirement is
+unmet *today*, in the browser preview, not merely in offline PDF. Consequences:
+
+1. every rendered invoice issues a third-party request from a document holding
+   client and supplier PII (request metadata leaks to Google);
+2. offline headless Chromium (S6 PDF) will silently fall back, breaking cyrillic
+   glyph coverage.
+
+`render-invoice.test.ts` pins the external-URL count at exactly **1** so the gap
+cannot grow silently; it does not certify compliance. FR-TPL-05 is therefore
+tracked as `accepted`, not `shipped`.
+
+**Decision needed** (wayfinder ticket 05): self-host/inline Inter as a base64
+`@font-face`, or drop the `@import` and accept a system-font fallback
+(BC-BRAND-01 impact). Both touch `docs/invoice-template.html` and belong to a
+separate change.
 
 ## After shipping
 

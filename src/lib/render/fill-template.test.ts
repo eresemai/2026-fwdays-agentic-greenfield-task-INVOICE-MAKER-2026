@@ -121,7 +121,9 @@ describe("fillTemplate", () => {
     );
   });
 
-  it("fills the real template with no tokens remaining", () => {
+  // Structural validity with real builder output is covered by
+  // render-invoice.test.ts; here we only prove every token is consumed.
+  it("consumes every token of the real template", () => {
     const output = fillTemplate(INVOICE_TEMPLATE, allVars());
     expect(output).not.toMatch(PLACEHOLDER_PATTERN);
   });

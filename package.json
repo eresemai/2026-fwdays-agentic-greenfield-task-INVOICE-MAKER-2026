@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run typecheck && next build",
+    "build": "npm run template:check && npm run typecheck && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "capability:check": "node scripts/check-capability-gates.mjs",
     "template:sync": "node scripts/sync-template.mjs",
+    "template:check": "node scripts/sync-template.mjs --check",
     "capability:list": "node scripts/check-capability-gates.mjs --list"
   },
   "dependencies": {

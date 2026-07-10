@@ -9,6 +9,9 @@ import { INVOICE_TEMPLATE } from "./template";
 const PLACEHOLDER_PATTERN = /\{\{([A-Z0-9_]+)\}\}/g;
 const TERMS_START = "<!-- TERMS AND CONDITIONS SECTION (FIXED — never modify) -->";
 const TERMS_END = "<!-- SIGNATURE SECTION (FIXED) -->";
+const TITLE_MARKUP = '<div class="invoice-title">INVOICE / РАХУНОК</div>';
+const SUBTITLE_MARKUP =
+  '<div class="invoice-subtitle">Graphic Design Service</div>';
 const MAX_RENDER_MS = 200;
 
 // Synthetic fixtures: documentation bank code, sequential account bodies.
@@ -74,8 +77,11 @@ function input(overrides: Partial<RenderInvoiceInput> = {}): RenderInvoiceInput 
 function section(html: string, start: string, end: string): string {
   const from = html.indexOf(start);
   const to = html.indexOf(end);
-  expect(from).toBeGreaterThan(-1);
-  expect(to).toBeGreaterThan(from);
+
+  if (from === -1 || to <= from) {
+    throw new Error(`Section markers not found or out of order: ${start}`);
+  }
+
   return html.slice(from, to);
 }
 
@@ -120,22 +126,41 @@ describe("renderInvoice", () => {
     expect(rendered).toBe(source);
   });
 
-  it("preserves the fixed signature markup (FR-TPL-02)", () => {
+  it("keeps the placeholder-free title and subtitle byte-identical (FR-TPL-02)", () => {
+    const html = renderInvoice(input());
+
+    for (const line of [TITLE_MARKUP, SUBTITLE_MARKUP]) {
+      expect(INVOICE_TEMPLATE).toContain(line);
+      expect(html).toContain(line);
+    }
+  });
+
+  it("preserves the fixed signature markup, substituting only the names (FR-TPL-02)", () => {
     const html = renderInvoice(input());
 
     expect(html).toContain('<div class="signature-line"></div>');
-    expect(html).toContain("signature / підпис");
-    expect(html).toContain("T. Shevchenko / Т. Шевченко");
+    expect(html).toContain('<div class="signature-caption">signature / підпис</div>');
+    expect(html).toContain(
+      '<div class="signature-name">T. Shevchenko / Т. Шевченко</div>'
+    );
   });
 
-  it("stays self-contained: embedded styles, only the template's font import (FR-TPL-05)", () => {
+  it("embeds its CSS and A4 print rules (FR-TPL-05, partial)", () => {
     const html = renderInvoice(input());
-    const externalUrls = html.match(/https?:\/\/[^'"\s)]+/g) ?? [];
 
     expect(html).toContain("<style>");
     expect(html).toContain("@page");
-    // The template's Google Fonts @import is the sole external reference and
-    // must not grow (see the PDF offline-font gap, wayfinder ticket 05).
+  });
+
+  it("pins the one KNOWN VIOLATION of FR-TPL-05: the remote font @import", () => {
+    const html = renderInvoice(input());
+    const externalUrls = html.match(/https?:\/\/[^'"\s)]+/g) ?? [];
+
+    // FR-TPL-05 allows no external network dependency beyond *bundled* fonts.
+    // Google Fonts is remote, so the requirement is not met — see
+    // docs/capabilities/document-render.md#known-gap and wayfinder 05.
+    // This assertion pins the violation at exactly one URL so it cannot grow
+    // silently; it does NOT certify compliance.
     expect(externalUrls).toHaveLength(1);
     expect(externalUrls[0]).toContain("fonts.googleapis.com");
   });
