@@ -70,11 +70,10 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | FR-NACE-03 | nace-catalog | proposed |
 | FR-NACE-04 | nace-catalog | proposed |
 | FR-NACE-05 | nace-catalog | proposed |
-| FR-NACE-06 | nace-catalog | proposed |
-| FR-CALC-01 | invoice-calc | proposed |
+| FR-CALC-01 | invoice-calc | accepted |
 | FR-CALC-02 | invoice-calc | proposed |
-| FR-CALC-03 | invoice-calc | proposed |
-| FR-CALC-04 | invoice-calc | proposed |
+| FR-CALC-03 | invoice-calc | accepted |
+| FR-CALC-04 | invoice-calc | accepted |
 | FR-CALC-05 | invoice-calc | proposed |
 | FR-CALC-06 | invoice-calc | proposed |
 | FR-BANK-01 | banking | proposed |
@@ -93,12 +92,13 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | FR-EDIT-01 | invoice-edit | proposed |
 | FR-EDIT-02 | invoice-edit | proposed |
 
-### Dropped (Future — `invoice-chat`)
+### Dropped
 
-| ID | Status |
-| --- | --- |
-| FR-CHAT-01..04 | dropped |
-| FR-INPUT-03 | dropped |
+| ID | Capability | Status | Reason |
+| --- | --- | --- | --- |
+| FR-NACE-06 | nace-catalog | dropped | No invoice requisite; template has no NACE placeholder (Wayfinder 03) |
+| FR-CHAT-01..04 | invoice-chat | dropped | Chat/LLM input — Future, not MVP |
+| FR-INPUT-03 | form-input | dropped | Replaced by structured form (FR-INPUT-01) |
 
 ---
 

@@ -117,11 +117,13 @@ Honest status for each course practice. Open **TODO** items will be completed be
 - Cursor subagents: `code-reviewer`, `bugbot`, `ultracite-reviewer`.
 - **CodeRabbit** as external checker on this PR.
 - Wayfinder sessions used separate planning agents (Claude Opus) vs implementation agents (Cursor).
+- **Checker pass (separate chat):** fork [PR #2](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/2) (`wayfinder/resolve-01-04`, merged 2026-07-09) reviewed by Cursor Bugbot subagent + human synthesis — see [Review log](#review-log-fork-pr-2) below.
 
 **TODO:**
 
-- [ ] Systematic checker pass after each shipped slice (separate agent / chat).
-- [ ] Document checker findings in PR or change log.
+- [x] Systematic checker pass after each shipped slice (separate agent / chat) — **PR #2 done**
+- [x] Document checker findings in PR or change log — **see Review log below**
+- [ ] Checker pass for next shipped slice (S0 `shell` completion).
 - [ ] Address CodeRabbit feedback before **Ready for review**.
 
 ---
@@ -172,6 +174,44 @@ https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-20
 
 ---
 
+## Review log (fork PR #2)
+
+**Subject:** [eresemai/…#2](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/2) — *docs: wayfinder 01–04, capability gates, and WEG3D Fin design skill*  
+**Merged:** 2026-07-09 · **+3025 / −173** across 33 files · 5 commits  
+**Checker:** separate Cursor chat (maker ≠ checker) · Bugbot subagent + synthesis  
+**Verdict:** **Approved** — follow-ups from checker pass resolved 2026-07-10.
+
+### Scope reviewed
+
+| Area | Assessment |
+| --- | --- |
+| Wayfinder tickets 01–04 | ✅ Evidence-backed; opens new tickets 15–16 correctly |
+| `openspec/capability-map.yaml` + gate script | ✅ Sound slice order and CLI |
+| `docs/capability.md` + `docs/capabilities/` | ✅ Clear human roadmap |
+| `docs/current-state.md` | ✅ Good handoff pattern |
+| `weg3d-fin-design` skill | ✅ Actionable UI rules, token refs, session banner |
+| `docs/requirements.md` split | ✅ Correct traceability index role |
+
+### Findings (checker) — resolved
+
+| Severity | Location | Finding | Resolution |
+| --- | --- | --- | --- |
+| **High** | `scripts/check-capability-gates.mjs` | `yaml` missing from `package.json` | Added `yaml` to `devDependencies` |
+| **High** | `docs/capabilities/invoice-calc.md` | Stale `DDMM/0YY` / inverted FR-CALC-03 | Synced with Wayfinder 06+07 decisions |
+| **High** | `docs/current-state.md` | Stale `Next up` vs resolved tickets | Refreshed priorities and blockers |
+| **Medium** | `docs/capability.md:94` | Incomplete pdf gate deps | Added `document-render`, `form-input`, preview |
+| **Medium** | `FR-NACE-06` traceability | Still `proposed` after ticket 03 drop | Dropped in requirements, map, nace spec |
+| **Low** | PR test plan | `capability:check` on clean install | Fixed via `yaml` dependency |
+
+### Recommended follow-ups (maker chat)
+
+1. ~~Add `yaml` to `devDependencies` and re-lock.~~ **Done**
+2. ~~Sync `invoice-calc.md`, `current-state.md` Next up, and `capability.md` pdf row.~~ **Done**
+3. ~~Propagate FR-NACE-06 drop into traceability + `nace-catalog/spec.md`.~~ **Done**
+4. `/opsx:apply add-invoice-calc` then sync delta to authoritative spec.
+
+---
+
 ### Checklist
 
 - [x] Real name provided (Serhii Rozum)
@@ -180,4 +220,4 @@ https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-20
 - [ ] Working end-to-end result (target: M4 demo milestone)
 - [ ] Loop engineering — at least one slice through an autonomous loop
 - [ ] Vitest + test-first for `src/lib/`
-- [ ] Maker ≠ checker — documented separate review pass per shipped slice
+- [x] Maker ≠ checker — documented separate review pass per shipped slice (fork PR #2)

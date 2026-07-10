@@ -91,7 +91,7 @@ Blocked until every **Depends on** row is `shipped` in `capability-map.yaml`.
 | `form-input` | shell, supplier-profile, client-directory, nace-catalog, banking, document-render | export-share, invoice-registry |
 | `export-share` preview | document-render, form-input | pdf gate |
 | `invoice-registry` | form-input, document-render, invoice-calc | invoice-edit |
-| `export-share` pdf | preview shipped | — |
+| `export-share` pdf | document-render, form-input, export-share preview | — |
 | `invoice-edit` | invoice-registry, form-input, invoice-calc | MVP complete |
 
 ### Critical path to demo (M4)
