@@ -451,8 +451,7 @@
       "recordings": []
     }
   ],
-  "failures": [],
-  "warnings": [
+  "failures": [
     {
       "check": "test-trace",
       "msg": "FR-SHELL-01 has no test annotated \"@trace FR-SHELL-01\""
@@ -649,5 +648,6 @@
       "check": "recording-evidence",
       "msg": "FR-CLIENT-04 is not referenced by any recording manifest under docs/qa/"
     }
-  ]
+  ],
+  "warnings": []
 }
