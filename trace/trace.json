@@ -416,7 +416,7 @@
         "openspec/specs/invoice-registry/spec.md",
         "openspec/changes/add-invoice-registry/specs/invoice-registry/spec.md"
       ],
-      "planned": false,
+      "planned": true,
       "tests": [
         "src/lib/storage/invoice-register.test.ts"
       ],
@@ -428,7 +428,7 @@
         "openspec/specs/invoice-registry/spec.md",
         "openspec/changes/add-invoice-registry/specs/invoice-registry/spec.md"
       ],
-      "planned": false,
+      "planned": true,
       "tests": [
         "src/lib/storage/invoice-register.test.ts"
       ],
@@ -440,7 +440,7 @@
         "openspec/specs/invoice-registry/spec.md",
         "openspec/changes/add-invoice-registry/specs/invoice-registry/spec.md"
       ],
-      "planned": false,
+      "planned": true,
       "tests": [
         "src/lib/storage/invoice-register.test.ts"
       ],
@@ -490,20 +490,7 @@
       "recordings": []
     }
   ],
-  "failures": [
-    {
-      "check": "plan-ownership",
-      "msg": "FR-REG-01 is not assigned in docs/mvp-capability-plan.md"
-    },
-    {
-      "check": "plan-ownership",
-      "msg": "FR-REG-02 is not assigned in docs/mvp-capability-plan.md"
-    },
-    {
-      "check": "plan-ownership",
-      "msg": "FR-REG-03 is not assigned in docs/mvp-capability-plan.md"
-    }
-  ],
+  "failures": [],
   "warnings": [
     {
       "check": "test-trace",

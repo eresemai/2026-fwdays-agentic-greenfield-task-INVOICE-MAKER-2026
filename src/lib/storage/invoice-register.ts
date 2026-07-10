@@ -60,7 +60,14 @@ function isNonEmptyString(value: unknown): value is string {
 }
 
 function isIsoDate(value: unknown): value is string {
-  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+  // Shape AND calendar validity: `2026-13-45` passes the regex but is not a
+  // real date, so reject it the way clients.ts does (Date.parse) to keep a
+  // corrupt or hand-edited store entry out of deriveOverdue's comparison.
+  return (
+    typeof value === "string" &&
+    /^\d{4}-\d{2}-\d{2}$/.test(value) &&
+    !Number.isNaN(Date.parse(value))
+  );
 }
 
 function isStatus(value: unknown): value is InvoiceStatus {
@@ -109,6 +116,15 @@ function clone<T>(value: T): T {
   return structuredClone(value);
 }
 
+function createId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `invoice-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+// Read localStorage fresh on every operation so a write from another tab is
+// never lost to a stale in-memory copy (matches clients.ts).
 function readStore(): InvoiceStore {
   if (!isBrowser()) {
     return { version: 1, invoices: [] };
@@ -154,27 +170,31 @@ function writeStore(store: InvoiceStore): void {
   }
 }
 
-let cache: InvoiceStore | null = null;
-
-function getStore(): InvoiceStore {
-  if (cache === null) {
-    cache = readStore();
-  }
-  return cache;
+function sortByUpdatedDesc(invoices: InvoiceRecord[]): InvoiceRecord[] {
+  return [...invoices].sort(
+    (left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt)
+  );
 }
 
-function commit(store: InvoiceStore): void {
-  cache = store;
+const EMPTY_INVOICES: readonly InvoiceRecord[] = Object.freeze([]);
+
+// Reference-stable snapshot for useSyncExternalStore; invalidated in every
+// write path before listeners are notified.
+let cachedInvoices: readonly InvoiceRecord[] | null = null;
+
+function invalidateSnapshot(): void {
+  cachedInvoices = null;
+}
+
+function persist(store: InvoiceStore): void {
+  // Persist FIRST: a failed write must not leave a phantom record in memory.
   writeStore(store);
+  invalidateSnapshot();
   notifyListeners();
 }
 
 function nowIso(): string {
   return new Date().toISOString();
-}
-
-function newId(): string {
-  return globalThis.crypto.randomUUID();
 }
 
 function validateInput(input: InvoiceRecordInput): void {
@@ -200,36 +220,38 @@ function validateInput(input: InvoiceRecordInput): void {
 }
 
 export function listInvoices(): readonly InvoiceRecord[] {
-  // Sorted newest-first by updatedAt, mirroring the clients register.
-  return getStore()
-    .invoices.map(clone)
-    .sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
+  if (cachedInvoices === null) {
+    const sorted = sortByUpdatedDesc(readStore().invoices);
+    cachedInvoices =
+      sorted.length === 0 ? EMPTY_INVOICES : Object.freeze(sorted);
+  }
+  return cachedInvoices;
+}
+
+export function getInvoicesServerSnapshot(): readonly InvoiceRecord[] {
+  return EMPTY_INVOICES;
 }
 
 export function getInvoice(id: string): InvoiceRecord | null {
-  const found = getStore().invoices.find((invoice) => invoice.id === id);
-  return found ? clone(found) : null;
+  // readStore() re-parses localStorage, so the returned record is a fresh value
+  // a caller may edit without touching the persisted register.
+  return readStore().invoices.find((invoice) => invoice.id === id) ?? null;
 }
 
 export function saveInvoice(input: InvoiceRecordInput): InvoiceRecord {
   validateInput(input);
-  const store = getStore();
+  const store = readStore();
   const timestamp = nowIso();
-  const existingIndex = input.id
-    ? store.invoices.findIndex((invoice) => invoice.id === input.id)
-    : -1;
 
-  if (input.id && existingIndex === -1) {
-    throw new InvoiceNotFoundError(
-      `Cannot update invoice ${input.id}: not found in the register.`
+  if (input.id) {
+    const existingIndex = store.invoices.findIndex(
+      (invoice) => invoice.id === input.id
     );
-  }
-
-  // FR-REG-03: freeze a value copy of the snapshot so a later directory edit to
-  // the caller's source object can never reach into the stored record.
-  const snapshot = clone(input.snapshot);
-
-  if (existingIndex >= 0) {
+    if (existingIndex === -1) {
+      throw new InvoiceNotFoundError(
+        `Cannot update invoice ${input.id}: not found in the register.`
+      );
+    }
     const previous = store.invoices[existingIndex];
     const updated: InvoiceRecord = {
       ...previous,
@@ -237,27 +259,29 @@ export function saveInvoice(input: InvoiceRecordInput): InvoiceRecord {
       status: input.status,
       issueDateIso: input.issueDateIso,
       paymentDeadlineIso: input.paymentDeadlineIso,
-      snapshot,
+      // FR-REG-03: store a value copy so a later directory edit to the
+      // caller's source object cannot reach into the stored record.
+      snapshot: clone(input.snapshot),
       updatedAt: timestamp,
     };
-    const invoices = [...store.invoices];
-    invoices[existingIndex] = updated;
-    commit({ version: 1, invoices });
-    return clone(updated);
+    store.invoices[existingIndex] = updated;
+    persist(store);
+    return updated;
   }
 
   const created: InvoiceRecord = {
-    id: input.id ?? newId(),
+    id: createId(),
     invoiceNumber: input.invoiceNumber,
     status: input.status,
     issueDateIso: input.issueDateIso,
     paymentDeadlineIso: input.paymentDeadlineIso,
-    snapshot,
+    snapshot: clone(input.snapshot),
     createdAt: timestamp,
     updatedAt: timestamp,
   };
-  commit({ version: 1, invoices: [...store.invoices, created] });
-  return clone(created);
+  store.invoices.push(created);
+  persist(store);
+  return created;
 }
 
 export function setInvoiceStatus(
@@ -269,7 +293,7 @@ export function setInvoiceStatus(
       `Status must be one of ${INVOICE_STATUSES.join(", ")}.`
     );
   }
-  const store = getStore();
+  const store = readStore();
   const index = store.invoices.findIndex((invoice) => invoice.id === id);
   if (index === -1) {
     throw new InvoiceNotFoundError(
@@ -281,31 +305,31 @@ export function setInvoiceStatus(
     status,
     updatedAt: nowIso(),
   };
-  const invoices = [...store.invoices];
-  invoices[index] = updated;
-  commit({ version: 1, invoices });
-  return clone(updated);
+  store.invoices[index] = updated;
+  persist(store);
+  return updated;
 }
 
 export function deleteInvoice(id: string): boolean {
-  const store = getStore();
+  const store = readStore();
   const invoices = store.invoices.filter((invoice) => invoice.id !== id);
   if (invoices.length === store.invoices.length) {
     return false;
   }
-  commit({ version: 1, invoices });
+  persist({ version: 1, invoices });
   return true;
 }
 
 /**
  * FR-REG-02: `overdue` is derived for display and never stored. ISO
  * `YYYY-MM-DD` strings compare lexicographically = chronologically, so this
- * needs no Date math and carries no timezone hazard.
+ * needs no Date math and carries no timezone hazard. Pass a `YYYY-MM-DD`
+ * `todayIso` (not a full timestamp) so a same-day deadline is not overdue.
  */
 export function deriveOverdue(record: InvoiceRecord, todayIso: string): boolean {
   return record.status === "sent" && record.paymentDeadlineIso < todayIso;
 }
 
 export function __resetInvoiceCacheForTests(): void {
-  cache = null;
+  invalidateSnapshot();
 }

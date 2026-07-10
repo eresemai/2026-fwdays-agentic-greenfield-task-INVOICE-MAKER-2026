@@ -1,0 +1,44 @@
+{
+  "generatedBy": "review-gate",
+  "scope": "add-invoice-registry",
+  "change": "add-invoice-registry",
+  "baseRef": "4503945",
+  "headRef": "HEAD",
+  "dimensions": {
+    "correctness": {
+      "confirmed": 3,
+      "contested": 3,
+      "rejected": 2
+    },
+    "security": {
+      "confirmed": 4,
+      "contested": 0,
+      "rejected": 4
+    },
+    "spec-compliance": {
+      "confirmed": 4,
+      "contested": 2,
+      "rejected": 2
+    },
+    "visual": {
+      "confirmed": 0,
+      "contested": 2,
+      "rejected": 1
+    }
+  },
+  "confirmedTitles": [
+    "commit() updates the in-memory cache before persisting, so a failed write leaves a phantom-saved record",
+    "isIsoDate accepts structurally-valid but impossible calendar dates",
+    "Dead/misleading input.id in the create branch implies caller-chosen ids that are never honored",
+    "Writes build from stale in-memory cache without re-reading localStorage, enabling cross-tab lost updates (unlike clients.ts)",
+    "npm audit: 2 moderate advisories via next's bundled postcss (no critical/high)",
+    "Clean — FR-REG-03 clone-on-save/read immutability correctly implemented",
+    "Clean — Authorization/IDOR/tenant scoping, auth/session, and injection not applicable to this slice",
+    "tasks.md 4.3 ticked \"traceability green\" but the gate FAILS",
+    "FR-REG-01/02/03 unassigned in docs/mvp-capability-plan.md (G3 owner map)",
+    "Canonical spec hand-edited before archive and left inconsistent with the delta",
+    "Proposal/design still list a src/lib/validation/invoice-record.ts (zod) deliverable that was intentionally not built"
+  ],
+  "clean": false,
+  "generatedAt": "2026-07-10T17:52:41Z"
+}

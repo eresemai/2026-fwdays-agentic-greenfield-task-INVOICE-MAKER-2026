@@ -1,8 +1,16 @@
 # Design: add-invoice-registry
 
+> **D2 note (validation):** the first sketch below mentioned a separate zod
+> module. It was NOT built — validation is inline hand-written guards, matching
+> `clients.ts` / `supplier-profiles.ts`. Consistency with the surrounding storage
+> layer beats introducing zod for one module.
+
 ## D1 — Storage module (`src/lib/storage/invoice-register.ts`)
 
-Mirror the established browser-storage pattern (`clients.ts`):
+Mirror the established browser-storage pattern (`clients.ts`) — including
+`readStore()` fresh on every operation (no cached store object, so a cross-tab
+write is never lost), a reference-stable frozen list snapshot, a server snapshot,
+and **write-before-invalidate** ordering so a failed persist leaves no phantom:
 
 - Versioned key `invoice-maker:invoices:v1`.
 - In-memory cache + `subscribe`/`getServerSnapshot` for React `useSyncExternalStore`.

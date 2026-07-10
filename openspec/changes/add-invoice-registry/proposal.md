@@ -15,7 +15,9 @@ in this slice; that is a follow-on.
 - `src/lib/storage/invoice-register.ts` — versioned localStorage register
   following the `clients.ts` / `supplier-profiles.ts` pattern (list/get/save/
   setStatus/delete, SSR guards, corrupt-store fallback, subscribe).
-- `src/lib/validation/invoice-record.ts` — zod schema for a stored record.
+- validation is INLINE in the storage module (hand-written type guards), matching
+  the `clients.ts` / `supplier-profiles.ts` pattern — **not** a separate zod module
+  (that first-sketch deliverable was dropped for consistency; see design D2 / tasks 3.2).
 - `deriveOverdue(record, todayIso)` — a pure, display-only derivation.
 
 ## Requirements delivered

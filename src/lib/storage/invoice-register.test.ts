@@ -165,6 +165,28 @@ describe("invoice-register storage", () => {
       expect(listInvoices()).toEqual([]);
     });
 
+    it("drops individual invalid records but keeps the valid ones", () => {
+      const valid = saveInvoice(buildInput({ invoiceNumber: "2026-009" }));
+      // Seed a well-formed store whose array mixes the valid record with junk:
+      // null, a non-object, and a record with an impossible calendar date.
+      storageMock.__store.set(
+        INVOICE_REGISTER_STORAGE_KEY,
+        JSON.stringify({
+          version: 1,
+          invoices: [
+            null,
+            "garbage",
+            { ...valid, id: "bad", paymentDeadlineIso: "2026-13-45" },
+            valid,
+          ],
+        })
+      );
+      __resetInvoiceCacheForTests();
+      const kept = listInvoices();
+      expect(kept).toHaveLength(1);
+      expect(kept[0]?.id).toBe(valid.id);
+    });
+
     it("removes a deleted invoice from storage", () => {
       const saved = saveInvoice(buildInput());
       expect(deleteInvoice(saved.id)).toBe(true);

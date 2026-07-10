@@ -88,6 +88,16 @@ spec scenarios; nothing invented.
 - FR-EXPORT-02
 - FR-EXPORT-03
 
+### S5 — `invoice-registry`
+
+First slice delivered through the full G4 loop with earned evidence (tests-first
+red→green, review-gate, `Slice:` trailer). Storage + domain-logic layer.
+
+- FR-REG-01 → stored statuses draft|sent|paid|cancelled
+- FR-REG-02 → derived overdue (display-only, never stored)
+- FR-REG-03 → issued snapshot immutability
+- TC-DATA-01 → browser persistence (shared with the directories)
+
 ### Post-MVP (owned, not shipped in course submission)
 
 - FR-EXPORT-04 → `export-share` (pdf gate)
