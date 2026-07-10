@@ -1,13 +1,13 @@
 # Capability: `banking`
 
-[← Capability map](../capability.md) · **Depends on:** [supplier-profile](supplier-profile.md) · **Unblocks:** [document-render](document-render.md), [form-input](form-input.md)
+[← Capability map](../capability.md) · **Depends on:** [supplier-profile](supplier-profile.md) ✅ · **Unblocks:** [document-render](document-render.md), [form-input](form-input.md)
 
 | Field | Value |
 | --- | --- |
 | Slice | S2 — Directories |
-| Order | #3c (after supplier-profile) |
+| Order | #3c (next up — supplier-profile shipped in PR #5) |
 | Owner | domain |
-| Gate status | not_started |
+| Gate status | not_started (unblocked 2026-07-10 — dependency satisfied) |
 | OpenSpec spec | [banking/spec.md](../../openspec/specs/banking/spec.md) |
 | OpenSpec change | `add-banking` |
 

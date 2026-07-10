@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { cloneElement, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -187,17 +187,20 @@ export function SupplierProfileForm({
   );
 }
 
-function Field({
-  label,
-  children,
-}: {
+type FieldProps = {
   label: string;
-  children: React.ReactNode;
-}) {
+  children: React.ReactElement<{ id?: string }>;
+};
+
+function Field({ label, children }: FieldProps) {
+  const id = useId();
+
   return (
     <div className="space-y-1.5">
-      <Label className="wf-label text-wf-text-2">{label}</Label>
-      {children}
+      <Label className="wf-label text-wf-text-2" htmlFor={id}>
+        {label}
+      </Label>
+      {cloneElement(children, { id })}
     </div>
   );
 }

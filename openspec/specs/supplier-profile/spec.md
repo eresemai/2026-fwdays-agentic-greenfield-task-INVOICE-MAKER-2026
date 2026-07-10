@@ -64,7 +64,7 @@ Supplier tax ID and IBAN values MUST NOT be hardcoded in the repository or compi
 
 #### Scenario: Empty install
 - **WHEN** a fresh install loads without user data
-- **THEN** no real tax IDs or IBANs appear in compiled JavaScript assets
+- **THEN** no real tax IDs or IBANs appear in compiled JavaScript assets and the profile list is empty
 
 #### Scenario: Build audit
 - **WHEN** the production client bundle is built from a clean checkout

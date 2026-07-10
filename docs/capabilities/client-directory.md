@@ -7,9 +7,9 @@
 | Slice | S2 — Directories |
 | Order | #3b (parallel with supplier-profile) |
 | Owner | ui |
-| Gate status | not_started |
+| Gate status | shipped ([PR #4](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/4), merged 2026-07-10) |
 | OpenSpec spec | [client-directory/spec.md](../../openspec/specs/client-directory/spec.md) |
-| OpenSpec change | `add-client-directory` |
+| OpenSpec change | `add-client-directory` (archived `2026-07-10-add-client-directory`) |
 
 ## Purpose
 
@@ -35,14 +35,14 @@ No numbered `FR-*` IDs. See OpenSpec spec scenarios.
 
 ## Verification
 
-- [ ] CRUD clients in UI
-- [ ] Select client on new invoice → fields prefilled
-- [ ] Edit client after issue → old invoice snapshot unchanged
+- [x] CRUD clients in UI (`/clients`, PR #4)
+- [ ] Select client on new invoice → fields prefilled (deferred — picker ships with form-input, S4)
+- [ ] Edit client after issue → old invoice snapshot unchanged (deferred — needs invoice-registry snapshots, S5)
 
 ## Done when
 
 - CRUD for clients in browser storage
-- Client picker prefills invoice form only
+- Client records expose invoice-form prefill fields (picker ships with form-input)
 
 ## After shipping
 

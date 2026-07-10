@@ -1,12 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ClientInput } from "@/types/client";
 import {
+  __resetClientsCacheForTests,
+  CLIENTS_STORAGE_KEY,
+  ClientNotFoundError,
+  ClientStorageError,
   ClientValidationError,
   clientToInvoiceCustomerFields,
   deleteClient,
   getClient,
   listClients,
   saveClient,
+  subscribeClients,
 } from "@/lib/storage/clients";
 
 function createLocalStorageMock() {
@@ -50,6 +55,7 @@ describe("clients storage", () => {
     });
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-07-10T10:00:00.000Z"));
+    __resetClientsCacheForTests();
   });
 
   afterEach(() => {
@@ -126,5 +132,78 @@ describe("clients storage", () => {
       customerPhone: client.phone,
       customerWebsite: client.website,
     });
+  });
+
+  it("falls back to an empty store when stored JSON is corrupt", () => {
+    window.localStorage.setItem(CLIENTS_STORAGE_KEY, "{not valid json");
+
+    expect(listClients()).toEqual([]);
+  });
+
+  it("drops invalid records from a version-1 store instead of crashing", () => {
+    const valid = {
+      id: "client-valid",
+      name: "Valid Client",
+      address: "вул. Хрещатик, 1, Київ",
+      email: "valid@example.com",
+      phone: "",
+      website: "",
+      createdAt: "2026-07-10T09:00:00.000Z",
+      updatedAt: "2026-07-10T09:00:00.000Z",
+    };
+    window.localStorage.setItem(
+      CLIENTS_STORAGE_KEY,
+      JSON.stringify({ version: 1, clients: [null, valid, { id: "", name: 7 }] })
+    );
+
+    expect(listClients()).toEqual([valid]);
+  });
+
+  it("treats an unknown store version as empty", () => {
+    window.localStorage.setItem(
+      CLIENTS_STORAGE_KEY,
+      JSON.stringify({ version: 2, clients: [{ id: "x", name: "X" }] })
+    );
+
+    expect(listClients()).toEqual([]);
+  });
+
+  it("throws ClientStorageError and does not notify listeners when persistence fails", () => {
+    vi.stubGlobal("window", {
+      localStorage: {
+        getItem: () => null,
+        setItem: () => {
+          throw new Error("QuotaExceededError");
+        },
+        removeItem: () => undefined,
+        clear: () => undefined,
+      },
+    });
+
+    const listener = vi.fn();
+    const unsubscribe = subscribeClients(listener);
+
+    expect(() => saveClient(buildClientInput())).toThrow(ClientStorageError);
+    expect(listener).not.toHaveBeenCalled();
+
+    unsubscribe();
+  });
+
+  it("throws ClientNotFoundError when saving with an id missing from the store", () => {
+    expect(() =>
+      saveClient(buildClientInput({ id: "missing-client-id" }))
+    ).toThrow(ClientNotFoundError);
+    expect(listClients()).toEqual([]);
+  });
+
+  it("returns a reference-stable snapshot until data changes", () => {
+    const first = listClients();
+    expect(listClients()).toBe(first);
+
+    saveClient(buildClientInput());
+
+    const second = listClients();
+    expect(second).not.toBe(first);
+    expect(listClients()).toBe(second);
   });
 });

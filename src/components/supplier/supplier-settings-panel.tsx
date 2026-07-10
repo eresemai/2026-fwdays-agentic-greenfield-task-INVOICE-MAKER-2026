@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { SupplierProfileDropdown } from "@/components/supplier/supplier-profile-dropdown";
 import { SupplierProfileForm } from "@/components/supplier/supplier-profile-form";
 import {
@@ -25,52 +25,41 @@ import {
 import {
   SupplierProfileStorageError,
   getActiveProfileId,
+  getServerActiveProfileId,
+  getServerProfilesSnapshot,
   listProfiles,
   removeProfile,
   saveProfile,
   setActiveProfile,
+  subscribeSupplierProfiles,
 } from "@/lib/storage/supplier-profiles";
 import type { SupplierProfileFormValues } from "@/components/supplier/supplier-profile-form";
-import type { SupplierProfile } from "@/types/supplier";
 
 type PanelMode = "create" | "edit";
 
 export function SupplierSettingsPanel() {
-  const [profiles, setProfiles] = useState<SupplierProfile[]>(() => listProfiles());
-  const [activeId, setActiveId] = useState<string | null>(() => getActiveProfileId());
-  const [mode, setMode] = useState<PanelMode>("create");
-  const [editingProfile, setEditingProfile] = useState<SupplierProfile | null>(
-    null
+  // Store-backed state: server snapshot renders the empty state, so
+  // server HTML and the first client render agree (no hydration mismatch).
+  const profiles = useSyncExternalStore(
+    subscribeSupplierProfiles,
+    listProfiles,
+    getServerProfilesSnapshot
   );
+  const activeId = useSyncExternalStore(
+    subscribeSupplierProfiles,
+    getActiveProfileId,
+    getServerActiveProfileId
+  );
+
+  // Local UI state only; profile data always derives from the store.
+  const [mode, setMode] = useState<PanelMode>("create");
+  const [editingProfileId, setEditingProfileId] = useState<string | null>(null);
   const [storageError, setStorageError] = useState<string | null>(null);
 
-  const refresh = useCallback(() => {
-    const nextProfiles = listProfiles();
-    const nextActiveId = getActiveProfileId();
-    setProfiles(nextProfiles);
-    setActiveId(nextActiveId);
-
-    if (mode === "edit" && editingProfile) {
-      const stillExists = nextProfiles.find(
-        (profile) => profile.id === editingProfile.id
-      );
-      setEditingProfile(stillExists ?? null);
-      if (!stillExists) {
-        setMode("create");
-      }
-    }
-  }, [editingProfile, mode]);
-
-  useEffect(() => {
-    function handleStorage(event: StorageEvent) {
-      if (event.key === null || event.key.includes("supplier-profiles")) {
-        refresh();
-      }
-    }
-
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, [refresh]);
+  const editingProfile =
+    profiles.find((profile) => profile.id === editingProfileId) ?? null;
+  const activeProfile =
+    profiles.find((profile) => profile.id === activeId) ?? null;
 
   function handleStorageFailure(error: unknown) {
     if (error instanceof SupplierProfileStorageError) {
@@ -83,11 +72,9 @@ export function SupplierSettingsPanel() {
   function handleSelectProfile(profileId: string) {
     try {
       setActiveProfile(profileId);
-      setActiveId(profileId);
+      setEditingProfileId(profileId);
+      setMode("edit");
       setStorageError(null);
-      const profile = listProfiles().find((item) => item.id === profileId) ?? null;
-      setEditingProfile(profile);
-      setMode(profile ? "edit" : "create");
     } catch (error) {
       handleStorageFailure(error);
     }
@@ -95,21 +82,21 @@ export function SupplierSettingsPanel() {
 
   function handleCreateClick() {
     setMode("create");
-    setEditingProfile(null);
+    setEditingProfileId(null);
     setStorageError(null);
   }
 
   function handleSave(values: SupplierProfileFormValues) {
     try {
+      // Saving never changes the active profile: activation is an explicit
+      // user action, and storage auto-activates the first-ever profile.
       const saved = saveProfile(
         mode === "edit" && editingProfile
           ? { ...values, id: editingProfile.id }
           : values
       );
-      setActiveProfile(saved.id);
-      refresh();
       setMode("edit");
-      setEditingProfile(saved);
+      setEditingProfileId(saved.id);
       setStorageError(null);
     } catch (error) {
       handleStorageFailure(error);
@@ -124,16 +111,12 @@ export function SupplierSettingsPanel() {
     try {
       removeProfile(editingProfile.id);
       setMode("create");
-      setEditingProfile(null);
-      refresh();
+      setEditingProfileId(null);
       setStorageError(null);
     } catch (error) {
       handleStorageFailure(error);
     }
   }
-
-  const activeProfile =
-    profiles.find((profile) => profile.id === activeId) ?? null;
 
   return (
     <div className="space-y-4">
@@ -176,7 +159,7 @@ export function SupplierSettingsPanel() {
               mode === "edit"
                 ? () => {
                     setMode("create");
-                    setEditingProfile(null);
+                    setEditingProfileId(null);
                   }
                 : undefined
             }
