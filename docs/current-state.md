@@ -9,7 +9,7 @@ Last updated: 2026-07-10 (UTC)
 
 | Field | Value |
 | --- | --- |
-| **Branch** | `main` @ `851b97a` |
+| **Branch** | `main` @ `a63c4a4` |
 | **Active capability** | S2 — `supplier-profile` / `client-directory` (parallel) |
 | **Active OpenSpec change** | — (`add-nace-catalog` + `add-invoice-calc` applied; archive pending) |
 | **Slice / gate** | S0 + S1 **shipped**; S2 directories unblocked |
@@ -40,6 +40,7 @@ Source: `openspec/capability-map.yaml` · order: [capability.md](capability.md)
 
 | Date | Commit / work | Outcome |
 | --- | --- | --- |
+| 2026-07-10 | `a63c4a4` | S1 hardening — adversarial review fixes (matcher anchoring + NFC, calc guards); 115 tests |
 | 2026-07-10 | `851b97a` | S1 `nace-catalog` shipped — seed catalog + keyword matcher |
 | 2026-07-10 | `3366a4a` | S1 `invoice-calc` shipped — money, numbering, dates, purpose |
 | 2026-07-10 | `a1effff` | Vitest harness (TC-STACK-06); 104 tests green |
@@ -86,6 +87,7 @@ Append-only (newest last).
 | Date (UTC) | Session | Action | Outcome |
 | --- | --- | --- | --- |
 | 2026-07-10 | Agent | Docs refresh + spec sync | S0/S1 marked shipped; PR #50 body updated |
+| 2026-07-10 | OpenSpec | S1 adversarial review + hardening (`a63c4a4`) | Workflow: 5 lenses × 2 refuters, 13 raw → 10 confirmed (2 major in matcher). Fixed: NFC + prefix-anchored token matching (Демонтаж/аналогових/3600 → none; NFD й/ї works), prepaymentSplit overflow guard + DEFAULT_PREPAYMENT_PERCENT=50, computeDeadline ≤ 9999 bound + toIso year pad, duplicate-number message names real next free number. 115 tests green |
 | 2026-07-10 | OpenSpec | S1 `add-nace-catalog` + `add-invoice-calc` applied | `src/lib/nace/`, `src/lib/invoice-calc/`; 104 Vitest tests |
 | 2026-07-10 | OpenSpec | S0 `add-shell` archived; PR #3 merged | Responsive shell shipped |
 | 2026-07-10 | Wayfinder | Tickets 06, 07, 15 resolved | Money model + numbering + spec audit |
