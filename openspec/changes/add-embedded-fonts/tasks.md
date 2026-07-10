@@ -40,8 +40,10 @@
 - [x] 4.2 `docs/requirements.md`: FR-TPL-05 `accepted` → `shipped`
 - [x] 4.3 `docs/capabilities/document-render.md`: remove the Known-gap section,
   check the external-dependency box, record the size cost and the licence
-- [x] 4.4 Note in the wayfinder-05 blocker (`docs/current-state.md`) that font
-  availability is now solved; `Type 3` glyph embedding remains open
+- [x] 4.4 Note in the wayfinder-05 blocker that font availability is now solved
+  and `Type 3` glyph embedding remains open. Done directly on `main`
+  (`docs/current-state.md`, commit `c0069d1`), not in this branch — the handoff
+  file is shared across the PR stack and would conflict on every rebase.
 
 ## 5. Ship
 
