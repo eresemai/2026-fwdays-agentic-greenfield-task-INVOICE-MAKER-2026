@@ -7,9 +7,9 @@
 | Slice | S2 — Directories |
 | Order | #3a |
 | Owner | ui |
-| Gate status | not_started |
+| Gate status | shipped ([PR #5](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/5), merged 2026-07-10) |
 | OpenSpec spec | [supplier-profile/spec.md](../../openspec/specs/supplier-profile/spec.md) |
-| OpenSpec change | `add-supplier-profile` |
+| OpenSpec change | `add-supplier-profile` (archived `2026-07-10-add-supplier-profile`) |
 
 ## Purpose
 
@@ -20,7 +20,7 @@ Multiple profiles without authentication — not multi-tenancy.
 
 | ID | Description | Status |
 | --- | --- | --- |
-| FR-BANK-02 | Name/address EN+UA, tax ID, bank, SWIFT, USD+EUR IBANs | proposed |
+| FR-BANK-02 | Name/address EN+UA, tax ID, bank, SWIFT, USD+EUR IBANs | shipped |
 | NFR-SEC-01 | No real tax ID/IBAN in client bundle | accepted |
 
 OpenSpec scenarios: save/edit/delete; switch profile; empty install has no secrets.
@@ -36,10 +36,10 @@ OpenSpec scenarios: save/edit/delete; switch profile; empty install has no secre
 
 ## Verification
 
-- [ ] Create profile → appears in dropdown
-- [ ] Reload browser → data persists (localStorage/IndexedDB)
-- [ ] `grep` built bundle: no hardcoded IBAN/tax IDs
-- [ ] Demo seed data clearly fake if shipped in repo
+- [x] Create profile → appears in dropdown (PR #5)
+- [x] Reload browser → data persists (localStorage, versioned key)
+- [x] `grep` built bundle: no hardcoded IBAN/tax IDs
+- [x] Demo seed data clearly fake if shipped in repo (no seed data shipped)
 
 ## Done when
 

@@ -36,7 +36,7 @@ npm run capability:check -- --capability <id>
 
 ```bash
 npm run capability:check -- --capability banking
-npm run test   # 129 tests, Vitest
+npm run test   # Vitest (S1 domain + S2 storage suites)
 ```
 
 ### S2 complete ✅
@@ -99,7 +99,7 @@ Work top → bottom. Within a slice, rows without mutual dependency can run **in
 | --- | --- | --- | --- | --- |
 | 4 | `document-render` | domain | not_started | [detail](capabilities/document-render.md) |
 
-Blocked until S1 + `banking` shipped.
+Blocked until `banking` ships (S1 ✅, S2 directories ✅).
 
 ### S4 — Create flow (demo milestone)
 
@@ -149,7 +149,7 @@ Blocked until every **Depends on** row is `shipped` in `capability-map.yaml`.
 ```
 shell ✅
   → nace-catalog ✅ ∥ invoice-calc ✅
-  → supplier-profile ✅ ∥ client-directory → banking
+  → supplier-profile ✅ ∥ client-directory ✅ → banking
   → document-render
   → form-input → export-share (preview)
 ```
@@ -166,7 +166,7 @@ S0  shell ── shipped ✅ ─────────────────
 S1  nace-catalog ✅   invoice-calc ✅
          │                  │
          ▼                  │
-S2  supplier-profile ✅ ──► banking  ← active   client-directory ✅
+S2  supplier-profile ✅ ──► banking  ← next     client-directory ✅
          │                  │                          │
          └────────┬─────────┴─────────────┬────────────┘
                   ▼                       │
@@ -227,8 +227,8 @@ S6           export-share (pdf) + invoice-edit
 
 | Priority | Action | Why |
 | --- | --- | --- |
-| 1 | Merge [PR #4](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/4) → `/opsx:archive add-client-directory` | Completes S2 directories on `main` |
-| 2 | `/opsx:archive add-supplier-profile` on `main` if not done | Close lane C OpenSpec change |
-| 3 | `/opsx:propose add-banking` | S2 next; unblocks `document-render` |
-| 4 | `/opsx:propose add-document-render` after `banking` | Template fill → HTML output |
-| 5 | Wayfinder 05 (human) | Prototype PDF before S6 pdf gate |
+| 1 | `/opsx:propose add-banking` | S2 step 3c; unblocks `document-render` |
+| 2 | `/opsx:propose add-document-render` after `banking` | Template fill → HTML output |
+| 3 | Wayfinder 05 (human) | Prototype PDF before S6 pdf gate |
+
+PRs [#4](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/4) and [#5](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/5) are merged and both S2 changes are archived (see §0).
