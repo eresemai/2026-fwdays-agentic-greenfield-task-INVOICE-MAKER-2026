@@ -22,7 +22,7 @@
 
 Video: _to be added after recording_
 
-## Current progress (2026-07-10, `main` @ `851b97a`)
+## Current progress (2026-07-10, `main` @ `764b71d`)
 
 | Area | Status |
 | --- | --- |
@@ -30,16 +30,17 @@ Video: _to be added after recording_
 | **Responsive shell (S0)** | ✅ `shell` shipped — PR #3, `add-shell` archived (`FR-SHELL-01..03`) |
 | **Health API** | ✅ `GET /api/health` (`FR-SHELL-03`) |
 | **Domain core (S1)** | ✅ `nace-catalog` + `invoice-calc` shipped — `src/lib/nace/`, `src/lib/invoice-calc/` |
-| **Vitest (TC-STACK-06)** | ✅ 104 tests green (`npm run test`) |
-| **OpenSpec specs** | ✅ 11 capabilities; S0/S1 deltas synced to `openspec/specs/` |
+| **Directories (S2)** | ✅ `supplier-profile` (PR #5) + `client-directory` (PR #4) shipped — settings + clients UI, browser storage CRUD |
+| **Vitest (TC-STACK-06)** | ✅ 129 tests green (`npm run test`) |
+| **OpenSpec specs** | ✅ 11 capabilities; S0–S2 deltas synced to `openspec/specs/`; **5 changes archived** |
 | **Capability roadmap** | ✅ `openspec/capability-map.yaml`, `docs/capability.md`, `docs/capabilities/` |
 | **Gate tooling** | ✅ `npm run capability:check` / `capability:list` |
 | **Agent handoff** | ✅ `docs/current-state.md` (session resume between agents) |
 | **Wayfinder planning** | ✅ Tickets 01–04, 06, 07, 15 resolved; 05, 11, 16 open |
-| **Active slice** | 🔄 **S2** — `supplier-profile` + `client-directory` (parallel) |
+| **Active slice** | 🔄 **S2 remainder** — `banking` next (currency → IBAN from active supplier profile) |
 | **End-to-end invoice flow** | ⏳ Demo milestone M4 (S4: form → live HTML preview) |
 
-**Recent commits:** S1 domain libs (`nace-catalog`, `invoice-calc`), Vitest harness, S0 responsive shell (PR #3), capability map + docs, wayfinder spec-coherence, CI auto-sync to this PR.
+**Recent commits:** S2 directories (PR #4 `client-directory`, PR #5 `supplier-profile`), S1 domain libs, Vitest harness (129 tests), S0 responsive shell (PR #3), 5 OpenSpec changes archived, CI auto-sync to this PR.
 
 ## Agentic Engineering practices applied
 
@@ -76,22 +77,24 @@ Honest status for each course practice. Open **TODO** items will be completed be
 
 ---
 
-### 2. Specs first (SDD) — ✅ applied (S0 + S1 shipped)
+### 2. Specs first (SDD) — ✅ applied (S0 + S1 + S2 directories shipped)
 
 - **OpenSpec** living specs for all 11 MVP capabilities.
 - **Capability map** with slice order S0→S6 and dependency gates (`npm run capability:check`).
 - Workflow: `/opsx:propose` → design + tasks + delta specs → `/opsx:apply` → `/opsx:sync` → `/opsx:archive`.
-- **Shipped through OpenSpec:** S0 `shell` (PR #3), S1 `nace-catalog` + `invoice-calc` (`src/lib/`).
-- Traceability: `FR-*` → OpenSpec scenario → `src/lib/` implementation + Vitest.
+- **Shipped through OpenSpec:** S0 `shell` (PR #3), S1 `nace-catalog` + `invoice-calc` (`src/lib/`), S2 `supplier-profile` (PR #5) + `client-directory` (PR #4).
+- **5 archived changes** in `openspec/changes/archive/` (`add-shell`, `add-nace-catalog`, `add-invoice-calc`, `add-supplier-profile`, `add-client-directory`).
+- Traceability: `FR-*` → OpenSpec scenario → implementation + Vitest.
 - `openspec validate --strict` passes; wayfinder ticket **15** resolved (migration audit).
 
 **TODO before final submission:**
 
 - [x] Ship **S0 `shell`** through full OpenSpec change (`add-shell` archived).
 - [x] Ship **S1** domain core (`nace-catalog`, `invoice-calc`) with Vitest.
+- [x] Ship **S2 directories** (`supplier-profile`, `client-directory`) through OpenSpec changes.
 - [x] Close wayfinder tickets **06** (money model) and **07** (invoice number).
+- [ ] Ship **S2 `banking`**, then S3–S4 capabilities through OpenSpec changes.
 - [ ] Reach demo milestone **M4** (form → live HTML preview).
-- [ ] Ship S2–S4 capabilities through OpenSpec changes.
 
 ---
 
@@ -100,7 +103,7 @@ Honest status for each course practice. Open **TODO** items will be completed be
 **Done:**
 
 - Gates: `npm run typecheck`, `npm run lint`, `npm run build`.
-- **Vitest:** `npm run test` — 104 tests (`TC-STACK-06`) for `src/lib/nace/` and `src/lib/invoice-calc/`.
+- **Vitest:** `npm run test` — 129 tests (`TC-STACK-06`) for `src/lib/` (nace, invoice-calc) and S2 storage CRUD (`supplier-profile`, `client-directory`).
 - **Capability gates:** `npm run capability:check -- --capability <id>`.
 - `GET /api/health` contract in `openspec/specs/shell/spec.md`.
 - **Responsive shell:** headless Chrome verified 375 px / 768 px — no overflow (S0).
@@ -225,7 +228,8 @@ https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-20
 - [x] Agentic Engineering practices described (with honest TODOs)
 - [ ] Working end-to-end result (target: M4 demo milestone)
 - [ ] Loop engineering — at least one slice through an autonomous loop
-- [x] Vitest + test-first for `src/lib/` (S1: 104 tests)
+- [x] Vitest + test-first for `src/lib/` and storage (129 tests)
 - [x] Maker ≠ checker — documented separate review pass (fork PR #2)
 - [x] S0 `shell` shipped (responsive UI, health API, OpenSpec archived)
 - [x] S1 domain core shipped (`nace-catalog`, `invoice-calc`)
+- [x] S2 directories shipped (`supplier-profile` PR #5, `client-directory` PR #4)
