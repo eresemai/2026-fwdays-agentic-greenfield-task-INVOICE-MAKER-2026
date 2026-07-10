@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "capability:check": "node scripts/check-capability-gates.mjs",
+    "template:sync": "node scripts/sync-template.mjs",
     "capability:list": "node scripts/check-capability-gates.mjs --list"
   },
   "dependencies": {
