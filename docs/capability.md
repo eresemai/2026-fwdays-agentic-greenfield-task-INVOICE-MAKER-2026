@@ -29,7 +29,7 @@ npm run capability:check -- --capability <id>
 | **Previously shipped** | S1 domain core; S0 `shell` (PR #3) |
 | **Active slice** | S3 `document-render` |
 | **OpenSpec ready to propose** | `/opsx:propose add-document-render` |
-| **Archived changes** | 5 in `openspec/changes/archive/` (shell, S1×2, S2×2) |
+| **Archived changes** | 6 in `openspec/changes/archive/` (shell, S1×2, S2×3) |
 | **Demo target** | M4 — form → live HTML preview (S4) |
 
 **Unblocked now:** `document-render` (S3)
@@ -45,9 +45,9 @@ npm run test   # Vitest (S1 domain + S2 storage & banking suites)
 | --- | --- | --- |
 | `supplier-profile` | #5 merged | `2026-07-10-add-supplier-profile` |
 | `client-directory` | #4 merged | `2026-07-10-add-client-directory` |
-| `banking` | #7 open | `add-banking` (archive after merge) |
+| `banking` | #7 merged | `2026-07-10-add-banking` |
 
-Next: merge PR #7 → `/opsx:archive add-banking` → `/opsx:propose add-document-render` (S3).
+Next: `/opsx:propose add-document-render` (S3).
 
 ### Resolved decisions (no longer gate calc)
 
@@ -203,7 +203,7 @@ S6           export-share (pdf) + invoice-edit
 | --- | --- | --- | --- |
 | M0 | S0 | Shell + health | **done** |
 | M1 | S1 | `src/lib/` + Vitest | **done** |
-| M2 | S2 | Directories | **done** |
+| M2 | S2 | Directories + banking | **done** |
 | M3 | S3 | Rendered HTML | **unblocked** |
 | **M4** | **S4** | **Form → preview** | blocked |
 | M5 | S5 | Invoice register | blocked |
@@ -226,8 +226,8 @@ S6           export-share (pdf) + invoice-edit
 
 | Priority | Action | Why |
 | --- | --- | --- |
-| 1 | Merge [PR #7](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/7) → `/opsx:archive add-banking` | Lands S2 banking on `main` |
-| 2 | `/opsx:propose add-document-render` | S3 unblocked once banking merges |
-| 3 | Wayfinder 05 (human) | Prototype PDF before S6 pdf gate |
+| 1 | `/opsx:propose add-document-render` | S3 unblocked — banking shipped (PR #7) |
+| 2 | Wayfinder 05 (human) | Prototype PDF before S6 pdf gate |
+| 3 | Update mentor PR #50 body | Reflect S2 complete + 161 tests |
 
-PRs [#4](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/4) and [#5](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/5) are merged and both S2 directory changes are archived (see §0). PR #6 (S2 hardening) merged on `main`.
+PRs [#4](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/4), [#5](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/5), [#6](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/6), and [#7](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/7) are merged; all S2 OpenSpec changes archived (see §0).
