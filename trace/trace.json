@@ -33,6 +33,10 @@
     "FR-EXPORT-05": "MVP",
     "FR-EDIT-01": "MVP",
     "FR-EDIT-02": "MVP",
+    "FR-CLIENT-01": "MVP",
+    "FR-CLIENT-02": "MVP",
+    "FR-CLIENT-03": "MVP",
+    "FR-CLIENT-04": "MVP",
     "FR-NACE-06": "MVP",
     "FR-INPUT-03": "MVP",
     "NFR-PERF-01": "MVP",
@@ -404,6 +408,49 @@
       "recordings": []
     },
     {
+      "id": "FR-CLIENT-01",
+      "specs": [
+        "openspec/specs/client-directory/spec.md"
+      ],
+      "planned": true,
+      "tests": [
+        "src/lib/storage/clients.test.ts",
+        "src/lib/storage/clients.test.ts"
+      ],
+      "recordings": []
+    },
+    {
+      "id": "FR-CLIENT-02",
+      "specs": [
+        "openspec/specs/client-directory/spec.md"
+      ],
+      "planned": true,
+      "tests": [
+        "src/lib/storage/clients.test.ts"
+      ],
+      "recordings": []
+    },
+    {
+      "id": "FR-CLIENT-03",
+      "specs": [
+        "openspec/specs/client-directory/spec.md"
+      ],
+      "planned": true,
+      "tests": [
+        "src/lib/storage/clients.test.ts"
+      ],
+      "recordings": []
+    },
+    {
+      "id": "FR-CLIENT-04",
+      "specs": [
+        "openspec/specs/client-directory/spec.md"
+      ],
+      "planned": true,
+      "tests": [],
+      "recordings": []
+    },
+    {
       "id": "FR-NACE-06",
       "specs": [
         "openspec/specs/nace-catalog/spec.md"
@@ -471,6 +518,10 @@
     {
       "check": "test-trace",
       "msg": "FR-EDIT-02 has no test annotated \"@trace FR-EDIT-02\""
+    },
+    {
+      "check": "test-trace",
+      "msg": "FR-CLIENT-04 has no test annotated \"@trace FR-CLIENT-04\""
     },
     {
       "check": "test-trace",
@@ -610,23 +661,27 @@
     },
     {
       "check": "recording-evidence",
+      "msg": "FR-CLIENT-01 is not referenced by any recording manifest under docs/qa/"
+    },
+    {
+      "check": "recording-evidence",
+      "msg": "FR-CLIENT-02 is not referenced by any recording manifest under docs/qa/"
+    },
+    {
+      "check": "recording-evidence",
+      "msg": "FR-CLIENT-03 is not referenced by any recording manifest under docs/qa/"
+    },
+    {
+      "check": "recording-evidence",
+      "msg": "FR-CLIENT-04 is not referenced by any recording manifest under docs/qa/"
+    },
+    {
+      "check": "recording-evidence",
       "msg": "FR-NACE-06 is not referenced by any recording manifest under docs/qa/"
     },
     {
       "check": "recording-evidence",
       "msg": "FR-INPUT-03 is not referenced by any recording manifest under docs/qa/"
-    },
-    {
-      "check": "active-changes",
-      "msg": "active change \"improve-PD-3\" is not archived"
-    },
-    {
-      "check": "active-changes",
-      "msg": "active change \"improve-PD-7\" is not archived"
-    },
-    {
-      "check": "active-changes",
-      "msg": "active change \"improve-PD-9\" is not archived"
     }
   ]
 }

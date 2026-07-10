@@ -91,6 +91,10 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | FR-EXPORT-05 | export-share | proposed |
 | FR-EDIT-01 | invoice-edit | proposed |
 | FR-EDIT-02 | invoice-edit | proposed |
+| FR-CLIENT-01 | client-directory | shipped |
+| FR-CLIENT-02 | client-directory | shipped |
+| FR-CLIENT-03 | client-directory | shipped |
+| FR-CLIENT-04 | client-directory | proposed |
 
 ### Dropped
 

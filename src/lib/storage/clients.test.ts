@@ -63,6 +63,10 @@ describe("clients storage", () => {
     vi.unstubAllGlobals();
   });
 
+  // @trace FR-CLIENT-01, FR-CLIENT-02
+  // `getClient(id)).toEqual(created)` is a strict round-trip over every stored
+  // field (required and optional), and the body exercises create/read/update/
+  // delete against browser storage.
   it("creates, reads, updates, and deletes clients", () => {
     const created = saveClient(buildClientInput());
     expect(created.id).toBe("client-test-id-1");
@@ -105,6 +109,7 @@ describe("clients storage", () => {
     ]);
   });
 
+  // @trace FR-CLIENT-01
   it("rejects saves without required fields", () => {
     expect(() => saveClient(buildClientInput({ name: "   " }))).toThrow(
       ClientValidationError
@@ -117,6 +122,7 @@ describe("clients storage", () => {
     );
   });
 
+  // @trace FR-CLIENT-03
   it("maps client fields to invoice customer placeholders", () => {
     const client = saveClient(
       buildClientInput({

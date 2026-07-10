@@ -49,6 +49,19 @@ and [requirements.md](requirements.md).
 
 - FR-BANK-02
 
+### S2 — `client-directory`
+
+Numbered 2026-07-10. The capability shipped with a spec, 10 passing tests and
+real code, but owned **no FR ids**, so it sat outside the trace chain entirely
+and could have regressed without any gate noticing. Ids derived from its own
+spec scenarios; nothing invented.
+
+- FR-CLIENT-01
+- FR-CLIENT-02
+- FR-CLIENT-03
+- FR-CLIENT-04 (`proposed` — the "issued invoice unchanged" scenario cannot be
+  verified until `invoice-registry` (S5) exists to hold the snapshots)
+
 ### S2 — `banking`
 
 - FR-BANK-01
