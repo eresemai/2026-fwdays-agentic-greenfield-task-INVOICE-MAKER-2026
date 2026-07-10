@@ -25,29 +25,30 @@ npm run capability:check -- --capability <id>
 
 | Field | Value |
 | --- | --- |
-| **Last shipped** | S2 `banking` (`feat/banking`); before it `supplier-profile` + `client-directory` (PR #4, #5) |
-| **Previously shipped** | S1 domain core; S0 `shell` (PR #3) |
-| **Active slice** | S3 `document-render` |
-| **OpenSpec ready to propose** | `/opsx:propose add-document-render` |
+| **Last shipped** | S3 `document-render` (`feat/document-render`); before it S2 `banking` (PR #7) |
+| **Previously shipped** | S2 directories (PR #4, #5); S1 domain core; S0 `shell` (PR #3) |
+| **Active slice** | S4 `form-input` → `export-share` (preview) — **demo milestone** |
+| **OpenSpec ready to propose** | `/opsx:propose add-form-input` |
 | **Archived changes** | 6 in `openspec/changes/archive/` (shell, S1×2, S2×3) |
 | **Demo target** | M4 — form → live HTML preview (S4) |
 
-**Unblocked now:** `document-render` (S3)
+**Unblocked now:** `form-input` (S4)
 
 ```bash
-npm run capability:check -- --capability document-render
-npm run test   # Vitest (S1 domain + S2 storage & banking suites)
+npm run capability:check -- --capability form-input
+npm run test   # Vitest (domain + storage + banking + render suites)
 ```
 
-### S2 complete ✅
+### S2 + S3 complete ✅
 
 | Capability | PR | OpenSpec archive |
 | --- | --- | --- |
 | `supplier-profile` | #5 merged | `2026-07-10-add-supplier-profile` |
 | `client-directory` | #4 merged | `2026-07-10-add-client-directory` |
 | `banking` | #7 merged | `2026-07-10-add-banking` |
+| `document-render` | `feat/document-render` | archive after merge |
 
-Next: `/opsx:propose add-document-render` (S3).
+Next: `/opsx:propose add-form-input` (S4).
 
 ### Resolved decisions (no longer gate calc)
 
@@ -92,15 +93,13 @@ Work top → bottom. Within a slice, rows without mutual dependency can run **in
 | 3b | `client-directory` | ui | **shipped** | shell ✅ | [detail](capabilities/client-directory.md) |
 | 3c | `banking` | domain | **shipped** | supplier-profile ✅ | [detail](capabilities/banking.md) |
 
-### S3 — Render ← **next**
+### S3 — Render ✅
 
 | Step | Capability | Owner | Status | Doc |
 | --- | --- | --- | --- | --- |
-| 4 | `document-render` | domain | not_started | [detail](capabilities/document-render.md) |
+| 4 | `document-render` | domain | **shipped** | [detail](capabilities/document-render.md) |
 
-All dependencies shipped (S1 ✅ + `banking` ✅) — unblocked.
-
-### S4 — Create flow (demo milestone)
+### S4 — Create flow (demo milestone) ← **next**
 
 | Step | Capability | Owner | Status | Doc |
 | --- | --- | --- | --- | --- |
@@ -169,10 +168,10 @@ S2  supplier-profile ✅ ──► banking ✅          client-directory ✅
          │                  │                          │
          └────────┬─────────┴─────────────┬────────────┘
                   ▼                       │
-S3           document-render ◄────────────┘  ← next
+S3           document-render ✅ ◄──────────┘
                   │
                   ▼
-S4           form-input ──► export-share (preview)
+S4           form-input ──► export-share (preview)   ← next
                   │
                   ▼
 S5           invoice-registry
@@ -204,8 +203,8 @@ S6           export-share (pdf) + invoice-edit
 | M0 | S0 | Shell + health | **done** |
 | M1 | S1 | `src/lib/` + Vitest | **done** |
 | M2 | S2 | Directories + banking | **done** |
-| M3 | S3 | Rendered HTML | **unblocked** |
-| **M4** | **S4** | **Form → preview** | blocked |
+| M3 | S3 | Rendered HTML | **done** |
+| **M4** | **S4** | **Form → preview** | **unblocked** |
 | M5 | S5 | Invoice register | blocked |
 | M6 | S6 | PDF + edit | blocked |
 
@@ -226,8 +225,8 @@ S6           export-share (pdf) + invoice-edit
 
 | Priority | Action | Why |
 | --- | --- | --- |
-| 1 | `/opsx:propose add-document-render` | S3 unblocked — banking shipped (PR #7) |
-| 2 | Wayfinder 05 (human) | Prototype PDF before S6 pdf gate |
-| 3 | Update mentor PR #50 body | Reflect S2 complete + 161 tests |
+| 1 | `/opsx:propose add-form-input` | S4 unblocked — the M4 demo milestone |
+| 2 | Wayfinder 05 (human) | Prototype PDF; note the template's Google Fonts `@import` will not resolve offline in headless Chromium |
+| 3 | Update mentor PR #50 body | Reflect S3 complete + 193 tests |
 
 PRs [#4](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/4), [#5](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/5), [#6](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/6), and [#7](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/7) are merged; all S2 OpenSpec changes archived (see §0).

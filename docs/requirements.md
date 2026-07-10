@@ -79,11 +79,11 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | FR-BANK-01 | banking | proposed |
 | FR-BANK-02 | supplier-profile | shipped |
 | FR-BANK-03 | banking | proposed |
-| FR-TPL-01 | document-render | proposed |
-| FR-TPL-02 | document-render | proposed |
-| FR-TPL-03 | document-render | proposed |
-| FR-TPL-04 | document-render | proposed |
-| FR-TPL-05 | document-render | proposed |
+| FR-TPL-01 | document-render | shipped |
+| FR-TPL-02 | document-render | shipped |
+| FR-TPL-03 | document-render | shipped |
+| FR-TPL-04 | document-render | shipped |
+| FR-TPL-05 | document-render | accepted |
 | FR-EXPORT-01 | export-share | proposed |
 | FR-EXPORT-02 | export-share | proposed |
 | FR-EXPORT-03 | export-share | proposed |
@@ -107,7 +107,7 @@ Expanded scope per capability: **[capabilities/](capabilities/)**.
 | ID | Primary capability | Status |
 | --- | --- | --- |
 | NFR-PERF-01 | shell | accepted |
-| NFR-PERF-02 | document-render | proposed |
+| NFR-PERF-02 | document-render | shipped |
 | NFR-A11Y-01 | form-input | proposed |
 | NFR-I18N-01 | shell | accepted |
 | NFR-SEC-01 | supplier-profile | accepted |
