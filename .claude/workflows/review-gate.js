@@ -51,20 +51,28 @@ const diffInstruction = baseRef
   ? `Review the changes in \`git diff ${baseRef}..${headRef}\` (run that command yourself; also read surrounding context of changed files).`
   : 'Review the entire current codebase (use AGENTS.md and openspec/ to scope what matters).'
 
+// PD-15: for a SLICE review (baseRef set), the dependency audit is scoped to
+// deps the slice CHANGED — a pre-existing transitive advisory in an UNCHANGED
+// dependency is a whole-tree issue, not a slice defect, and must not block the
+// slice's clean review.
+const auditScope = baseRef
+  ? `Dependency audit is SLICE-SCOPED: run \`git diff ${baseRef}..${headRef} -- package.json package-lock.json\` first. Report a dependency/advisory finding ONLY if the slice added or bumped the dependency it stems from. A pre-existing transitive advisory in a dependency this slice did not touch (e.g. a bundled sub-dependency of an unchanged framework) is OUT OF SCOPE for a slice review — do not report it.`
+  : 'Dependency audit covers the whole tree (npm audit).'
+
 const DIMENSIONS = [
   {
     key: 'correctness',
-    agentType: 'code-reviewer',
+    agentType: 'project-factory:code-reviewer',
     prompt: `${diffInstruction}\nScope: ${scope}. ${focus}\nReview for correctness, error handling (any user input path that can throw raw -> 500, silent external-call failures, stale uncontrolled form state), framework-version correctness, data integrity, and maintainability. Return structured findings only.`,
   },
   {
     key: 'security',
-    agentType: 'security-reviewer',
-    prompt: `${diffInstruction}\nScope: ${scope}. ${focus}\nFull security checklist: authz matrix (server-side enforcement, IDOR on id-fetched routes, tenant scoping), auth/session handling, injection (SQL/HTML/CSV/path), secrets hygiene, dependency audit, abuse resistance (mass assignment, rate limits). Return structured findings only.`,
+    agentType: 'project-factory:security-reviewer',
+    prompt: `${diffInstruction}\nScope: ${scope}. ${focus}\nFull security checklist: authz matrix (server-side enforcement, IDOR on id-fetched routes, tenant scoping), auth/session handling, injection (SQL/HTML/CSV/path), secrets hygiene, abuse resistance (mass assignment, rate limits). ${auditScope} Return structured findings only.`,
   },
   {
     key: 'spec-compliance',
-    agentType: 'spec-compliance-auditor',
+    agentType: 'project-factory:spec-compliance-auditor',
     prompt: `${diffInstruction}\nScope: ${scope}. ${focus}\nAudit the implementation against its OpenSpec requirements and scenarios: missing/partial/contradicted scenarios, undocumented scope drift, ticked tasks without artifacts, FR/NFR coverage. Return structured findings only.`,
   },
   {
@@ -97,10 +105,19 @@ for (const f of found.filter(Boolean).flat()) {
 log(`${deduped.length} unique findings across ${DIMENSIONS.length} dimensions`)
 
 phase('Verify')
+// Verifier lenses. `args.thorough` (or a global/whole-tree review) uses BOTH the
+// correctness and exploitability lenses; the default is the single correctness
+// lens — enough to refute a wrong finding, at roughly half the cost, which fits
+// small logic slices. A finding survives only if NO lens refutes it.
+const ALL_LENSES = [
+  'correctness — is the claimed mechanism actually wrong in this code?',
+  'exploitability/reproducibility — can the claimed problem actually occur for a real user or attacker?',
+]
+const lenses = args?.thorough || !baseRef ? ALL_LENSES : ALL_LENSES.slice(0, 1)
 const verified = await parallel(
   deduped.map((f) => () =>
     parallel(
-      ['correctness — is the claimed mechanism actually wrong in this code?', 'exploitability/reproducibility — can the claimed problem actually occur for a real user or attacker?'].map(
+      lenses.map(
         (lens) => () =>
           agent(
             `Adversarially verify this review finding through the lens of ${lens}\n\nFinding: ${JSON.stringify(f)}\n\nRead the actual code at the cited location and its callers. Try hard to REFUTE the finding (wrong file, guarded elsewhere, unreachable path, framework already handles it). Default to refuted=true if you cannot positively confirm the mechanism.`,
@@ -110,7 +127,10 @@ const verified = await parallel(
     ).then((votes) => {
       const valid = votes.filter(Boolean)
       const refutes = valid.filter((v) => v.refuted).length
-      return { ...f, verdict: refutes >= 2 ? 'rejected' : refutes === 1 ? 'contested' : 'confirmed', verifierNotes: valid.map((v) => v.reasoning) }
+      // Any refutation drops a finding below "confirmed": with one lens a refute
+      // rejects it; with two, one refute contests and two reject.
+      const verdict = refutes >= lenses.length ? 'rejected' : refutes > 0 ? 'contested' : 'confirmed'
+      return { ...f, verdict, verifierNotes: valid.map((v) => v.reasoning) }
     }),
   ),
 )

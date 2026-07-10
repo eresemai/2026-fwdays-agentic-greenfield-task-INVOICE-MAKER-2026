@@ -1,9 +1,9 @@
 {
-  "createdAt": "2026-07-10T17:08:45.985Z",
-  "gitHead": "df5d135f068d5fa73af9969455c68a91b0d17d7e",
+  "createdAt": "2026-07-10T18:22:59.277Z",
+  "gitHead": "d3b7c89861269f27189469dc2323a9552aab17ef",
   "files": {
     ".claude/workflows/eval-suite.js": "f93c99d868b812cfa7412927f52b62d1042525396a9d0265f16cfe435b9c6098",
-    ".claude/workflows/review-gate.js": "7295d8e94ba347213120b9d190b9ebbb88dee373173cfc7daba2114b726ca76b",
+    ".claude/workflows/review-gate.js": "56f391a77df6237f9ef241789ec9d9c7630ac539ce0613b15d0139eecb8aa708",
     ".claude/workflows/spec-pipeline.js": "00c689d129ecf8a9e6603d08fd1054976e2caea97a8929980d4fe3c3102fa3a3",
     ".claude/workflows/trajectory-eval.js": "ea229b3a57f6e0723c27e9f3148fdd5df17181225349d8b0770dc346efe47715",
     ".claude/workflows/uat-triage.js": "bcad8666cf3358fa37ece9c6c5096281520f516470675a9aabd8361cbdf45ad2",
@@ -46,6 +46,7 @@
     "improve-PD-12 (Refs: PD-12): check-traceability's @trace parser is ANCHORED to the start of a comment. Unanchored it credited any mention: a `// No @trace FR-EXPORT-02: this test cannot prove it` disclaimer re-credited four refuted requirements, and a fixture under tests/ credited the real FR-CALC-01. Executed red->green: tests/check-traceability-anchor.test.mjs 2/4 -> 4/4; traced count held at 20/34; pd-3 7/7 and pd-9 6/6 unchanged. The anchor test is wired into CI Gate self-tests.",
     "improve-PD-1 (Refs: PD-1): check-traceability.mjs and check-acceptance-methods.mjs both learn that a `| dropped |` status is non-MVP, like `| Future |`. FR-NACE-06 and FR-INPUT-03 (dropped negative requirements) leave the MVP set in both. Executed red->green: tests/check-dropped-status.test.mjs 2/5 -> 5/5; real repo MVP FRs 38 -> 36, warnings 53 -> 49. Two gate-bearing files drift together under one Refs: PD-1 commit.",
     "improve-PD-10 (Refs: PD-10): check-trajectory Slice: trailer counts only if the commit carries a REAL trailer AND touched src/app/lib/db/components/tests. A docs-only commit (5bcbfe9 claimed 10 slices, 0 src files) no longer counts. Executed red->green: tests/check-slice-trailer.test.mjs (real git-repo fixtures) 1/2 -> 2/2.",
-    "improve-PD-8 (Refs: PD-8): check-trajectory trusts clean:true review evidence only from a real review-gate output (generatedBy: review-gate + populated dimensions). A bare {clean:true} or generatedBy:retrofit is an unverified-stamp, fails under --release. Executed red->green: tests/check-review-evidence.test.mjs 3/6 -> 6/6."
+    "improve-PD-8 (Refs: PD-8): check-trajectory trusts clean:true review evidence only from a real review-gate output (generatedBy: review-gate + populated dimensions). A bare {clean:true} or generatedBy:retrofit is an unverified-stamp, fails under --release. Executed red->green: tests/check-review-evidence.test.mjs 3/6 -> 6/6.",
+    "improve-PD-14-15 (Refs: PD-14, PD-15): review-gate.js agent types now project-factory:-prefixed (bare names did not resolve, lost 2 dimensions in S5 round 1); slice dependency audit scoped to slice-changed deps so a pre-existing transitive next/postcss advisory no longer blocks clean:true on every slice; verifier lenses configurable (default 1 for slice reviews, both via args.thorough or global). node --check passes."
   ]
 }
