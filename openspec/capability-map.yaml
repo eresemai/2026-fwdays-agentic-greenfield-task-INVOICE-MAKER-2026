@@ -163,7 +163,7 @@ capabilities:
 
   export-share:
     owner: ui
-    status: not_started
+    status: in_progress
     spec: openspec/specs/export-share/spec.md
     owns:
       - FR-EXPORT-01

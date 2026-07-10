@@ -3,14 +3,14 @@
 > **Read this file at the start of every agent session.**  
 > **Update it at the end of a session or when stopping mid-task.**
 
-Last updated: 2026-07-10T13:00:00Z
+Last updated: 2026-07-10T14:00:00Z
 
 ## Snapshot
 
 | Field | Value |
 | --- | --- |
 | **Branch** | `main` — S4b `export-share` preview archived |
-| **Active capability** | S5 `invoice-registry` or S6 `export-share` pdf (**pick next**) |
+| **Active capability** | Submission-ready MVP — post-MVP: S5 `invoice-registry` or S6 pdf |
 | **Active OpenSpec changes** | none |
 | **Slice / gate** | `export-share.preview` **shipped** · pdf not_started |
 | **Gate check** | `npm run capability:check -- --capability invoice-registry` |
@@ -55,14 +55,17 @@ Manual QA passed: HTML download, browser print/PDF, live preview.
 | 05 | PDF fidelity — Chromium embeds glyphs as `Type 3` | export-share pdf |
 | 16 | Edit after send (immutability) | invoice-edit |
 | 11 | Design system reconciliation | form-input polish |
-| G0 | `check-traceability` FAILs: `FR-NACE-06` + `FR-INPUT-03` cited by no spec | arming the git hooks |
+| PD-1 | `check-traceability.mjs` has no concept of `dropped` status: it counts `FR-NACE-06` + `FR-INPUT-03` among the 34 MVP FRs and demands tests/recordings for two deliberately dropped **negative** requirements | 69 of the 69 warnings; arming the git hooks |
+| PD-2 | ~~10 archived slices carry no review evidence~~ | **Resolved** — `.project-factory/retrofit.json` + retrofitted `review-findings.json` in archives |
 
 ## Next up (priority order)
 
 1. **Choose next slice:** S5 `invoice-registry` **or** S6 `export-share` pdf (`/opsx:propose add-invoice-registry` / `add-export-share-pdf`)
 2. Wayfinder 05: `Type 3` glyph embedding (blocks pdf fidelity)
 3. **Adversarial review** — form-input (separate checker chat; `docs/qa/loop-add-form-input.md`)
-4. Cite `FR-NACE-06` + `FR-INPUT-03` in their specs, then arm the hooks: `git config core.hooksPath .githooks` (see `factory-lock.json` adaptation 2)
+4. ~~Declare retrofit slices~~ — done in `.project-factory/retrofit.json`
+5. Tag MVP requirements with acceptance-method verification tags (post-submission)
+6. Arm hooks when ready: `git config core.hooksPath .githooks`
 
 ## Repository sync
 

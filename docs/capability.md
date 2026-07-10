@@ -25,27 +25,31 @@ npm run capability:check -- --capability <id>
 
 | Field | Value |
 | --- | --- |
-| **Last shipped** | S4 `form-input` (`add-form-input`) — M4 form → live preview |
-| **Previously shipped** | S3 `document-render`; S2 directories + banking |
-| **Active slice** | S4b `export-share` (preview) — **next** |
-| **OpenSpec ready to propose** | `/opsx:propose add-export-share` |
-| **Archived changes** | 6 in `openspec/changes/archive/` (shell, S1×2, S2×3) |
-| **Demo target** | M4 — form → live HTML preview (S4) |
+| **Last shipped** | S4b `export-share` preview — print, HTML download, browser PDF |
+| **Previously shipped** | S4 `form-input`; S3 `document-render`; S2 directories + banking; S1 domain; S0 shell |
+| **Active slice** | **Submission-ready MVP** — post-MVP: S5 `invoice-registry` or S6 pdf |
+| **OpenSpec ready to propose** | `/opsx:propose add-invoice-registry` or `add-export-share-pdf` |
+| **Archived changes** | **10** in `openspec/changes/archive/` (S0–S4b) |
+| **Demo target** | M4 — supplier + client → form → preview → export ✅ |
 
-**Unblocked now:** `export-share` preview (S4b)
+**Unblocked now:** S5 `invoice-registry` or S6 `export-share` pdf (wayfinder 05)
 
 ```bash
-npm run capability:check -- --capability export-share
-npm run test   # Vitest (211 tests)
+npm run capability:check -- --capability invoice-registry
+npm run test   # Vitest (220 tests)
 ```
+
+### S4b complete ✅
+
+| Capability | Change | Outcome |
+| --- | --- | --- |
+| `export-share` preview | `add-export-share-preview` | Print, download HTML, browser PDF on `/invoices/new` |
 
 ### S4 complete ✅
 
 | Capability | Change | Outcome |
 | --- | --- | --- |
 | `form-input` | `add-form-input` | `/invoices/new` — form, short paste, client prefill, live HTML preview |
-
-Next: `/opsx:archive add-form-input`, then `/opsx:propose add-export-share`.
 
 ### S2 + S3 complete ✅
 
@@ -54,9 +58,8 @@ Next: `/opsx:archive add-form-input`, then `/opsx:propose add-export-share`.
 | `supplier-profile` | #5 merged | `2026-07-10-add-supplier-profile` |
 | `client-directory` | #4 merged | `2026-07-10-add-client-directory` |
 | `banking` | #7 merged | `2026-07-10-add-banking` |
-| `document-render` | `feat/document-render` | archive after merge |
-
-Next: `/opsx:propose add-form-input` (S4).
+| `document-render` | merged | `2026-07-10-add-document-render` |
+| embedded fonts | merged | `2026-07-10-add-embedded-fonts` |
 
 ### Resolved decisions (no longer gate calc)
 

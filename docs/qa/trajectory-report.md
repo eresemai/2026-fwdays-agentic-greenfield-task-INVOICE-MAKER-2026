@@ -6,20 +6,20 @@ It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
 Scope: 10 archived slice(s).
-Result: PASS, 20 warning(s)
+Result: FAIL (10 failures)
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
-| 2026-07-10-add-banking | **missing** | **0** | yes | - |
-| 2026-07-10-add-client-directory | **missing** | **0** | yes | - |
-| 2026-07-10-add-document-render | **missing** | **0** | yes | - |
-| 2026-07-10-add-embedded-fonts | **missing** | **0** | yes | - |
-| 2026-07-10-add-export-share-preview | **missing** | **0** | yes | - |
-| 2026-07-10-add-form-input | **missing** | **0** | yes | - |
-| 2026-07-10-add-invoice-calc | **missing** | **0** | yes | - |
-| 2026-07-10-add-nace-catalog | **missing** | **0** | yes | - |
-| 2026-07-10-add-shell | **missing** | **0** | yes | - |
-| 2026-07-10-add-supplier-profile | **missing** | **0** | yes | - |
+| 2026-07-10-add-banking | clean | **0** | yes | - |
+| 2026-07-10-add-client-directory | clean | **0** | yes | - |
+| 2026-07-10-add-document-render | clean | **0** | yes | - |
+| 2026-07-10-add-embedded-fonts | clean | **0** | yes | - |
+| 2026-07-10-add-export-share-preview | clean | **0** | yes | - |
+| 2026-07-10-add-form-input | clean | **0** | yes | - |
+| 2026-07-10-add-invoice-calc | clean | **0** | yes | - |
+| 2026-07-10-add-nace-catalog | clean | **0** | yes | - |
+| 2026-07-10-add-shell | clean | **0** | yes | - |
+| 2026-07-10-add-supplier-profile | clean | **0** | yes | - |
 
 ## Cross-slice module overlap
 
@@ -27,27 +27,17 @@ None.
 
 ## Failures
 
-None.
+- **trailer**: 2026-07-10-add-banking: no commit carries a "Slice: add-banking" trailer
+- **trailer**: 2026-07-10-add-client-directory: no commit carries a "Slice: add-client-directory" trailer
+- **trailer**: 2026-07-10-add-document-render: no commit carries a "Slice: add-document-render" trailer
+- **trailer**: 2026-07-10-add-embedded-fonts: no commit carries a "Slice: add-embedded-fonts" trailer
+- **trailer**: 2026-07-10-add-export-share-preview: no commit carries a "Slice: add-export-share-preview" trailer
+- **trailer**: 2026-07-10-add-form-input: no commit carries a "Slice: add-form-input" trailer
+- **trailer**: 2026-07-10-add-invoice-calc: no commit carries a "Slice: add-invoice-calc" trailer
+- **trailer**: 2026-07-10-add-nace-catalog: no commit carries a "Slice: add-nace-catalog" trailer
+- **trailer**: 2026-07-10-add-shell: no commit carries a "Slice: add-shell" trailer
+- **trailer**: 2026-07-10-add-supplier-profile: no commit carries a "Slice: add-supplier-profile" trailer
 
 ## Warnings
 
-- **review-evidence**: 2026-07-10-add-banking: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-10-add-banking: no commit carries a "Slice: add-banking" trailer
-- **review-evidence**: 2026-07-10-add-client-directory: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-10-add-client-directory: no commit carries a "Slice: add-client-directory" trailer
-- **review-evidence**: 2026-07-10-add-document-render: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-10-add-document-render: no commit carries a "Slice: add-document-render" trailer
-- **review-evidence**: 2026-07-10-add-embedded-fonts: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-10-add-embedded-fonts: no commit carries a "Slice: add-embedded-fonts" trailer
-- **review-evidence**: 2026-07-10-add-export-share-preview: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-10-add-export-share-preview: no commit carries a "Slice: add-export-share-preview" trailer
-- **review-evidence**: 2026-07-10-add-form-input: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-10-add-form-input: no commit carries a "Slice: add-form-input" trailer
-- **review-evidence**: 2026-07-10-add-invoice-calc: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-10-add-invoice-calc: no commit carries a "Slice: add-invoice-calc" trailer
-- **review-evidence**: 2026-07-10-add-nace-catalog: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-10-add-nace-catalog: no commit carries a "Slice: add-nace-catalog" trailer
-- **review-evidence**: 2026-07-10-add-shell: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-10-add-shell: no commit carries a "Slice: add-shell" trailer
-- **review-evidence**: 2026-07-10-add-supplier-profile: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-10-add-supplier-profile: no commit carries a "Slice: add-supplier-profile" trailer
+None.

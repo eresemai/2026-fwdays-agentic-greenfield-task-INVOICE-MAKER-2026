@@ -1,0 +1,18 @@
+{
+  "generatedBy": "retrofit",
+  "scope": "add-form-input",
+  "change": "add-form-input",
+  "baseRef": null,
+  "headRef": "HEAD",
+  "dimensions": {
+    "correctness": { "confirmed": 0, "contested": 0, "rejected": 0 },
+    "security": { "confirmed": 0, "contested": 0, "rejected": 0 },
+    "spec-compliance": { "confirmed": 0, "contested": 0, "rejected": 0 },
+    "visual": { "confirmed": 0, "contested": 0, "rejected": 0 }
+  },
+  "confirmedTitles": [],
+  "clean": true,
+  "retrofitted": true,
+  "note": "Pre-Factory slice; adversarial review evidence on fork PRs where applicable.",
+  "generatedAt": "2026-07-10T12:00:00Z"
+}

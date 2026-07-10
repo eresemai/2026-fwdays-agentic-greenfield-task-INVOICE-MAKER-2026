@@ -1,6 +1,18 @@
-<!-- Draft body for fwdays homework PR #50 (mentor repo). -->
-<!-- Source of truth: edit this file, then run: -->
-<!-- gh pr edit 50 --repo koldovsky/2026-fwdays-agentic-greenfield-task --body-file .github/HOMEWORK_SUBMISSION.md -->
+## Для ментора (TL;DR)
+
+**Serhii Rozum** · **Invoice Maker 2026** — browser-first MVP для українських ФОП (двомовні інвойси USD/EUR)
+
+| | |
+| --- | --- |
+| **Відео (1–2 хв)** | https://www.loom.com/share/01ebc7b3403a4b7da8dc785ef2b8205b |
+| **Live demo** | https://invoice-maker-2026.vercel.app |
+| **Швидкий старт** | `npm i && npm run dev` → http://localhost:3000/invoices/new |
+| **Що працює** | supplier + client → форма → live preview → print / HTML / PDF |
+| **Практики** | OpenSpec (10 archives) · Project Factory · 220 tests · loop log · maker≠checker |
+| **Fork + CI** | https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/actions |
+| **AI review (fork)** | PRs [#2](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/2), [#6](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/6)–[#8](https://github.com/eresemai/2026-fwdays-agentic-greenfield-task-INVOICE-MAKER-2026/pull/8) |
+
+---
 
 ## Author
 
@@ -42,9 +54,7 @@ Video: https://www.loom.com/share/01ebc7b3403a4b7da8dc785ef2b8205b
 | **Project Factory** | ✅ `/project-factory:init` (G0); `factory-lock.json`; CI + gate scripts |
 | **Loop engineering** | ✅ S4 close-out — [4 ticks](docs/qa/loop-add-form-input.md) |
 | **Traceability** | ✅ `check-traceability` — 0 failures; reports in `docs/qa/` |
-| **CI** | ✅ `.github/workflows/ci.yml` — lint, typecheck, test, build, openspec validate |
-
-**Demo video:** [Loom](https://www.loom.com/share/01ebc7b3403a4b7da8dc785ef2b8205b)
+| **CI** | ✅ `.github/workflows/ci.yml` — lint, typecheck, test, build, traceability, trajectory, openspec validate |
 
 ## Agentic Engineering practices applied
 
