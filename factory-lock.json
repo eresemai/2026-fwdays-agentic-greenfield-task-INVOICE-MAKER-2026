@@ -1,6 +1,6 @@
 {
-  "createdAt": "2026-07-10T12:32:22.505Z",
-  "gitHead": "3d5efd1677f5313807c37aa4d20f1c5e8d4a61ed",
+  "createdAt": "2026-07-10T12:38:28.036Z",
+  "gitHead": "a8ca4c660e73930f0a92b8f1d992b5b42ae24d46",
   "files": {
     ".claude/workflows/eval-suite.js": "f93c99d868b812cfa7412927f52b62d1042525396a9d0265f16cfe435b9c6098",
     ".claude/workflows/review-gate.js": "7295d8e94ba347213120b9d190b9ebbb88dee373173cfc7daba2114b726ca76b",
@@ -10,7 +10,7 @@
     ".claude/workflows/vision-verify.js": "84c893a066088a158d308a3a21cf7cd3b44fdefb4f503ef9bd85507b7364fc69",
     ".githooks/commit-msg": "c6427b364dbc15da31235e4c0f9a8ac74639b7f0512cadce95f301637387fb5c",
     ".githooks/pre-commit": "c64e18049003ddd126e8ac2c61c1ce759923977748f5f044ee34fc1c3212eaea",
-    ".github/workflows/ci.yml": "62a335781aab7e2416ff6a8fdd69a9bccc403a62437df76ae2a75474bd80fc98",
+    ".github/workflows/ci.yml": "06149df2e5b62177329a7182e9d3d489f5acb75b90fa8d41d4729b12d25ac0f2",
     ".github/workflows/sync-homework-pr.yml": "4b7239d7da0c61b19f815b29854166a87a8b2cfa3a523dc42599c225cb3e529b",
     "quality/process-baseline.json": "c4138cf68d31420931034e59d580cc4db6fdd08550de95347c7396bd9b2923d5",
     "quality/telemetry.config.json": "98276dbbd18f9d694f3378aed7ecc042439d99c8e292bb3caeed7a833005835b",
@@ -40,6 +40,7 @@
     "ci.yml: fetch-depth 0 so check-trajectory Slice trailer grep sees full history on GitHub Actions",
     "improve-PD-3 (Refs: PD-3): check-trajectory.mjs now reads .project-factory/retrofit.json and renders RETROFITTED/NOT-EARNED instead of PASS; the 10 back-stamped review-findings.json were deleted as forged evidence (one, add-form-input, contradicted its own review doc). Executed red->green proof: tests/check-trajectory-retrofit.test.mjs (3/7 -> 7/7). Narrowing: non-zero exit only under --release so the pre-commit hook stays passable; the Result: string reads NOT-EARNED in both modes, which is what gate-status and qa-verify classify on.",
     "NOTE for future reseals: --init-lock REPLACES the adaptations array, it does not merge. A prior session's reseal silently dropped 8 notes. Always read factory-lock.json first and re-pass every note.",
-    "improve-PD-9 (Refs: PD-9): check-traceability.mjs @trace parser now shares ID_PATTERN with idsIn, so categorized ids (FR-CALC-01) register. Executed red->green: tests/check-traceability-trace-ids.test.mjs 4/6 -> 6/6; real repo test-trace warnings 34 -> 33 when one annotation is added (delta was 0 before). Gate fixtures live under tests/.gate-fixtures/ because PATHS.testDirs includes tests/ and a fixture annotation was silently crediting the real FR-CALC-01."
+    "improve-PD-9 (Refs: PD-9): check-traceability.mjs @trace parser now shares ID_PATTERN with idsIn, so categorized ids (FR-CALC-01) register. Executed red->green: tests/check-traceability-trace-ids.test.mjs 4/6 -> 6/6; real repo test-trace warnings 34 -> 33 when one annotation is added (delta was 0 before). Gate fixtures live under tests/.gate-fixtures/ because PATHS.testDirs includes tests/ and a fixture annotation was silently crediting the real FR-CALC-01.",
+    "improve-PD-7 (Refs: PD-7): ci.yml runs gate-status.mjs in its own job (set -o pipefail is load-bearing: bash -e without pipefail lets tee mask a non-zero exit, measured 0 vs 1) and executes the improve-PD-3/PD-9 red->green proofs on every run. The gate-status job is EXPECTED red until G6; keep it out of required checks rather than adding continue-on-error. Note: .github/workflows/*.yml ARE gate-bearing and in the lock."
   ]
 }
