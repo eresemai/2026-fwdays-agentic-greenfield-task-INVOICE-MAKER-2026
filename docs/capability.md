@@ -25,29 +25,28 @@ npm run capability:check -- --capability <id>
 
 | Field | Value |
 | --- | --- |
-| **Last shipped on `main`** | S2 `supplier-profile` (PR #5 merged) |
-| **Last shipped (this branch)** | S2 `client-directory` on `feat/client-directory` (PR #4) |
-| **Previously shipped** | S1 `nace-catalog` + `invoice-calc`; S0 `shell` (PR #3) |
-| **Active slice** | Finish S2 — merge PR #4; then `banking` |
-| **OpenSpec ready to archive** | `add-supplier-profile` (on `main`); `add-client-directory` after PR #4 |
+| **Last shipped** | S2 `supplier-profile` + `client-directory` (PR #4, #5) |
+| **Previously shipped** | S1 domain core; S0 `shell` (PR #3) |
+| **Active slice** | S2 `banking` → S3 `document-render` |
 | **OpenSpec ready to propose** | `/opsx:propose add-banking` |
+| **Archived changes** | 5 in `openspec/changes/archive/` (shell, S1×2, S2×2) |
 | **Demo target** | M4 — form → live HTML preview (S4) |
 
-**Unblocked now:** `banking` (S2) after PR #4 merges; `document-render` blocked on `banking`
+**Unblocked now:** `banking` (S2)
 
 ```bash
 npm run capability:check -- --capability banking
 npm run test   # 129 tests, Vitest
 ```
 
-### S2 branches (clean split)
+### S2 complete ✅
 
-| Lane | Capability | Branch hint | Status | OpenSpec change |
-| --- | --- | --- | --- | --- |
-| C | `supplier-profile` | `feat/supplier-profile` | **shipped** on `main` (PR #5) | `add-supplier-profile` → archive on `main` |
-| D | `client-directory` | `feat/client-directory` | **shipped** (PR #4) | `add-client-directory` → archive after merge |
+| Capability | PR | OpenSpec archive |
+| --- | --- | --- |
+| `supplier-profile` | #5 merged | `2026-07-10-add-supplier-profile` |
+| `client-directory` | #4 merged | `2026-07-10-add-client-directory` |
 
-Supplier lane is on `main`; client lane merges via PR #4. After both are on `main`: `/opsx:propose add-banking` → `document-render`.
+Next: `/opsx:propose add-banking` → `document-render`.
 
 ### Resolved decisions (no longer gate calc)
 
@@ -84,7 +83,7 @@ Work top → bottom. Within a slice, rows without mutual dependency can run **in
 | 2a | `nace-catalog` | domain | **shipped** | `add-nace-catalog` synced | [detail](capabilities/nace-catalog.md) |
 | 2b | `invoice-calc` | domain | **shipped** | `add-invoice-calc` synced | [detail](capabilities/invoice-calc.md) |
 
-### S2 — Directories ← **banking active**
+### S2 — Directories ✅ · **banking next**
 
 | Step | Capability | Owner | Status | Depends on | Doc |
 | --- | --- | --- | --- | --- | --- |
@@ -92,7 +91,7 @@ Work top → bottom. Within a slice, rows without mutual dependency can run **in
 | 3b | `client-directory` | ui | **shipped** | shell ✅ | [detail](capabilities/client-directory.md) |
 | 3c | `banking` | domain | not_started | supplier-profile ✅ | [detail](capabilities/banking.md) |
 
-3a on `main`; 3b via PR #4; 3c is next after PR #4 merges.
+3c is next.
 
 ### S3 — Render
 
