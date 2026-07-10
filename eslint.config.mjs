@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Claude Code worktrees (not application source):
+    ".claude/**",
     // Static design-system gallery, not application code (NFR-DX-01 scope):
     "docs/**",
   ]),

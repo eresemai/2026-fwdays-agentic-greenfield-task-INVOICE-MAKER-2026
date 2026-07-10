@@ -25,19 +25,27 @@ npm run capability:check -- --capability <id>
 
 | Field | Value |
 | --- | --- |
-| **Last shipped** | S3 `document-render` (`feat/document-render`); before it S2 `banking` (PR #7) |
-| **Previously shipped** | S2 directories (PR #4, #5); S1 domain core; S0 `shell` (PR #3) |
-| **Active slice** | S4 `form-input` → `export-share` (preview) — **demo milestone** |
-| **OpenSpec ready to propose** | `/opsx:propose add-form-input` |
+| **Last shipped** | S4 `form-input` (`add-form-input`) — M4 form → live preview |
+| **Previously shipped** | S3 `document-render`; S2 directories + banking |
+| **Active slice** | S4b `export-share` (preview) — **next** |
+| **OpenSpec ready to propose** | `/opsx:propose add-export-share` |
 | **Archived changes** | 6 in `openspec/changes/archive/` (shell, S1×2, S2×3) |
 | **Demo target** | M4 — form → live HTML preview (S4) |
 
-**Unblocked now:** `form-input` (S4)
+**Unblocked now:** `export-share` preview (S4b)
 
 ```bash
-npm run capability:check -- --capability form-input
-npm run test   # Vitest (domain + storage + banking + render suites)
+npm run capability:check -- --capability export-share
+npm run test   # Vitest (211 tests)
 ```
+
+### S4 complete ✅
+
+| Capability | Change | Outcome |
+| --- | --- | --- |
+| `form-input` | `add-form-input` | `/invoices/new` — form, short paste, client prefill, live HTML preview |
+
+Next: `/opsx:archive add-form-input`, then `/opsx:propose add-export-share`.
 
 ### S2 + S3 complete ✅
 
@@ -103,7 +111,7 @@ Work top → bottom. Within a slice, rows without mutual dependency can run **in
 
 | Step | Capability | Owner | Status | Doc |
 | --- | --- | --- | --- | --- |
-| 5a | `form-input` | ui | not_started | [detail](capabilities/form-input.md) |
+| 5a | `form-input` | ui | **shipped** | [detail](capabilities/form-input.md) |
 | 5b | `export-share` (preview) | ui | not_started | [detail](capabilities/export-share.md) |
 
 ### S5 — Persistence
@@ -204,7 +212,7 @@ S6           export-share (pdf) + invoice-edit
 | M1 | S1 | `src/lib/` + Vitest | **done** |
 | M2 | S2 | Directories + banking | **done** |
 | M3 | S3 | Rendered HTML | **done** |
-| **M4** | **S4** | **Form → preview** | **unblocked** |
+| **M4** | **S4** | **Form → preview** | **done** |
 | M5 | S5 | Invoice register | blocked |
 | M6 | S6 | PDF + edit | blocked |
 
