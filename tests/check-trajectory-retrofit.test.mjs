@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
 const SCRIPT = resolve("scripts/check-trajectory.mjs");
-const FIXTURES = resolve("tests/gate-fixtures/pd-3");
+const FIXTURES = resolve("tests/.gate-fixtures/pd-3");
 
 function runIn(fixture, args) {
   const dir = mkdtempSync(join(tmpdir(), `pd-3-${fixture}-`));

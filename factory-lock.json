@@ -1,6 +1,6 @@
 {
-  "createdAt": "2026-07-10T12:23:08.808Z",
-  "gitHead": "ef1ccc0453cf9213b92cdc38d245db8ec2cbced6",
+  "createdAt": "2026-07-10T12:32:22.505Z",
+  "gitHead": "3d5efd1677f5313807c37aa4d20f1c5e8d4a61ed",
   "files": {
     ".claude/workflows/eval-suite.js": "f93c99d868b812cfa7412927f52b62d1042525396a9d0265f16cfe435b9c6098",
     ".claude/workflows/review-gate.js": "7295d8e94ba347213120b9d190b9ebbb88dee373173cfc7daba2114b726ca76b",
@@ -22,7 +22,7 @@
     "scripts/check-factory-integrity.mjs": "fbd605f988b157a3454f85a3cf7cd4b9656614e4e25798efe5a6ae6ec72c1dc0",
     "scripts/check-process-ratchet.mjs": "a824c3bf4a36e4c1979c09d899242dbe4ac1cdf6e08bf227fca5b4772f331a03",
     "scripts/check-recordings.mjs": "447628eccba1a88860d5b2cfb8f4fff9b09050edd0141476a31bcddc66fe3a54",
-    "scripts/check-traceability.mjs": "10dfdb95743c685e31f0a1cdb2d4cbef0d728315097efd93544346330250fadf",
+    "scripts/check-traceability.mjs": "febe8fc4b4eba39122c056f25c204d8be7ea155c1043cfcf90af398daf8657b5",
     "scripts/check-trajectory.mjs": "2d94c755ac0d19f2b90dbdf505b0e3e4ecc5df2bfbdc65f872a6215515927ab4",
     "scripts/check-visual-fidelity.mjs": "f6fd0816f6293c0394c3cdb57232bb72b85cebe3b40ac6b88bf0628847722504",
     "scripts/gate-status.mjs": "07617acbbd6ae513bcc7675478e920bd86ff2c765ae1b2ebc2ab27dad50e5fae",
@@ -39,6 +39,7 @@
     "openspec init skipped: repo already carries 10 capability specs + capability-map.yaml + config.yaml (no openspec/project.md by design)",
     "ci.yml: fetch-depth 0 so check-trajectory Slice trailer grep sees full history on GitHub Actions",
     "improve-PD-3 (Refs: PD-3): check-trajectory.mjs now reads .project-factory/retrofit.json and renders RETROFITTED/NOT-EARNED instead of PASS; the 10 back-stamped review-findings.json were deleted as forged evidence (one, add-form-input, contradicted its own review doc). Executed red->green proof: tests/check-trajectory-retrofit.test.mjs (3/7 -> 7/7). Narrowing: non-zero exit only under --release so the pre-commit hook stays passable; the Result: string reads NOT-EARNED in both modes, which is what gate-status and qa-verify classify on.",
-    "NOTE for future reseals: --init-lock REPLACES the adaptations array, it does not merge. A prior session's reseal silently dropped 8 notes. Always read factory-lock.json first and re-pass every note."
+    "NOTE for future reseals: --init-lock REPLACES the adaptations array, it does not merge. A prior session's reseal silently dropped 8 notes. Always read factory-lock.json first and re-pass every note.",
+    "improve-PD-9 (Refs: PD-9): check-traceability.mjs @trace parser now shares ID_PATTERN with idsIn, so categorized ids (FR-CALC-01) register. Executed red->green: tests/check-traceability-trace-ids.test.mjs 4/6 -> 6/6; real repo test-trace warnings 34 -> 33 when one annotation is added (delta was 0 before). Gate fixtures live under tests/.gate-fixtures/ because PATHS.testDirs includes tests/ and a fixture annotation was silently crediting the real FR-CALC-01."
   ]
 }

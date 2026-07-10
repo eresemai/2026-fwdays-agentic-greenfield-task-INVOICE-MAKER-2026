@@ -60,7 +60,12 @@ function* walk(dir, filter) {
   }
 }
 // Ids may be plain (FR-12) or categorized (FR-SHELL-01, NFR-A11Y-02).
-const idsIn = (text) => [...new Set(text.match(/\b(?:FR|NFR|TC|BC|BUG)-(?:[A-Z0-9]+-)?\d+\b/g) ?? [])];
+const ID_PATTERN = "(?:FR|NFR|TC|BC|BUG)-(?:[A-Z0-9]+-)?\\d+";
+const idsIn = (text) => [...new Set(text.match(new RegExp(`\\b${ID_PATTERN}\\b`, "g")) ?? [])];
+// `@trace FR-CALC-01` / `@trace FR-12, BUG-3`. Shares ID_PATTERN with idsIn on
+// purpose: a narrower pattern here would demand an annotation (see the
+// test-trace report below) that this parser could never recognize.
+const TRACE_ANNOTATION_RE = new RegExp(`@trace\\s+(${ID_PATTERN}(?:\\s*,\\s*${ID_PATTERN})*)`, "g");
 
 // ---------- 1. parse requirements ----------
 // Missing requirements file is NORMAL before Phase 1 (the loop installs in
@@ -145,7 +150,7 @@ const isTestFile = (f) => /\.(test|spec|eval)\.(ts|tsx|js|mjs)$/.test(f) || /int
 for (const dir of PATHS.testDirs) {
   for (const file of walk(dir, isTestFile)) {
     const text = read(file) ?? "";
-    for (const m of text.matchAll(/@trace\s+([A-Z]+-\d+(?:\s*,\s*[A-Z]+-\d+)*)/g)) {
+    for (const m of text.matchAll(TRACE_ANNOTATION_RE)) {
       for (const id of m[1].split(/\s*,\s*/)) {
         if (!testTraces.has(id)) testTraces.set(id, []);
         testTraces.get(id).push(file.replaceAll("\\", "/"));
