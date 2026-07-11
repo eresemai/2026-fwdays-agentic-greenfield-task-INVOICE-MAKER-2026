@@ -133,8 +133,14 @@ const verified = await parallel(
 )
 
 phase('Report')
-const confirmed = verified.filter(Boolean).filter((f) => f.verdict === 'confirmed')
-const contested = verified.filter(Boolean).filter((f) => f.verdict === 'contested')
+// PD-16: a security/spec reviewer emits positive "Clean — …" notes and
+// "Coverage summary" lines to record what it checked and found fine. Those are
+// accurate (verdict 'confirmed') but are NOT defects — counting them as
+// confirmed made clean:true unreachable for any thorough review. Exclude
+// positive/informational notes from the defect set; `clean` is defect-free.
+const isPositiveNote = (f) => /^\s*(clean\b|coverage summary\b)/i.test(f.title || '')
+const confirmed = verified.filter(Boolean).filter((f) => f.verdict === 'confirmed' && !isPositiveNote(f))
+const contested = verified.filter(Boolean).filter((f) => f.verdict === 'contested' && !isPositiveNote(f))
 const rejected = verified.filter(Boolean).filter((f) => f.verdict === 'rejected')
 log(`confirmed: ${confirmed.length}, contested: ${contested.length}, rejected: ${rejected.length}`)
 
