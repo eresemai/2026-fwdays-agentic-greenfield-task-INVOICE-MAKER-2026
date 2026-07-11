@@ -144,7 +144,12 @@ phase('Report')
 // accurate (verdict 'confirmed') but are NOT defects — counting them as
 // confirmed made clean:true unreachable for any thorough review. Exclude
 // positive/informational notes from the defect set; `clean` is defect-free.
-const isPositiveNote = (f) => /^\s*(clean\b|verified\b|coverage summary\b)/i.test(f.title || '')
+// A positive note leads with Clean/Verified/Coverage summary AND a separator
+// (em-dash or colon), the convention reviewers use for non-defects. Requiring
+// the separator keeps a real defect that merely starts with the word — e.g.
+// "Verified email requirement not enforced" — in the defect set (the title-only
+// prefix match this replaces could silently drop it).
+const isPositiveNote = (f) => /^\s*(clean|verified|coverage summary)\s*[—:]/i.test(f.title || '')
 const confirmed = verified.filter(Boolean).filter((f) => f.verdict === 'confirmed' && !isPositiveNote(f))
 const contested = verified.filter(Boolean).filter((f) => f.verdict === 'contested' && !isPositiveNote(f))
 const rejected = verified.filter(Boolean).filter((f) => f.verdict === 'rejected')
