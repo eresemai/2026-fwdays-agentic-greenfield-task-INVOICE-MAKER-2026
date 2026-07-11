@@ -49,6 +49,7 @@ jobs:
           node tests/check-dropped-status.test.mjs
           node tests/check-slice-trailer.test.mjs
           node tests/check-review-evidence.test.mjs
+          node tests/check-review-severity.test.mjs
       - name: Traceability chain (and freshness of generated report)
         run: |
           node scripts/check-traceability.mjs --check-fresh

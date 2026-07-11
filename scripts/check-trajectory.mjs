@@ -114,7 +114,18 @@ for (const slice of slices) {
         parsed.dimensions &&
         typeof parsed.dimensions === "object" &&
         Object.keys(parsed.dimensions).length > 0;
+      // PD-18: "zero confirmed findings" is an unreachable bar — a thorough
+      // adversarial review asymptotically always surfaces some minor/doc item.
+      // A real review-gate run whose confirmed findings are ALL minor/low (none
+      // major/critical/high) is earned; major+ still blocks. Needs the
+      // per-finding `confirmed:[{severity}]` the review-gate now records.
+      const confirmed = Array.isArray(parsed.confirmed) ? parsed.confirmed : null;
+      const noMajor =
+        confirmed !== null &&
+        confirmed.every((f) => !/^(major|critical|high)$/i.test(String(f?.severity ?? "")));
       if (parsed.clean === true && fromReviewGate) reviewEvidence = "clean";
+      else if (fromReviewGate && confirmed && confirmed.length > 0 && noMajor)
+        reviewEvidence = "clean-minor";
       else if (parsed.clean === true) reviewEvidence = "unverified-stamp";
       else reviewEvidence = "unclean";
     } catch {
@@ -124,9 +135,11 @@ for (const slice of slices) {
   if (retrofitted) {
     // A `clean:true` stamp on a retrofit slice proves nothing: the review it
     // claims predates the Factory. Downgrade it and say so out loud.
-    const stamped = reviewEvidence === "clean" ? ` (a "clean" stamp is present but predates the loop — ignored)` : "";
+    const stamped = reviewEvidence === "clean" || reviewEvidence === "clean-minor" ? ` (a "clean" stamp is present but predates the loop — ignored)` : "";
     reviewEvidence = "retrofitted";
     warn("retrofit", `${slice}: RETROFITTED — red-first history unreconstructible, review evidence not earned${stamped}`);
+  } else if (reviewEvidence === "clean-minor") {
+    warn("review-evidence", `${slice}: review earned with MINOR-only confirmed findings (PD-18) — no major/critical open; verify they are documented`);
   } else if (reviewEvidence !== "clean") {
     gated(flags.has("--release"), "review-evidence", `${slice}: review-findings.json is ${reviewEvidence} (review must have run clean before archive)`);
   }
@@ -191,7 +204,8 @@ if (slices.length === 0) warn("slices", "no archived slices found under openspec
 // A retrofit slice is never evidence. When every archived slice is retrofitted,
 // the trajectory gate has been earned by nothing and must not print PASS.
 const retrofitCount = rows.filter((r) => r.retrofitted).length;
-const earnedCount = rows.filter((r) => !r.retrofitted && r.reviewEvidence === "clean").length;
+const isEarnedReview = (e) => e === "clean" || e === "clean-minor";
+const earnedCount = rows.filter((r) => !r.retrofitted && isEarnedReview(r.reviewEvidence)).length;
 const notEarned = retrofitCount > 0 && earnedCount === 0;
 
 let verdict;

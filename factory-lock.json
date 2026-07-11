@@ -1,16 +1,16 @@
 {
-  "createdAt": "2026-07-11T08:32:39.132Z",
-  "gitHead": "194da8bbdecb877deed4f83948286d7e4c9fabef",
+  "createdAt": "2026-07-11T10:10:43.795Z",
+  "gitHead": "629e938f4740f8ea039336005e894bcb1acaf2a9",
   "files": {
     ".claude/workflows/eval-suite.js": "9a264172c0b712657014c4cf1d4eeb9ee4429509209495cebd7841f427717b68",
-    ".claude/workflows/review-gate.js": "1b9daebf1b0f40dff815f6e374799538eb74deb005c9389079a9eff1382fcaf8",
+    ".claude/workflows/review-gate.js": "58f51dd945c7491f89fcf40dcdac99a21366f048717380166ab2789b2b6a9f6c",
     ".claude/workflows/spec-pipeline.js": "639f5c52855d84aa7a385dcc6c90a1f8b57e230b07d16cbc9985fb7fdc7767d1",
     ".claude/workflows/trajectory-eval.js": "036d274d6fcf3d1e28cb02a6c79debfe623847eea3485c3f974b0200c0ca34dc",
     ".claude/workflows/uat-triage.js": "c1338b81a606a2c368f8b82818893a02a6add3efd8a8d0056acdea735e2c01d1",
     ".claude/workflows/vision-verify.js": "8a7f45cd391b9824aee9676b11ec57e4f107f9715379d490c7a39d1aabf53741",
     ".githooks/commit-msg": "c6427b364dbc15da31235e4c0f9a8ac74639b7f0512cadce95f301637387fb5c",
     ".githooks/pre-commit": "c64e18049003ddd126e8ac2c61c1ce759923977748f5f044ee34fc1c3212eaea",
-    ".github/workflows/ci.yml": "3e9d280819ab02cd79c506f687c339b64f9707f62a8232326d17168dc04ff04d",
+    ".github/workflows/ci.yml": "754a30988da73d1393dac4143a7173770f0668aff2b0ba447babb1cf7228853b",
     ".github/workflows/sync-homework-pr.yml": "ba00c9d34a36db9c4cf051121a1693f40908b89d1b571d11f41ff72af12d8e66",
     "quality/process-baseline.json": "c4138cf68d31420931034e59d580cc4db6fdd08550de95347c7396bd9b2923d5",
     "quality/telemetry.config.json": "98276dbbd18f9d694f3378aed7ecc042439d99c8e292bb3caeed7a833005835b",
@@ -23,7 +23,7 @@
     "scripts/check-process-ratchet.mjs": "a824c3bf4a36e4c1979c09d899242dbe4ac1cdf6e08bf227fca5b4772f331a03",
     "scripts/check-recordings.mjs": "447628eccba1a88860d5b2cfb8f4fff9b09050edd0141476a31bcddc66fe3a54",
     "scripts/check-traceability.mjs": "0794dbc85a921d1a0c6a75927734e40fa0b9442a0bafee55e312146fddce6e73",
-    "scripts/check-trajectory.mjs": "b3de4440150f6cff04d6b56c5ffe311ca9dec610ebfad258aa62e9c0377bf8be",
+    "scripts/check-trajectory.mjs": "843d49a7bc527bc1d4d5538481d7be4334ba0116e005722e7f6ddfa2054d5732",
     "scripts/check-visual-fidelity.mjs": "f6fd0816f6293c0394c3cdb57232bb72b85cebe3b40ac6b88bf0628847722504",
     "scripts/gate-status.mjs": "07617acbbd6ae513bcc7675478e920bd86ff2c765ae1b2ebc2ab27dad50e5fae",
     "scripts/qa-verify.mjs": "fdcd0b3d4db03837702fc81e94ab27a1ce16aa235e4fb32413b563478243c2c0"
@@ -53,6 +53,7 @@
     "improve-PD-16 (Refs: PD-16): review-gate clean = 'no confirmed DEFECTS', excluding positive 'Clean —'/'Coverage summary' notes. Before, thorough security reviews (which emit clean-aspect notes) could never reach clean:true, blocking every earned slice from archiving under PD-8.",
     "improve-PD-16 (extended): isPositiveNote also excludes 'Verified —' notes (reviewers emit them like 'Clean —' to confirm a fix is sound). Without it a positive 'Verified — deep-freeze fix present' counted as a confirmed defect.",
     "improve-PD-17 (Refs: PD-17): review-gate reviewers ignore **/review-findings.json — the gate's own evidence artifact, written at the end of each run, always lags HEAD by one run and produced a self-referential 'stale artifact' finding every pass.",
-    "improve-PD-16 (hardened): isPositiveNote requires a separator (em-dash or colon) after Clean/Verified/Coverage summary, so a real defect that merely starts with the word ('Verified email requirement not enforced') stays in the defect set. The review-gate itself flagged the title-prefix-only version as a major hole."
+    "improve-PD-16 (hardened): isPositiveNote requires a separator (em-dash or colon) after Clean/Verified/Coverage summary, so a real defect that merely starts with the word ('Verified email requirement not enforced') stays in the defect set. The review-gate itself flagged the title-prefix-only version as a major hole.",
+    "improve-PD-18 (Refs: PD-18): archive bar is severity-aware. review-gate records per-confirmed severity; check-trajectory earns a review at clean:true OR all-minor confirmed (clean-minor, warns), major+ still blocks. 'Zero confirmed' was unreachable for a thorough asymptotic review."
   ]
 }

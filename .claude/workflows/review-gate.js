@@ -173,6 +173,10 @@ if (change) {
     headRef,
     dimensions: dims,
     confirmedTitles: confirmed.map((f) => f.title),
+    // PD-18: per-finding severity so check-trajectory can distinguish a
+    // major/critical defect (blocks archive) from minor/doc items (a thorough
+    // review always surfaces some — they are earned once documented).
+    confirmed: confirmed.map((f) => ({ title: f.title, severity: f.severity ?? 'minor', dimension: f.dimension })),
     clean: confirmed.length === 0,
     generatedAt: 'WRITER_FILL_ISO_UTC',
   }
