@@ -18,7 +18,7 @@
 - [x] 3.1 `src/types/invoice-record.ts`: `InvoiceStatus`, `INVOICE_STATUSES`, `InvoiceSnapshot`, `InvoiceRecord`, `InvoiceRecordInput`.
 - [x] 3.2 Validation is INLINE in the storage module (hand-written type guards), NOT a separate zod schema as design D2 first sketched. **Deviation, on purpose:** the neighboring storage modules `clients.ts` / `supplier-profiles.ts` validate with hand-written guards, and consistency with the surrounding code (AGENTS.md) beats introducing zod into the storage layer for one module.
 - [x] 3.3 `src/lib/storage/invoice-register.ts`: versioned store, CRUD, `setInvoiceStatus`, `deriveOverdue`, clone-on-save + clone-on-read (D1/D3), SSR + corrupt-store guards.
-- [x] 3.4 Ran the test — GREEN, 16/16 (12 initial + partial-drop, trim, impossible-date, and listInvoices-isolation tests added across review rounds), no assertion weakened.
+- [x] 3.4 Ran the test — GREEN, 19/19 (12 initial + partial-drop, trim, impossible-date, listInvoices-isolation, and 3 update-by-id tests added across review rounds), no assertion weakened.
 
 ## 4. Validation battery
 
