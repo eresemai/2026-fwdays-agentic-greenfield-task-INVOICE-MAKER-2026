@@ -99,6 +99,35 @@ describe("invoice-register storage", () => {
       expect(() => setInvoiceStatus("missing", "sent")).toThrow(InvoiceNotFoundError);
     });
 
+    it("updates an existing invoice in place, preserving id and createdAt", () => {
+      const created = saveInvoice(buildInput({ status: "draft" }));
+      vi.setSystemTime(new Date("2026-07-11T10:00:00.000Z"));
+      const updated = saveInvoice({
+        ...buildInput({ status: "paid", invoiceNumber: "2026-777" }),
+        id: created.id,
+      });
+      expect(updated.id).toBe(created.id);
+      expect(updated.createdAt).toBe(created.createdAt);
+      expect(updated.updatedAt).not.toBe(created.updatedAt);
+      expect(updated.status).toBe("paid");
+      expect(updated.invoiceNumber).toBe("2026-777");
+      expect(listInvoices()).toHaveLength(1);
+    });
+
+    it("deep-clones the snapshot on update, isolating it from the source", () => {
+      const created = saveInvoice(buildInput());
+      const snapshot = buildSnapshot({ customer: { name: "Updated Co" } });
+      const updated = saveInvoice({ ...buildInput({ snapshot }), id: created.id });
+      snapshot.customer.name = "MUTATED";
+      expect(getInvoice(updated.id)?.snapshot.customer.name).toBe("Updated Co");
+    });
+
+    it("throws InvoiceNotFoundError when saving with an unknown id", () => {
+      expect(() =>
+        saveInvoice({ ...buildInput(), id: "no-such-invoice" })
+      ).toThrow(InvoiceNotFoundError);
+    });
+
     it("trims the invoice number before persisting", () => {
       const saved = saveInvoice(buildInput({ invoiceNumber: "  2026-042  " }));
       expect(saved.invoiceNumber).toBe("2026-042");
