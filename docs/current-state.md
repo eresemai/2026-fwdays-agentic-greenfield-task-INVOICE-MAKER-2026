@@ -5,6 +5,30 @@
 
 Last updated: 2026-07-10T19:10:00Z (Project Factory orchestration session)
 
+## S5 invoice-registry — code done, archive blocked on an asymptotic review (2026-07-11)
+
+The storage/logic slice is **complete and excellent**: 239 tests, all code
+findings across **7 review rounds** resolved (3 major bugs caught + fixed early;
+later rounds only surfaced doc-drift and positive "Clean —" notes). Committed on
+`main` with `Slice:`/`Refs:` trailers; not archived.
+
+**Why not archived:** `check-trajectory` (PD-8) needs `review-findings.json`
+`clean:true`, i.e. zero confirmed findings. A thorough adversarial review is
+**asymptotic** — it always surfaces *something* minor (now: the review-gate's own
+tooling changes + one-commit-lagging doc counts). ~14M tokens spent chasing it.
+The review-gate itself was hardened along the way: **PD-14** (agent-type names),
+**PD-15** (slice-scoped dependency audit), **PD-16** (exclude positive
+Clean/Verified/Coverage notes from the defect count; hardened to require a
+separator so real defects starting with those words are kept), **PD-17** (don't
+review the gate's own evidence artifact).
+
+**Open decision for the human:** PD-8's `clean:true` bar is likely too strict —
+it should probably be "no unresolved **actionable** confirmed defects" (severity
+-aware / resolved-or-waived), not "zero confirmed". Options: (a) make PD-8
+severity-aware and archive; (b) one more review now that the last 3 findings are
+fixed; (c) waive. **Do not** hand-edit review-findings.json to clean:true — that
+is the forgery PD-3 removed.
+
 ## Snapshot
 
 | Field | Value |

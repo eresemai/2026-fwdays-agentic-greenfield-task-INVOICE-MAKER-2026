@@ -7,40 +7,30 @@
   "dimensions": {
     "correctness": {
       "confirmed": 2,
-      "contested": 3,
-      "rejected": 1
+      "contested": 1,
+      "rejected": 0
     },
     "security": {
-      "confirmed": 5,
+      "confirmed": 4,
       "contested": 3,
-      "rejected": 2
+      "rejected": 0
     },
     "spec-compliance": {
-      "confirmed": 5,
-      "contested": 1,
+      "confirmed": 1,
+      "contested": 0,
       "rejected": 1
     },
     "visual": {
-      "confirmed": 1,
+      "confirmed": 0,
       "contested": 0,
-      "rejected": 2
+      "rejected": 0
     }
   },
   "confirmedTitles": [
-    "design.md D2 states getInvoice/listInvoices return clones, but neither clones; listInvoices returns shared cached records with an asymmetric read-isolation contract",
-    "Canonical spec is out of sync with the delta: the 'Overdue never persisted' scenario and reworded 'Overdue badge' are missing from openspec/specs",
-    "npm audit: 2 moderate advisories (postcss <8.5.10 CSS-stringify XSS) transitive via next; no critical/high",
-    "Clean — FR-REG-03 clone-on-save correctly implemented via structuredClone before persistence",
-    "Clean — Corrupt-store fallback is robust and consistent with clients.ts",
-    "Clean — No mass-assignment; saveInvoice maps fields explicitly and ignores caller-supplied id on create",
-    "Clean — Secrets hygiene: no secrets in code and no tracked .env files",
-    "Coverage summary",
-    "Canonical spec hand-edited to add FR IDs but left inconsistent with the change delta",
-    "Design claims listInvoices returns clones, but it returns shared cached record refs (untested)",
-    "tasks.md 5.1 ticked complete while its own text says re-review is pending",
-    "Slice scope/tasks residue: validation dir and stale test count",
-    "Canonical spec lags the delta: still asserts UI behavior for a logic-only slice and omits the 'Overdue never persisted' scenario"
+    "review-gate positive-note filter can silently drop a real defect whose title starts with \"Verified\"/\"Clean\"",
+    "tasks.md records the wrong test count (16/16) after update-by-id tests were added; suite is now 19",
+    "tasks.md 3.4 reports a stale test count (16/16) — actual suite is 19/19"
   ],
   "clean": false,
-  "generatedAt": "2026-07-10T18:13:31Z"
+  "generatedAt": "2026-07-11T08:30:32Z"
 }
