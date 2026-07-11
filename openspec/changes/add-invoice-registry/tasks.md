@@ -18,11 +18,11 @@
 - [x] 3.1 `src/types/invoice-record.ts`: `InvoiceStatus`, `INVOICE_STATUSES`, `InvoiceSnapshot`, `InvoiceRecord`, `InvoiceRecordInput`.
 - [x] 3.2 Validation is INLINE in the storage module (hand-written type guards), NOT a separate zod schema as design D2 first sketched. **Deviation, on purpose:** the neighboring storage modules `clients.ts` / `supplier-profiles.ts` validate with hand-written guards, and consistency with the surrounding code (AGENTS.md) beats introducing zod into the storage layer for one module.
 - [x] 3.3 `src/lib/storage/invoice-register.ts`: versioned store, CRUD, `setInvoiceStatus`, `deriveOverdue`, clone-on-save + clone-on-read (D1/D3), SSR + corrupt-store guards.
-- [x] 3.4 Ran the test — GREEN, 13/13 (12 initial + 1 partial-drop test added in review fixes), no assertion weakened.
+- [x] 3.4 Ran the test — GREEN, 16/16 (12 initial + partial-drop, trim, impossible-date, and listInvoices-isolation tests added across review rounds), no assertion weakened.
 
 ## 4. Validation battery
 
-- [x] 4.1 `lint` (0 errors; 3 pre-existing warnings elsewhere), `test:run` 232 pass, `typecheck` ok, `build` — green
+- [x] 4.1 `lint` (0 errors; 3 pre-existing warnings elsewhere), `test:run` (whole suite green), `typecheck` ok, `build` — green
 - [x] 4.2 `npx openspec validate add-invoice-registry --strict` — valid
 - [x] 4.3 `node scripts/check-traceability.mjs` — FR-REG-01/02/03 + TC-DATA-01 all traced. **Corrected:** this was first ticked prematurely while `check-traceability` still FAILED with 3 plan-ownership errors (FR-REG-01/02/03 absent from `docs/mvp-capability-plan.md`). The review-gate caught the false tick (a `done-claims-need-evidence` violation by the maker). Fixed by adding the S5 FR block to the plan; the gate now exits 0.
 

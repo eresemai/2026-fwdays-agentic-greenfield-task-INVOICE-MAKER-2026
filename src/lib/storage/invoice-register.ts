@@ -125,6 +125,16 @@ function clone<T>(value: T): T {
   return structuredClone(value);
 }
 
+function deepFreeze<T>(value: T): T {
+  if (value && typeof value === "object") {
+    for (const key of Object.keys(value)) {
+      deepFreeze((value as Record<string, unknown>)[key]);
+    }
+    Object.freeze(value);
+  }
+  return value;
+}
+
 function createId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
@@ -234,7 +244,10 @@ function validateInput(input: InvoiceRecordInput): InvoiceRecordInput {
 
 export function listInvoices(): readonly InvoiceRecord[] {
   if (cachedInvoices === null) {
-    const sorted = sortByUpdatedDesc(readStore().invoices);
+    // Deep-freeze the cached snapshot so the list path has the same read
+    // isolation as getInvoice (which re-parses per call): a consumer cannot
+    // mutate a nested snapshot field and pollute the shared cache.
+    const sorted = sortByUpdatedDesc(readStore().invoices).map(deepFreeze);
     cachedInvoices =
       sorted.length === 0 ? EMPTY_INVOICES : Object.freeze(sorted);
   }

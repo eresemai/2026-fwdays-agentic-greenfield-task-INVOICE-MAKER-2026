@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { InvoiceRecordInput, InvoiceSnapshot } from "@/types/invoice-record";
+import type {
+  InvoiceRecord,
+  InvoiceRecordInput,
+  InvoiceSnapshot,
+} from "@/types/invoice-record";
 import {
   __resetInvoiceCacheForTests,
   deleteInvoice,
@@ -156,6 +160,18 @@ describe("invoice-register storage", () => {
       const read = getInvoice(saved.id);
       expect(read).not.toBeNull();
       if (read) read.snapshot.customer.name = "TAMPERED";
+      expect(getInvoice(saved.id)?.snapshot.customer.name).toBe("Acme Corp");
+    });
+
+    it("listInvoices returns deeply-frozen records, isolating the list path too", () => {
+      const saved = saveInvoice(buildInput());
+      const [listed] = listInvoices();
+      expect(listed).toBeDefined();
+      // Deep-frozen: a nested mutation must not take effect (throws in strict
+      // mode; either way the store is unchanged).
+      expect(() => {
+        (listed as InvoiceRecord).snapshot.customer.name = "TAMPERED";
+      }).toThrow();
       expect(getInvoice(saved.id)?.snapshot.customer.name).toBe("Acme Corp");
     });
   });
