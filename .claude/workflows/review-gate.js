@@ -47,9 +47,15 @@ const scope = args?.scope ?? 'working tree'
 const baseRef = args?.baseRef
 const headRef = args?.headRef ?? 'HEAD'
 const focus = args?.focus ?? ''
+// PD-17: never review the review-gate's own evidence artifact. It is written
+// by the persist step at the END of each run, so it always lags HEAD by one
+// run; reviewing it produces a self-referential "the artifact is stale" finding
+// on every pass. Exclude it from the diff the reviewers read.
+const IGNORE_NOTE =
+  ' IGNORE `**/review-findings.json` — it is this gate\'s own generated evidence, not code under review.'
 const diffInstruction = baseRef
-  ? `Review the changes in \`git diff ${baseRef}..${headRef}\` (run that command yourself; also read surrounding context of changed files).`
-  : 'Review the entire current codebase (use AGENTS.md and openspec/ to scope what matters).'
+  ? `Review the changes in \`git diff ${baseRef}..${headRef}\` (run that command yourself; also read surrounding context of changed files).${IGNORE_NOTE}`
+  : `Review the entire current codebase (use AGENTS.md and openspec/ to scope what matters).${IGNORE_NOTE}`
 
 // PD-15: for a SLICE review (baseRef set), the dependency audit is scoped to
 // deps the slice CHANGED — a pre-existing transitive advisory in an UNCHANGED

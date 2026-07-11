@@ -1,9 +1,9 @@
 {
-  "createdAt": "2026-07-11T08:07:39.260Z",
-  "gitHead": "89b4028fcde0f2c323a3da5c5f771af58877bd7b",
+  "createdAt": "2026-07-11T08:20:37.516Z",
+  "gitHead": "e9f05e75e21f98205983e5648cd6d3d427e3fd4c",
   "files": {
     ".claude/workflows/eval-suite.js": "9a264172c0b712657014c4cf1d4eeb9ee4429509209495cebd7841f427717b68",
-    ".claude/workflows/review-gate.js": "0d6787052f1e26b714996ec19e8d233a910ec0144fe6ab6b83186ef984b9ca09",
+    ".claude/workflows/review-gate.js": "cdc11dcd39844c75688f873fc22d5516afa46d29dfddf8950fcba09df1969b1a",
     ".claude/workflows/spec-pipeline.js": "639f5c52855d84aa7a385dcc6c90a1f8b57e230b07d16cbc9985fb7fdc7767d1",
     ".claude/workflows/trajectory-eval.js": "036d274d6fcf3d1e28cb02a6c79debfe623847eea3485c3f974b0200c0ca34dc",
     ".claude/workflows/uat-triage.js": "c1338b81a606a2c368f8b82818893a02a6add3efd8a8d0056acdea735e2c01d1",
@@ -51,6 +51,7 @@
     "Correction to improve-PD-14-15: reverted the single-lens 'lighter review' change. The exploitability lens is load-bearing — it contests real-but-unreachable footguns; dropping it made round-3 confirm 16 minor footguns that 2 lenses would have contested. PD-14 (agentType prefixes) and PD-15 (scoped dependency audit) are KEPT.",
     "improve-PD-14 (extended): prefixed bare agent-only names in the remaining 5 workflows (spec-pipeline spec-writer, eval-suite + trajectory-eval eval-judge, vision-verify vision-judge, uat-triage bug-triage-analyst) with project-factory:. All 6 workflows now resolve their specialist agents.",
     "improve-PD-16 (Refs: PD-16): review-gate clean = 'no confirmed DEFECTS', excluding positive 'Clean —'/'Coverage summary' notes. Before, thorough security reviews (which emit clean-aspect notes) could never reach clean:true, blocking every earned slice from archiving under PD-8.",
-    "improve-PD-16 (extended): isPositiveNote also excludes 'Verified —' notes (reviewers emit them like 'Clean —' to confirm a fix is sound). Without it a positive 'Verified — deep-freeze fix present' counted as a confirmed defect."
+    "improve-PD-16 (extended): isPositiveNote also excludes 'Verified —' notes (reviewers emit them like 'Clean —' to confirm a fix is sound). Without it a positive 'Verified — deep-freeze fix present' counted as a confirmed defect.",
+    "improve-PD-17 (Refs: PD-17): review-gate reviewers ignore **/review-findings.json — the gate's own evidence artifact, written at the end of each run, always lags HEAD by one run and produced a self-referential 'stale artifact' finding every pass."
   ]
 }
