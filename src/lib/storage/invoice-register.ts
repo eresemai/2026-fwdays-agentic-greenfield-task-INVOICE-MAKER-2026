@@ -95,12 +95,17 @@ function isSnapshot(value: unknown): value is InvoiceSnapshot {
   const s = value as Record<string, unknown>;
   const isObject = (v: unknown) =>
     typeof v === "object" && v !== null && !Array.isArray(v);
+  const t = s.termsText as Record<string, unknown> | null | undefined;
   return (
     isObject(s.supplier) &&
     isObject(s.customer) &&
     Array.isArray(s.serviceRows) &&
     isObject(s.totals) &&
-    isObject(s.termsText)
+    isObject(s.termsText) &&
+    // termsText is concretely typed { en: string; ua: string } — validate it as
+    // such, not just as an object, to match the deep date validation.
+    typeof t?.en === "string" &&
+    typeof t?.ua === "string"
   );
 }
 

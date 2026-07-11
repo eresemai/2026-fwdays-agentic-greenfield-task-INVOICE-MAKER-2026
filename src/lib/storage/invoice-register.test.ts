@@ -155,7 +155,7 @@ describe("invoice-register storage", () => {
       expect(getInvoice(saved.id)?.snapshot.supplier.ibanEur).toBe("UA903223130000026007233566020");
     });
 
-    it("clones on read: mutating a returned record does not alter the store", () => {
+    it("read isolation: mutating a getInvoice result does not alter the store", () => {
       const saved = saveInvoice(buildInput());
       const read = getInvoice(saved.id);
       expect(read).not.toBeNull();

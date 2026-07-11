@@ -49,12 +49,14 @@ interface InvoiceRecord {
 **Immutability (FR-REG-03):** `saveInvoice` deep-clones the incoming snapshot
 (`structuredClone`) before storing, so a caller mutating the source object it
 passed in — e.g. after editing a supplier IBAN in the directory — cannot reach
-into a stored snapshot. Read isolation follows the `clients.ts` pattern rather
-than per-call cloning: `getInvoice` returns a fresh value because `readStore()`
-re-parses localStorage on every call, and `listInvoices` returns a
-reference-stable `Object.freeze`d snapshot (shallow, like `listClients`) that
-consumers MUST treat as read-only. The persisted register is the source of
-truth; the snapshot is a value captured at issue time, never a live reference.
+into a stored snapshot. Read isolation: `getInvoice` returns a fresh value
+because `readStore()` re-parses localStorage on every call, and `listInvoices`
+returns a reference-stable snapshot whose records are **deep-frozen** — a
+deliberate strengthening over `listClients`' shallow `Object.freeze`, required so
+the list path has the same isolation as `getInvoice` (a consumer cannot mutate a
+nested snapshot field and pollute the shared cache). The persisted register is
+the source of truth; the snapshot is a value captured at issue time, never a
+live reference.
 
 ## D3 — Derived overdue (FR-REG-02, display-only)
 
@@ -67,6 +69,14 @@ function deriveOverdue(record: InvoiceRecord, todayIso: string): boolean {
 ISO `YYYY-MM-DD` strings compare lexicographically = chronologically, so no Date
 math and no timezone hazard. `overdue` is **never** a field on `InvoiceRecord` —
 a test asserts the stored/serialized record has no `overdue` key.
+
+## D3b — Supporting CRUD primitives
+
+`saveInvoice` also handles update-by-id, and `deleteInvoice` removes a record.
+These have no dedicated FR-REG scenario — they are the standard register CRUD
+that `invoice-edit` (S6, which `invoice-registry` blocks) will consume, present
+in the sibling `clients.ts` / `supplier-profiles.ts` stores for the same reason.
+They are exercised by unit tests, not left dead.
 
 ## D4 — Status transitions (FR-REG-01)
 
