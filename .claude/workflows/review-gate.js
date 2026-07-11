@@ -138,7 +138,7 @@ phase('Report')
 // accurate (verdict 'confirmed') but are NOT defects — counting them as
 // confirmed made clean:true unreachable for any thorough review. Exclude
 // positive/informational notes from the defect set; `clean` is defect-free.
-const isPositiveNote = (f) => /^\s*(clean\b|coverage summary\b)/i.test(f.title || '')
+const isPositiveNote = (f) => /^\s*(clean\b|verified\b|coverage summary\b)/i.test(f.title || '')
 const confirmed = verified.filter(Boolean).filter((f) => f.verdict === 'confirmed' && !isPositiveNote(f))
 const contested = verified.filter(Boolean).filter((f) => f.verdict === 'contested' && !isPositiveNote(f))
 const rejected = verified.filter(Boolean).filter((f) => f.verdict === 'rejected')

@@ -1,9 +1,9 @@
 {
-  "createdAt": "2026-07-11T07:53:54.989Z",
-  "gitHead": "53c5c68c35df86ee42a80330ab06f658b465e3f9",
+  "createdAt": "2026-07-11T08:07:39.260Z",
+  "gitHead": "89b4028fcde0f2c323a3da5c5f771af58877bd7b",
   "files": {
     ".claude/workflows/eval-suite.js": "9a264172c0b712657014c4cf1d4eeb9ee4429509209495cebd7841f427717b68",
-    ".claude/workflows/review-gate.js": "d1a55222839ea5799657b1fefcdc92f23d57e42cdfcaee7a6d9d0de0e09b07c0",
+    ".claude/workflows/review-gate.js": "0d6787052f1e26b714996ec19e8d233a910ec0144fe6ab6b83186ef984b9ca09",
     ".claude/workflows/spec-pipeline.js": "639f5c52855d84aa7a385dcc6c90a1f8b57e230b07d16cbc9985fb7fdc7767d1",
     ".claude/workflows/trajectory-eval.js": "036d274d6fcf3d1e28cb02a6c79debfe623847eea3485c3f974b0200c0ca34dc",
     ".claude/workflows/uat-triage.js": "c1338b81a606a2c368f8b82818893a02a6add3efd8a8d0056acdea735e2c01d1",
@@ -50,6 +50,7 @@
     "improve-PD-14-15 (Refs: PD-14, PD-15): review-gate.js agent types now project-factory:-prefixed (bare names did not resolve, lost 2 dimensions in S5 round 1); slice dependency audit scoped to slice-changed deps so a pre-existing transitive next/postcss advisory no longer blocks clean:true on every slice; verifier lenses configurable (default 1 for slice reviews, both via args.thorough or global). node --check passes.",
     "Correction to improve-PD-14-15: reverted the single-lens 'lighter review' change. The exploitability lens is load-bearing — it contests real-but-unreachable footguns; dropping it made round-3 confirm 16 minor footguns that 2 lenses would have contested. PD-14 (agentType prefixes) and PD-15 (scoped dependency audit) are KEPT.",
     "improve-PD-14 (extended): prefixed bare agent-only names in the remaining 5 workflows (spec-pipeline spec-writer, eval-suite + trajectory-eval eval-judge, vision-verify vision-judge, uat-triage bug-triage-analyst) with project-factory:. All 6 workflows now resolve their specialist agents.",
-    "improve-PD-16 (Refs: PD-16): review-gate clean = 'no confirmed DEFECTS', excluding positive 'Clean —'/'Coverage summary' notes. Before, thorough security reviews (which emit clean-aspect notes) could never reach clean:true, blocking every earned slice from archiving under PD-8."
+    "improve-PD-16 (Refs: PD-16): review-gate clean = 'no confirmed DEFECTS', excluding positive 'Clean —'/'Coverage summary' notes. Before, thorough security reviews (which emit clean-aspect notes) could never reach clean:true, blocking every earned slice from archiving under PD-8.",
+    "improve-PD-16 (extended): isPositiveNote also excludes 'Verified —' notes (reviewers emit them like 'Clean —' to confirm a fix is sound). Without it a positive 'Verified — deep-freeze fix present' counted as a confirmed defect."
   ]
 }
