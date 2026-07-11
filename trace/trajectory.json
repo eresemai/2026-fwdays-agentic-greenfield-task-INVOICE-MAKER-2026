@@ -1,8 +1,8 @@
 {
   "generatedBy": "scripts/check-trajectory.mjs",
-  "verdict": "NOT-EARNED",
+  "verdict": "PASS",
   "retrofitCount": 10,
-  "earnedCount": 0,
+  "earnedCount": 1,
   "slices": [
     {
       "slice": "2026-07-10-add-banking",
@@ -83,6 +83,16 @@
       "libDomains": [],
       "processComplete": true,
       "retrofitted": true
+    },
+    {
+      "slice": "2026-07-11-add-invoice-registry",
+      "reviewEvidence": "clean-minor",
+      "trailerCommits": 7,
+      "libDomains": [
+        "storage"
+      ],
+      "processComplete": true,
+      "retrofitted": false
     }
   ],
   "overlaps": [],
@@ -167,6 +177,10 @@
     {
       "check": "trailer",
       "msg": "2026-07-10-add-supplier-profile: no commit carries a real \"Slice: add-supplier-profile\" trailer that also touched the slice's implementation"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-11-add-invoice-registry: review earned with MINOR-only confirmed findings (PD-18) — no major/critical open; verify they are documented"
     }
   ]
 }

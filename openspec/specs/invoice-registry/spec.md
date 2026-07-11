@@ -1,9 +1,7 @@
 ## Purpose
 
 Browser-side invoice register with manual statuses and immutable issued snapshots.
-
 ## Requirements
-
 ### Requirement: FR-REG-01 Stored invoice statuses
 The system SHALL persist invoice status as one of `draft`, `sent`, `paid`, or `cancelled` set manually by the user.
 
@@ -35,3 +33,4 @@ The invoice register SHALL persist in browser storage (localStorage or IndexedDB
 #### Scenario: Reload preserves register
 - **WHEN** the user reloads the app in the same browser
 - **THEN** previously saved invoices are still listed
+

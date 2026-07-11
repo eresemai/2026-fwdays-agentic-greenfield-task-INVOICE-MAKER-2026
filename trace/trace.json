@@ -413,8 +413,7 @@
     {
       "id": "FR-REG-01",
       "specs": [
-        "openspec/specs/invoice-registry/spec.md",
-        "openspec/changes/add-invoice-registry/specs/invoice-registry/spec.md"
+        "openspec/specs/invoice-registry/spec.md"
       ],
       "planned": true,
       "tests": [
@@ -425,8 +424,7 @@
     {
       "id": "FR-REG-02",
       "specs": [
-        "openspec/specs/invoice-registry/spec.md",
-        "openspec/changes/add-invoice-registry/specs/invoice-registry/spec.md"
+        "openspec/specs/invoice-registry/spec.md"
       ],
       "planned": true,
       "tests": [
@@ -437,8 +435,7 @@
     {
       "id": "FR-REG-03",
       "specs": [
-        "openspec/specs/invoice-registry/spec.md",
-        "openspec/changes/add-invoice-registry/specs/invoice-registry/spec.md"
+        "openspec/specs/invoice-registry/spec.md"
       ],
       "planned": true,
       "tests": [
@@ -490,8 +487,7 @@
       "recordings": []
     }
   ],
-  "failures": [],
-  "warnings": [
+  "failures": [
     {
       "check": "test-trace",
       "msg": "FR-SHELL-01 has no test annotated \"@trace FR-SHELL-01\""
@@ -701,8 +697,9 @@
       "msg": "FR-CLIENT-04 is not referenced by any recording manifest under docs/qa/"
     },
     {
-      "check": "active-changes",
-      "msg": "active change \"add-invoice-registry\" is not archived"
+      "check": "tasks-complete",
+      "msg": "openspec/changes/archive/2026-07-11-add-invoice-registry/tasks.md has 2 unchecked task(s) but is archived"
     }
-  ]
+  ],
+  "warnings": []
 }

@@ -1,6 +1,6 @@
 # Delta: invoice-registry (add-invoice-registry)
 
-## ADDED Requirements
+## MODIFIED Requirements
 
 ### Requirement: FR-REG-01 Stored invoice statuses
 The system SHALL persist invoice status as one of `draft`, `sent`, `paid`, or `cancelled` set manually by the user.

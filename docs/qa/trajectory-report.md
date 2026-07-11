@@ -5,8 +5,8 @@ archived slice took: review evidence, `Slice:` trailers, and module scope.
 It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
-Scope: 10 archived slice(s) (10 RETROFITTED, 0 earned).
-Result: NOT-EARNED, 20 warning(s)
+Scope: 11 archived slice(s) (10 RETROFITTED, 1 earned).
+Result: PASS, 21 warning(s)
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
@@ -20,6 +20,7 @@ Result: NOT-EARNED, 20 warning(s)
 | 2026-07-10-add-nace-catalog | **retrofitted** | n/a (retrofit) | yes | - |
 | 2026-07-10-add-shell | **retrofitted** | n/a (retrofit) | yes | - |
 | 2026-07-10-add-supplier-profile | **retrofitted** | n/a (retrofit) | yes | - |
+| 2026-07-11-add-invoice-registry | **clean-minor** | 7 | yes | storage |
 
 ## Cross-slice module overlap
 
@@ -51,3 +52,4 @@ None.
 - **trailer**: 2026-07-10-add-shell: no commit carries a real "Slice: add-shell" trailer that also touched the slice's implementation
 - **retrofit**: 2026-07-10-add-supplier-profile: RETROFITTED — red-first history unreconstructible, review evidence not earned
 - **trailer**: 2026-07-10-add-supplier-profile: no commit carries a real "Slice: add-supplier-profile" trailer that also touched the slice's implementation
+- **review-evidence**: 2026-07-11-add-invoice-registry: review earned with MINOR-only confirmed findings (PD-18) — no major/critical open; verify they are documented
