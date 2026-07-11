@@ -6,31 +6,42 @@
   "headRef": "HEAD",
   "dimensions": {
     "correctness": {
-      "confirmed": 2,
+      "confirmed": 1,
       "contested": 1,
-      "rejected": 0
+      "rejected": 1
     },
     "security": {
       "confirmed": 4,
-      "contested": 3,
-      "rejected": 0
+      "contested": 2,
+      "rejected": 1
     },
     "spec-compliance": {
       "confirmed": 1,
       "contested": 0,
-      "rejected": 1
+      "rejected": 2
     },
     "visual": {
-      "confirmed": 0,
+      "confirmed": 1,
       "contested": 0,
-      "rejected": 0
+      "rejected": 1
     }
   },
   "confirmedTitles": [
-    "review-gate positive-note filter can silently drop a real defect whose title starts with \"Verified\"/\"Clean\"",
-    "tasks.md records the wrong test count (16/16) after update-by-id tests were added; suite is now 19",
-    "tasks.md 3.4 reports a stale test count (16/16) — actual suite is 19/19"
+    "deriveOverdue timestamp-normalization branch is never exercised by a test",
+    "capability-map lists invoice-registry as not_started while its code is committed and tested"
+  ],
+  "confirmed": [
+    {
+      "title": "deriveOverdue timestamp-normalization branch is never exercised by a test",
+      "severity": "minor",
+      "dimension": "correctness"
+    },
+    {
+      "title": "capability-map lists invoice-registry as not_started while its code is committed and tested",
+      "severity": "minor",
+      "dimension": "visual"
+    }
   ],
   "clean": false,
-  "generatedAt": "2026-07-11T08:30:32Z"
+  "generatedAt": "2026-07-11T10:20:16Z"
 }

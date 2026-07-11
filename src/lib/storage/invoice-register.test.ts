@@ -155,6 +155,12 @@ describe("invoice-register storage", () => {
       expect(deriveOverdue(dueToday, today)).toBe(false);
     });
 
+    it("normalizes a full ISO timestamp today, not flagging a same-day deadline", () => {
+      const dueToday = saveInvoice(buildInput({ status: "sent", paymentDeadlineIso: today }));
+      // A caller passing new Date().toISOString() must not read as overdue.
+      expect(deriveOverdue(dueToday, `${today}T23:59:59.000Z`)).toBe(false);
+    });
+
     it("is never overdue for draft, paid, or cancelled even past the deadline", () => {
       for (const status of ["draft", "paid", "cancelled"] as const) {
         const rec = saveInvoice(buildInput({ status, paymentDeadlineIso: "2026-01-01" }));

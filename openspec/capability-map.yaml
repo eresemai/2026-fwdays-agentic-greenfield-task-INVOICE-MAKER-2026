@@ -193,7 +193,7 @@ capabilities:
 
   invoice-registry:
     owner: ui
-    status: not_started
+    status: in_progress
     spec: openspec/specs/invoice-registry/spec.md
     owns:
       - FR-REG-01
