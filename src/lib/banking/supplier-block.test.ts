@@ -27,6 +27,7 @@ const PROFILE: SupplierProfile = {
   updatedAt: "2026-07-10T00:00:00.000Z",
 };
 
+// @trace FR-BANK-01
 describe("selectIban", () => {
   it("returns the USD IBAN for USD invoices (FR-BANK-01)", () => {
     expect(selectIban(PROFILE, "USD")).toBe(PROFILE.ibanUsd);
@@ -68,6 +69,7 @@ describe("selectIban", () => {
   });
 });
 
+// @trace FR-BANK-03
 describe("buildSupplierBlock", () => {
   it("contains exactly the eight SUPPLIER_* keys (FR-BANK-03)", () => {
     const block = buildSupplierBlock(PROFILE, "USD");

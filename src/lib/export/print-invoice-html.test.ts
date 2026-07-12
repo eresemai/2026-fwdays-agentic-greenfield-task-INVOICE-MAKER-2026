@@ -33,6 +33,12 @@ describe("printInvoiceHtml", () => {
     );
   });
 
+  // Deliberately untraced. The `210mm x 297mm` here is the hidden iframe's
+  // on-screen box (so browsers don't print a blank page), not the print page
+  // size — that lives in the template's `@page { size: A4 }`. Change it to
+  // Letter, or overflow the body horizontally, and this test still passes
+  // (jsdom does no layout). FR-EXPORT-03's honest method is `recording` / `e2e`.
+  // See docs/qa/trace-gaps.md
   it("loads html in a sized iframe and calls print on content window", async () => {
     const print = vi.fn();
     const focus = vi.fn();

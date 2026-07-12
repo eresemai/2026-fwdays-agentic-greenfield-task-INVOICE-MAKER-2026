@@ -40,6 +40,8 @@ Also: NFR-A11Y-01, NFR-OBS-01, TC-STACK-05 (Zod)
 | Payment terms | `src/lib/invoices/build-payment-terms-text.ts` |
 | Short format | `parseShortFormat` in `invoice-input.ts` |
 
+**Manual / QA:** [guides/quick-insert-manual-uk.md](../guides/quick-insert-manual-uk.md) · copy-paste samples in [guides/samples/](../guides/samples/)
+
 ## Verification
 
 - [x] All required fields validated with accessible labels

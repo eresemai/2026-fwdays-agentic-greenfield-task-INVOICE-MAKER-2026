@@ -58,6 +58,7 @@ describe("template drift", () => {
   // The --check test above re-runs the same encode path, so a systematic
   // truncation would corrupt both sides identically and still pass. Decoding
   // back to the on-disk bytes is the assertion that cannot be fooled that way.
+  // @trace FR-TPL-05
   it("embeds base64 that decodes to the exact committed woff2 files", () => {
     const encoded = Array.from(INVOICE_TEMPLATE.matchAll(DATA_URI_PATTERN)).map(
       (match) => match[1]
@@ -101,6 +102,7 @@ describe("template drift", () => {
   });
 });
 
+// @trace FR-TPL-01
 describe("fillTemplate", () => {
   it("substitutes every placeholder, leaving no tokens behind", () => {
     const output = fillTemplate("<p>{{PLACE_EN}} / {{PLACE_UA}}</p>", {

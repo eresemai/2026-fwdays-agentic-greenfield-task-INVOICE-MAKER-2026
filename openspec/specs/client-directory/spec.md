@@ -4,7 +4,7 @@ Browser-side client directory that prefills invoice forms.
 
 ## Requirements
 
-### Requirement: Client record fields
+### Requirement: FR-CLIENT-01 Client record fields
 A client record SHALL store the fields needed to prefill the invoice template customer block: customer name, address line, email, phone, and website, with optional company and tax ID metadata.
 
 #### Scenario: Required contact fields
@@ -14,6 +14,9 @@ A client record SHALL store the fields needed to prefill the invoice template cu
 #### Scenario: Optional contact fields
 - **WHEN** the user saves a client with phone and website provided
 - **THEN** the stored record contains those values for future form prefill
+
+### Requirement: FR-CLIENT-03 Template placeholder mapping
+A saved client record SHALL map to the invoice template's customer placeholders so the rendered document carries the directory's stored values.
 
 #### Scenario: Template mapping readiness
 - **WHEN** a saved client is loaded for prefill
@@ -26,8 +29,8 @@ Client directory entries SHALL persist only in browser storage and SHALL survive
 - **WHEN** the user saves a client and reloads the application
 - **THEN** the same client list and field values are available without a server round-trip
 
-### Requirement: Client directory CRUD
-The system SHALL let the user create, edit, and delete client records stored only in the browser, with each record conforming to the client record field requirements.
+### Requirement: FR-CLIENT-02 Client directory CRUD
+The system SHALL let the user create, edit, and delete client records stored only in the browser, with each record conforming to the FR-CLIENT-01 field requirements.
 
 #### Scenario: Save client
 - **WHEN** the user saves a client with required name, address, and email fields
@@ -41,8 +44,12 @@ The system SHALL let the user create, edit, and delete client records stored onl
 - **WHEN** the user confirms deletion of a client
 - **THEN** the client is removed from browser storage and no longer appears in the list
 
-### Requirement: Client prefill only
+### Requirement: FR-CLIENT-04 Client prefill only
 Client directory entries SHALL prefill the invoice form and MUST NOT define or mutate content of already-issued invoice snapshots stored by the invoice register.
+
+> Status: proposed. The "Issued invoice unchanged" scenario cannot be verified
+> until `invoice-registry` (S5) exists to hold the snapshots. Acceptance method:
+> `e2e`. Recorded as a gap in `docs/qa/trace-gaps.md`, not annotated.
 
 #### Scenario: Prefill new invoice
 - **WHEN** the user selects a client while creating a new invoice (implemented in `form-input`)

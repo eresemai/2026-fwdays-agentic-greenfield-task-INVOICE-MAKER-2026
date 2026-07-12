@@ -47,24 +47,38 @@ const scope = args?.scope ?? 'working tree'
 const baseRef = args?.baseRef
 const headRef = args?.headRef ?? 'HEAD'
 const focus = args?.focus ?? ''
+// PD-17: never review the review-gate's own evidence artifact. It is written
+// by the persist step at the END of each run, so it always lags HEAD by one
+// run; reviewing it produces a self-referential "the artifact is stale" finding
+// on every pass. Exclude it from the diff the reviewers read.
+const IGNORE_NOTE =
+  ' IGNORE `**/review-findings.json` — it is this gate\'s own generated evidence, not code under review.'
 const diffInstruction = baseRef
-  ? `Review the changes in \`git diff ${baseRef}..${headRef}\` (run that command yourself; also read surrounding context of changed files).`
-  : 'Review the entire current codebase (use AGENTS.md and openspec/ to scope what matters).'
+  ? `Review the changes in \`git diff ${baseRef}..${headRef}\` (run that command yourself; also read surrounding context of changed files).${IGNORE_NOTE}`
+  : `Review the entire current codebase (use AGENTS.md and openspec/ to scope what matters).${IGNORE_NOTE}`
+
+// PD-15: for a SLICE review (baseRef set), the dependency audit is scoped to
+// deps the slice CHANGED — a pre-existing transitive advisory in an UNCHANGED
+// dependency is a whole-tree issue, not a slice defect, and must not block the
+// slice's clean review.
+const auditScope = baseRef
+  ? `Dependency audit is SLICE-SCOPED: run \`git diff ${baseRef}..${headRef} -- package.json package-lock.json\` first. Report a dependency/advisory finding ONLY if the slice added or bumped the dependency it stems from. A pre-existing transitive advisory in a dependency this slice did not touch (e.g. a bundled sub-dependency of an unchanged framework) is OUT OF SCOPE for a slice review — do not report it.`
+  : 'Dependency audit covers the whole tree (npm audit).'
 
 const DIMENSIONS = [
   {
     key: 'correctness',
-    agentType: 'code-reviewer',
+    agentType: 'project-factory:code-reviewer',
     prompt: `${diffInstruction}\nScope: ${scope}. ${focus}\nReview for correctness, error handling (any user input path that can throw raw -> 500, silent external-call failures, stale uncontrolled form state), framework-version correctness, data integrity, and maintainability. Return structured findings only.`,
   },
   {
     key: 'security',
-    agentType: 'security-reviewer',
-    prompt: `${diffInstruction}\nScope: ${scope}. ${focus}\nFull security checklist: authz matrix (server-side enforcement, IDOR on id-fetched routes, tenant scoping), auth/session handling, injection (SQL/HTML/CSV/path), secrets hygiene, dependency audit, abuse resistance (mass assignment, rate limits). Return structured findings only.`,
+    agentType: 'project-factory:security-reviewer',
+    prompt: `${diffInstruction}\nScope: ${scope}. ${focus}\nFull security checklist: authz matrix (server-side enforcement, IDOR on id-fetched routes, tenant scoping), auth/session handling, injection (SQL/HTML/CSV/path), secrets hygiene, abuse resistance (mass assignment, rate limits). ${auditScope} Return structured findings only.`,
   },
   {
     key: 'spec-compliance',
-    agentType: 'spec-compliance-auditor',
+    agentType: 'project-factory:spec-compliance-auditor',
     prompt: `${diffInstruction}\nScope: ${scope}. ${focus}\nAudit the implementation against its OpenSpec requirements and scenarios: missing/partial/contradicted scenarios, undocumented scope drift, ticked tasks without artifacts, FR/NFR coverage. Return structured findings only.`,
   },
   {
@@ -97,10 +111,18 @@ for (const f of found.filter(Boolean).flat()) {
 log(`${deduped.length} unique findings across ${DIMENSIONS.length} dimensions`)
 
 phase('Verify')
+// Two lenses, always. The correctness lens asks "is the mechanism real?"; the
+// exploitability lens asks "can it actually happen?". Dropping the second to
+// save cost was tried and reverted: it is what separates a real-but-unreachable
+// footgun (contested) from a live defect (confirmed) — load-bearing, not fat.
+const lenses = [
+  'correctness — is the claimed mechanism actually wrong in this code?',
+  'exploitability/reproducibility — can the claimed problem actually occur for a real user or attacker?',
+]
 const verified = await parallel(
   deduped.map((f) => () =>
     parallel(
-      ['correctness — is the claimed mechanism actually wrong in this code?', 'exploitability/reproducibility — can the claimed problem actually occur for a real user or attacker?'].map(
+      lenses.map(
         (lens) => () =>
           agent(
             `Adversarially verify this review finding through the lens of ${lens}\n\nFinding: ${JSON.stringify(f)}\n\nRead the actual code at the cited location and its callers. Try hard to REFUTE the finding (wrong file, guarded elsewhere, unreachable path, framework already handles it). Default to refuted=true if you cannot positively confirm the mechanism.`,
@@ -110,14 +132,26 @@ const verified = await parallel(
     ).then((votes) => {
       const valid = votes.filter(Boolean)
       const refutes = valid.filter((v) => v.refuted).length
-      return { ...f, verdict: refutes >= 2 ? 'rejected' : refutes === 1 ? 'contested' : 'confirmed', verifierNotes: valid.map((v) => v.reasoning) }
+      const verdict = refutes >= 2 ? 'rejected' : refutes === 1 ? 'contested' : 'confirmed'
+      return { ...f, verdict, verifierNotes: valid.map((v) => v.reasoning) }
     }),
   ),
 )
 
 phase('Report')
-const confirmed = verified.filter(Boolean).filter((f) => f.verdict === 'confirmed')
-const contested = verified.filter(Boolean).filter((f) => f.verdict === 'contested')
+// PD-16: a security/spec reviewer emits positive "Clean — …" notes and
+// "Coverage summary" lines to record what it checked and found fine. Those are
+// accurate (verdict 'confirmed') but are NOT defects — counting them as
+// confirmed made clean:true unreachable for any thorough review. Exclude
+// positive/informational notes from the defect set; `clean` is defect-free.
+// A positive note leads with Clean/Verified/Coverage summary AND a separator
+// (em-dash or colon), the convention reviewers use for non-defects. Requiring
+// the separator keeps a real defect that merely starts with the word — e.g.
+// "Verified email requirement not enforced" — in the defect set (the title-only
+// prefix match this replaces could silently drop it).
+const isPositiveNote = (f) => /^\s*(clean|verified|coverage summary)\s*[—:]/i.test(f.title || '')
+const confirmed = verified.filter(Boolean).filter((f) => f.verdict === 'confirmed' && !isPositiveNote(f))
+const contested = verified.filter(Boolean).filter((f) => f.verdict === 'contested' && !isPositiveNote(f))
 const rejected = verified.filter(Boolean).filter((f) => f.verdict === 'rejected')
 log(`confirmed: ${confirmed.length}, contested: ${contested.length}, rejected: ${rejected.length}`)
 
@@ -139,6 +173,10 @@ if (change) {
     headRef,
     dimensions: dims,
     confirmedTitles: confirmed.map((f) => f.title),
+    // PD-18: per-finding severity so check-trajectory can distinguish a
+    // major/critical defect (blocks archive) from minor/doc items (a thorough
+    // review always surfaces some — they are earned once documented).
+    confirmed: confirmed.map((f) => ({ title: f.title, severity: f.severity ?? 'minor', dimension: f.dimension })),
     clean: confirmed.length === 0,
     generatedAt: 'WRITER_FILL_ISO_UTC',
   }

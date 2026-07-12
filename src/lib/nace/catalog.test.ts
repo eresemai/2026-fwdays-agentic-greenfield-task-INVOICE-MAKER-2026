@@ -47,6 +47,7 @@ const expectedSeedEntries = [
   },
 ] as const;
 
+// @trace FR-NACE-01, FR-NACE-02, FR-NACE-03, FR-NACE-04
 describe("naceCatalog seed entries (FR-NACE-02/03/04)", () => {
   it("contains exactly the four MVP seed entries", () => {
     expect(naceCatalog).toHaveLength(expectedSeedEntries.length);
@@ -66,6 +67,7 @@ describe("naceCatalog seed entries (FR-NACE-02/03/04)", () => {
   );
 });
 
+// @trace FR-NACE-01
 describe("entry identity and class codes (FR-NACE-01)", () => {
   it("uses the entry id as a unique key", () => {
     const ids = naceCatalog.map((entry) => entry.id);

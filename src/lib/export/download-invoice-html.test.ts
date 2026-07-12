@@ -37,6 +37,10 @@ describe("downloadInvoiceHtml", () => {
     );
   });
 
+  // Deliberately untraced. This feeds a stub string and asserts blob MIME type,
+  // filename and anchor click. FR-EXPORT-02's defining property — a self-contained
+  // file that opens OFFLINE with embedded styles matching the live preview — is
+  // structurally unprovable here. Its honest method is `e2e`. docs/qa/trace-gaps.md
   it("creates html blob and triggers download anchor", () => {
     const createObjectURL = vi.fn().mockReturnValue("blob:invoice");
     const revokeObjectURL = vi.fn();

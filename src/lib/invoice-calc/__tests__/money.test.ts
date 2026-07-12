@@ -57,6 +57,7 @@ describe("centsFromInput", () => {
   }
 });
 
+// @trace FR-CALC-03
 describe("lineAmount (FR-CALC-03)", () => {
   it("derives 650.00 × 17 = 11,050.00", () => {
     const amount = lineAmount(cents(65_000), 17);
@@ -83,6 +84,7 @@ describe("lineAmount (FR-CALC-03)", () => {
   });
 });
 
+// @trace FR-CALC-03
 describe("invoiceTotal (FR-CALC-03)", () => {
   it("sums line amounts", () => {
     const total = invoiceTotal([cents(1_105_000), cents(30_000), cents(1)]);
@@ -94,6 +96,7 @@ describe("invoiceTotal (FR-CALC-03)", () => {
   });
 });
 
+// @trace FR-CALC-04
 describe("prepaymentSplit (FR-CALC-04)", () => {
   it("splits 1,000.00 at 50% into 500.00 + 500.00", () => {
     const { prepayment, balance } = prepaymentSplit(cents(100_000), 50);
@@ -145,6 +148,7 @@ describe("prepaymentSplit (FR-CALC-04)", () => {
   });
 });
 
+// @trace FR-CALC-03
 describe("formatAmount (FR-CALC-03)", () => {
   const cases: Array<{ amount: number; expected: string }> = [
     { amount: 1_105_000, expected: "11,050.00" },

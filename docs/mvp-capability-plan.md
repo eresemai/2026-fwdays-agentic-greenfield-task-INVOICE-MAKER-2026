@@ -49,6 +49,19 @@ and [requirements.md](requirements.md).
 
 - FR-BANK-02
 
+### S2 — `client-directory`
+
+Numbered 2026-07-10. The capability shipped with a spec, 10 passing tests and
+real code, but owned **no FR ids**, so it sat outside the trace chain entirely
+and could have regressed without any gate noticing. Ids derived from its own
+spec scenarios; nothing invented.
+
+- FR-CLIENT-01
+- FR-CLIENT-02
+- FR-CLIENT-03
+- FR-CLIENT-04 (`proposed` — the "issued invoice unchanged" scenario cannot be
+  verified until `invoice-registry` (S5) exists to hold the snapshots)
+
 ### S2 — `banking`
 
 - FR-BANK-01
@@ -74,6 +87,16 @@ and [requirements.md](requirements.md).
 - FR-EXPORT-01
 - FR-EXPORT-02
 - FR-EXPORT-03
+
+### S5 — `invoice-registry`
+
+First slice delivered through the full G4 loop with earned evidence (tests-first
+red→green, review-gate, `Slice:` trailer). Storage + domain-logic layer.
+
+- FR-REG-01 → stored statuses draft|sent|paid|cancelled
+- FR-REG-02 → derived overdue (display-only, never stored)
+- FR-REG-03 → issued snapshot immutability
+- TC-DATA-01 → browser persistence (shared with the directories)
 
 ### Post-MVP (owned, not shipped in course submission)
 

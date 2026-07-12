@@ -60,7 +60,21 @@ function* walk(dir, filter) {
   }
 }
 // Ids may be plain (FR-12) or categorized (FR-SHELL-01, NFR-A11Y-02).
-const idsIn = (text) => [...new Set(text.match(/\b(?:FR|NFR|TC|BC|BUG)-(?:[A-Z0-9]+-)?\d+\b/g) ?? [])];
+const ID_PATTERN = "(?:FR|NFR|TC|BC|BUG)-(?:[A-Z0-9]+-)?\\d+";
+const idsIn = (text) => [...new Set(text.match(new RegExp(`\\b${ID_PATTERN}\\b`, "g")) ?? [])];
+// `// @trace FR-CALC-01` / ` * @trace FR-12, BUG-3`.
+//
+// Shares ID_PATTERN with idsIn on purpose: a narrower id pattern would demand
+// an annotation (see the test-trace report below) this parser could never read.
+//
+// ANCHORED to the start of a comment (PD-12). Unanchored, any mention became
+// evidence: a comment reading `No @trace FR-X: this test cannot prove it`
+// credited FR-X, and a fixture under tests/ credited a production requirement.
+// A disclaimer must never become proof.
+const TRACE_ANNOTATION_RE = new RegExp(
+  `^[ \\t]*(?://+|\\*|#)[ \\t]*@trace[ \\t]+(${ID_PATTERN}(?:[ \\t]*,[ \\t]*${ID_PATTERN})*)`,
+  "gm",
+);
 
 // ---------- 1. parse requirements ----------
 // Missing requirements file is NORMAL before Phase 1 (the loop installs in
@@ -77,7 +91,11 @@ const requirements = new Map(); // id -> { phase }
 for (const line of (reqText ?? "").split("\n")) {
   const m = line.match(/^\|\s*((?:FR|NFR|TC|BC)-(?:[A-Z0-9]+-)?\d+)\s*\|/);
   if (!m) continue;
-  const phase = /\|\s*Future\s*\|/i.test(line) ? "Future" : "MVP";
+  // `dropped` is as non-MVP as `Future` (PD-1). A dropped negative requirement
+  // is satisfied by omission and cannot honestly carry a test or a recording;
+  // counting it among MVP obligations manufactures unclearable warnings.
+  const nonMvp = line.match(/\|\s*(Future|dropped)\s*\|/i);
+  const phase = nonMvp ? nonMvp[1].toLowerCase() : "MVP";
   requirements.set(m[1], { phase });
 }
 const mvpFRs = [...requirements.keys()].filter(
@@ -145,7 +163,7 @@ const isTestFile = (f) => /\.(test|spec|eval)\.(ts|tsx|js|mjs)$/.test(f) || /int
 for (const dir of PATHS.testDirs) {
   for (const file of walk(dir, isTestFile)) {
     const text = read(file) ?? "";
-    for (const m of text.matchAll(/@trace\s+([A-Z]+-\d+(?:\s*,\s*[A-Z]+-\d+)*)/g)) {
+    for (const m of text.matchAll(TRACE_ANNOTATION_RE)) {
       for (const id of m[1].split(/\s*,\s*/)) {
         if (!testTraces.has(id)) testTraces.set(id, []);
         testTraces.get(id).push(file.replaceAll("\\", "/"));
