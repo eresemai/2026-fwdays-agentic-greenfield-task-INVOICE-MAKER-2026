@@ -259,6 +259,30 @@
         "status": "missing-artifact"
       }
     ],
+    "FR-REG-01": [
+      {
+        "method": "local-verifiable",
+        "mechanism": "npm:test",
+        "artifact": "src/lib/storage/invoice-register.test.ts",
+        "status": "artifact-ok"
+      }
+    ],
+    "FR-REG-02": [
+      {
+        "method": "local-verifiable",
+        "mechanism": "npm:test",
+        "artifact": "src/lib/storage/invoice-register.test.ts",
+        "status": "artifact-ok"
+      }
+    ],
+    "FR-REG-03": [
+      {
+        "method": "local-verifiable",
+        "mechanism": "npm:test",
+        "artifact": "src/lib/storage/invoice-register.test.ts",
+        "status": "artifact-ok"
+      }
+    ],
     "FR-CLIENT-01": [
       {
         "method": "local-verifiable",
